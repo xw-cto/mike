@@ -246,7 +246,7 @@ Each with a recommendation. Decisions 1 to 6 are factory#1336 section 7 and are 
 1. **Decided, Tig, 2026-10-05.** The control plane detects every change (section 5, rule 22) and steers Arthur when the board changed or a seat went idle. Never on a timer. No seat or vendor watches.
 2. **Decided, Tig, 2026-10-05: a lane plus an optional note.** The lane binds the gate and the share; the note is the human's intent, shared with Arthur on the board and with that lane's lane-PE as context (3.1).
 3. Reviewer count: `ceil(workers / 3)` sizes the pool; inside it, one reviewer per ready pull request. Recommend that.
-4. Mint cost is unmeasured. Recommend: measure 5 wait-only mints for 1 hour before the pool relies on remints.
+4. **Decided, Tig, 2026-10-05: measure first, on the existing harness.** [factory#1778](https://github.com/excaliwire/factory/issues/1778): 5 wait-only mints left 1 hour, tokens, turns, dollars and first-steer cost per seat. The number closes this decision; the remint-not-steer rule is built on it.
 5. **Decided by decision 1, 2026-10-05.** conflict-steer and copilot-findings are not verbs. A conflict and an unresolved Copilot thread set are two change kinds the control plane routes to the author seat as a steer.
 6. The one priorities list is per instance, not per project. Lanes may belong to any project. Recommend per instance: the human has one attention.
 7. **Decided, Tig, 2026-10-05: yes.** The system is Mike, not the harness, and the seat's run-kind field is renamed from `harness` to `runtime`.
