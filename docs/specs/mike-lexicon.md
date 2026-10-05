@@ -100,7 +100,7 @@
 | Reset defaults | Reboot option: assignments idle, auto-steer on, seat labels removed, a record per seat | [lex:287](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L287) | KEEP | One recorded write clears every assignment and label (mike.md 3.2) |
 | Restart control plane | Bounce the control-plane process only | [lex:305](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L305) | KEEP | Resumes from the store |
 | Retired name | A name in `seats.yaml` `retired`; never minted again | [spec:45](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L45) | KEEP | Same |
-| Reviewer | Seat that independently reviews a ready pull request it did not write | [lex:201](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L201) | KEEP | Role key `reviewer`; Warden is the default name (mike.md 2) |
+| Reviewer | Seat that independently reviews a ready pull request it did not write | [lex:201](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L201) | KEEP | Role key `reviewer`; Warden is factory's name for it, not a Mike default (decision 9) |
 | Reviewer grant | `reviewer: <Name>` from `tig` | [spec:422](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L422) | KEEP | From the human merger account (config) |
 | Row verbs | A Sessions row lists the verbs that fit liveness; others refused | [spec:102](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L102) | KEEP | The page's only verb source |
 | Running | Loop state in which each tick acts; the one config-store switch | [lex:83](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L83) | KEEP | Same |
@@ -238,7 +238,7 @@
 - Agent harness: audit keeps "harness" for the runtime kind; mike.md 8 renames it runtime.
 - Harness-gh-user: audit KEEP; mike.md 8 RENAME to gh_user.
 - Rung, Host ladder: audit CHALLENGE; mike.md 8 retires the ladder.
-- Reviewer: audit CHALLENGE on the role word; mike.md 2 settles it (role key `reviewer`, default name Warden).
+- Reviewer: audit CHALLENGE on the role word; mike.md 2 settles it (role key `reviewer`; Warden is factory's instance name).
 - Direction: audit CHALLENGE; mike.md 8 renames it priorities list.
 - Board: audit CHALLENGE; mike.md 3.1 defines it.
 - Temporary seat: audit CHALLENGE; mike.md 8 keeps it.
@@ -326,7 +326,7 @@ Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). What the human decided
 
 ### Arbiter
 
-Owner: [`mike.md` 2](mike.md#2-roles). The role of the seat that reads the board and decides who does what: which seat takes which issue, the share each priorities row actually gets, when to remint, the order of send-backs, and recovery after a reboot. It acts only through Mike's verbs, and the gates bind it like any caller. It is judgment, not the control plane, which is code. One per instance; default name Arthur. **Binds:** caller matrix `arbiter`; gates 1 to 5.
+Owner: [`mike.md` 2](mike.md#2-roles). The role of the seat that reads the board and decides who does what: which seat takes which issue, the share each priorities row actually gets, when to remint, the order of send-backs, and recovery after a reboot. It acts only through Mike's verbs, and the gates bind it like any caller. It is judgment, not the control plane, which is code. One per instance; the name is the role key unless the instance overrides it; Arthur on factory. **Binds:** caller matrix `arbiter`; gates 1 to 5.
 
 ### Steer rules
 

@@ -820,7 +820,7 @@ Acceptance: adding a vendor pool is a config edit with 0 code changes and its ga
 Verdict: NEW.
 
 **MS-145** As the loop, I want mint to pick the next vendor when one crosses its mint threshold, so that a vendor limit costs a vendor switch, not a stall.
-Evidence: [factory#1501](https://github.com/excaliwire/factory/issues/1501) (at 75 percent of Claude's 5-hour limit, stop minting Claude seats); `mike.md` 4.
+Evidence: [factory#1501](https://github.com/excaliwire/factory/issues/1501) (at 75 percent of Claude's 5-hour limit, stop minting Claude seats and shift to xAI Grok, decision 10); `mike.md` 4.
 Acceptance: with the Claude 5-hour gauge at 76 percent, the next mint record names a different vendor and cites the gauge reading.
 Verdict: NEW.
 

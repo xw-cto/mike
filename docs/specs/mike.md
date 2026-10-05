@@ -24,9 +24,9 @@ First-wave projects (#2): `excaliwire/web`, `excaliwire/app`, `tig/mike`, `tig/s
 
 ## 2. Roles
 
-A seat has a name and a role. What it does comes from the role. Names are instance config; Mike ships these defaults, and an instance may rename any of them without a code change (factory#1164 proved a rename touches no runtime code).
+A seat has a name and a role. What it does comes from the role. Mike ships no display names: a role's name is its role key (`arbiter`, `tpm`, `lane-pe`, `worker`, `reviewer`) unless the instance config overrides it, and an override touches no runtime code (factory#1164 proved that). The Arthurian names below are factory's instance config, not Mike's (decision 9).
 
-| Role key | Default name | What it does | Mints how |
+| Role key | Factory's name | What it does | Mints how |
 |---|---|---|---|
 | `arbiter` | Arthur | Judgment. Reads the board, decides which seat takes which issue, sets severity, orders send-backs, decides when to remint. Acts only through Mike's verbs. | By the human or the loop; one per instance. |
 | `tpm` | K (Kay today) | Keeps briefs and the roster current, turns the human's direction into issues with a severity, audits technical direction across lanes. Writes no development pull request. | By the human or the loop; one per instance. |
@@ -109,7 +109,7 @@ A seat runs on a **runtime** (factory calls this the seat's `harness`: `cursor-c
 
 Today the actuator is Cursor-shaped: mint steps are Cursor creates, grok-tmux has no archive, claude-cloud liveness is always unmeasured, and Health clears a row only on the Cursor record shape (factory#1336 comments, learnings 6, 9, 11; factory#1418). Mike has one actuator interface and one record shape, and each runtime fills it or reports unmeasured.
 
-**Budgets.** Each vendor declares its pools, windows (such as Claude's 5-hour limit), a probe, and a mint threshold. Mint picks the next vendor when one crosses its threshold (factory#1501: at 75 percent of Claude's 5-hour limit, stop minting Claude seats). An unmeasured gauge stays unmeasured, never 0, and a mint that depends on an unmeasured gauge is refused. The gauge list is config, not a tuple in code (factory `meters.GAUGES`).
+**Budgets.** Each vendor declares its pools, windows (such as Claude's 5-hour limit), a probe, and a mint threshold. Mint picks the next vendor when one crosses its threshold (factory#1501: at 75 percent of Claude's 5-hour limit, stop minting Claude seats and shift new seats to xAI Grok; decision 10). An unmeasured gauge stays unmeasured, never 0, and a mint that depends on an unmeasured gauge is refused. The gauge list is config, not a tuple in code (factory `meters.GAUGES`).
 
 **Seat hosts pull.** A machine that runs tmux seats checks in and claims actuations from the store. The control plane holds no inbound path and no SSH key to a seat host. Every steer goes through the control plane store, from any caller on any machine. There is no second, machine-local queue.
 
@@ -239,20 +239,20 @@ Each is accidental complexity or a defect on factory `main`, with the evidence.
 20. One-shot migration verbs kept in the product (retitle, seat-rename). A stable seat id makes rename a config edit.
 21. Dashboard behaviors that patch the above: parsing server prose and human time strings, a 30-second command timeout with no job id, full repaint per log frame, a banned-word dodge in source (`rules.mjs:330`), hover text that re-derives a verb rule the server already answers.
 
-## 11. Decisions for the human
+## 11. Decisions
 
-Each with a recommendation. Decisions 1 to 6 are factory#1336 section 7 and are repeated here because Mike's cut depends on them. A decided item says so and is closed.
+All 16 decided by Tig on 2026-10-05. Decisions 1 to 6 are factory#1336 section 7 and are repeated here because Mike's cut depends on them. Decision 4 closes when factory#1778 posts its number.
 
 1. **Decided, Tig, 2026-10-05.** The control plane detects every change (section 5, rule 22) and steers Arthur when the board changed or a seat went idle. Never on a timer. No seat or vendor watches.
 2. **Decided, Tig, 2026-10-05: a lane plus an optional note.** The lane binds the gate and the share; the note is the human's intent, shared with Arthur on the board and with that lane's lane-PE as context (3.1).
-3. Reviewer count: `ceil(workers / 3)` sizes the pool; inside it, one reviewer per ready pull request. Recommend that.
+3. **Decided, Tig, 2026-10-05.** `ceil(workers / 3)` caps the reviewer pool; inside it, one reviewer per ready pull request, all in parallel.
 4. **Decided, Tig, 2026-10-05: measure first, on the existing harness.** [factory#1778](https://github.com/excaliwire/factory/issues/1778): 5 wait-only mints left 1 hour, tokens, turns, dollars and first-steer cost per seat. The number closes this decision; the remint-not-steer rule is built on it.
 5. **Decided by decision 1, 2026-10-05.** conflict-steer and copilot-findings are not verbs. A conflict and an unresolved Copilot thread set are two change kinds the control plane routes to the author seat as a steer.
-6. The one priorities list is per instance, not per project. Lanes may belong to any project. Recommend per instance: the human has one attention.
+6. **Decided, Tig, 2026-10-05: per instance.** One list across every project the instance manages. A lane may belong to any project.
 7. **Decided, Tig, 2026-10-05: yes.** The system is Mike, not the harness, and the seat's run-kind field is renamed from `harness` to `runtime`.
 8. **Decided, Tig, 2026-10-05: yes.** The priorities list replaces the word direction everywhere, including the API's `direction` command, at the major bump #1 already needs.
-9. Shipped default names stay Arthurian (Arthur, K, Artificer, Warden). Recommend yes; an instance renames.
-10. Which vendor the budget rule in factory#1501 means by "Groq": the call notes say Groq; the seats run xAI Grok. Needs the human's word.
+9. **Decided, Tig, 2026-10-05: role keys are the names unless overridden.** Mike ships no display names. The Arthurian names are factory's instance config (section 2).
+10. **Decided, Tig, 2026-10-05: xAI Grok.** The budget rule in factory#1501 shifts new seats to xAI Grok, the vendor the workers and reviewers run on, not Groq.
 11. **Decided, Tig, 2026-10-05: pool.** Config holds a cap and a list of names. Mike mints a name when the pool is below target and kills one only when stale or at the cap (factory#1336 section 1, point 6).
 12. **Decided, Tig, 2026-10-05: keep the role, and Mike may mint it.** One PE per lane, wait-only, no ladder. The loop mints a missing lane-PE when the role's fill-missing setting is on; turning it on asks the human first, because each mint spends money. A project may configure zero lane-PEs.
 13. **Decided, Tig, 2026-10-05: keep two, measure a week.** Arthur and K stay separate roles. Mike measures K's follow-ups per hour for one week after the first cut, recorded on #3, then the human decides whether K merges into Arthur.
