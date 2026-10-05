@@ -54,7 +54,7 @@ Authority: human > director > TPM > lane-PE > worker or reviewer. An attached se
 ### 3.1 Pool, assignment, share
 
 - Seats are a **pool**. A worker or reviewer seat owns nothing beyond its current **assignment**: one issue or one pull request, or idle. The durable form of an assignment is the `seat:<name>` label on the issue or pull request. Mike's store caches it; the label is the truth.
-- The **priorities list** has at most 3 rows, ordered. Each row names a lane. The config store holds a **share** per rank: top 60, second 30, third 10 percent of workers. The human adjusts the shares. A row with no open non-Low work gives its share to the next row.
+- The **priorities list** has at most 3 rows, ordered. Each row names a lane and may carry a **note**: the human's intent for that row in a sentence. Mike puts the note on the board Arthur reads and in every steer to that lane's lane-PE, as context. The note binds nothing; the lane does. The config store holds a **share** per rank: top 60, second 30, third 10 percent of workers. The human adjusts the shares. A row with no open non-Low work gives its share to the next row.
 - **Severity** orders work inside a lane: SEV1 (Urgent), High, Medium, then oldest first inside a severity. The GitHub field that carries severity is instance config (`Priority` on factory).
 - **Nothing runs on Low.** An issue with no severity is Low.
 - The **board** is what Arthur reads: idle seats, each seat's assignment, send-backs with the author seat, ready pull requests per seat, and target versus actual share per row. Mike builds it; today's orchestrator follow-up carries no board (factory `idle_steer.py:1279-1293`), so this is new.
@@ -117,6 +117,7 @@ Today the actuator is Cursor-shaped: mint steps are Cursor creates, grok-tmux ha
 
 ## 5. The control plane
 
+- **The control plane is the only watcher.** It takes GitHub events by signed webhook and diffs its own store each tick: an issue assigned, a pull request from draft to ready, a review verdict, a send-back, a conflict, unresolved Copilot threads, a seat gone idle. Each change is routed to the seat it concerns as a recorded steer bound by the gates: Arthur gets the board when the board changed or a seat went idle; the author seat gets its send-back, conflict or Copilot findings; a reviewer gets a ready pull request. No seat polls GitHub. No vendor scheduler or routine-fire watches anything for Mike. Nothing fires on a timer except the tick itself.
 - **Control loop.** One tick: read desired state, read live state, decide, act. One loop per instance, from a checkout the instance owns. A tick does not overlap the previous one. Loop cadence, Running/Paused, and live/dry-run are config-store settings.
 - **Desired state** is instance config: roles, roster, projects, lanes and labels, hosts, vendors and budgets, briefs. Shipped defaults and instance config are separate files. Changing desired state is a pull request on the instance's config repository.
 - **Live state** is the store: assignments, session ids, liveness, gauges, records, settings versions. Never in git. The store is one process's responsibility, locked, and append-only where it is a log.
@@ -210,6 +211,7 @@ Each is a rule factory paid for. Evidence is the factory file at `bb2bf4c6` unle
 19. Secrets by name only: never in git, records, logs, or argv. `local.py:559`.
 20. Comment limits: review 12 lines, pull request body 20, other 6, `Next:` last. `test_comment_limits_1741.py`.
 21. Talking to the human: measurement not adjective, bad news first, recommendation not menu, decisions then merges then next, cost unasked. Root `AGENTS.md:84-96`.
+22. The control plane is the only watcher; a change is routed to the seat it concerns as a steer; no seat polls and no vendor watches (section 5). Tig, 2026-10-05.
 
 ## 10. What Mike does not re-create
 
@@ -241,11 +243,11 @@ Each is accidental complexity or a defect on factory `main`, with the evidence.
 
 Each with a recommendation. Decisions 1 to 6 are factory#1336 section 7 and are repeated here because Mike's cut depends on them. A decided item says so and is closed.
 
-1. Arthur each tick, or on each board change and each newly idle seat. Recommend: board change or idle seat.
-2. Priority rows are lanes, or free text. Recommend: lanes.
+1. **Decided, Tig, 2026-10-05.** The control plane detects every change (section 5, rule 22) and steers Arthur when the board changed or a seat went idle. Never on a timer. No seat or vendor watches.
+2. **Decided, Tig, 2026-10-05: a lane plus an optional note.** The lane binds the gate and the share; the note is the human's intent, shared with Arthur on the board and with that lane's lane-PE as context (3.1).
 3. Reviewer count: `ceil(workers / 3)` sizes the pool; inside it, one reviewer per ready pull request. Recommend that.
 4. Mint cost is unmeasured. Recommend: measure 5 wait-only mints for 1 hour before the pool relies on remints.
-5. conflict-steer and copilot-findings: keep as wakes until the planner is gone, then route each as a send-back. Recommend that.
+5. **Decided by decision 1, 2026-10-05.** conflict-steer and copilot-findings are not verbs. A conflict and an unresolved Copilot thread set are two change kinds the control plane routes to the author seat as a steer.
 6. The one priorities list is per instance, not per project. Lanes may belong to any project. Recommend per instance: the human has one attention.
 7. **Decided, Tig, 2026-10-05: yes.** The system is Mike, not the harness, and the seat's run-kind field is renamed from `harness` to `runtime`.
 8. **Decided, Tig, 2026-10-05: yes.** The priorities list replaces the word direction everywhere, including the API's `direction` command, at the major bump #1 already needs.

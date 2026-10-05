@@ -927,6 +927,23 @@ Evidence: `mike.md` 2.1.
 Acceptance: with no token set, the CLI's Mike verbs refuse and name the token; the session's direct GitHub comments carry no actor record and raise no Health row.
 Verdict: NEW.
 
+### 3.12 The control plane watches
+
+**MS-165** As the loop, I want to detect every board change myself, from signed webhooks and a diff of my own store each tick, so that no seat polls GitHub and no vendor scheduler watches anything for Mike.
+Evidence: `mike.md` 5 and rule 22; factory polls the human's notifications in [agent-harness/agent_harness/poke.py:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/poke.py#L1) and seats read GitHub themselves.
+Acceptance: with the webhook delivering, a tick makes 0 GitHub reads that are not the budgeted store refresh; a brief contains no instruction to poll or watch GitHub; a seat's own `gh` read of issue state is a refused record.
+Verdict: NEW.
+
+**MS-166** As the loop, I want each detected change routed to the seat it concerns as one recorded steer (Arthur for a board change or an idle seat; the author for a send-back, a conflict or Copilot findings; a reviewer for a ready pull request), so that a seat is told and never has to notice.
+Evidence: `mike.md` 5, 3.4, decisions 1 and 5; was: OS-36, OS-37 (conflict-steer, copilot-findings as verbs).
+Acceptance: one steer record per change with `why` naming the change kind and the GitHub event or diff that produced it; the same change produces 0 further steers; the steer passes the gates or is a refused record.
+Verdict: NEW.
+
+**MS-167** As a lane-PE, I want the note on my lane's priorities row carried in every steer I receive, so that the human's intent for the row is my context without a comment I must find.
+Evidence: `mike.md` 3.1, decision 2.
+Acceptance: a steer to a lane-PE whose lane has a row with a note contains that note verbatim; a row with no note adds nothing; the note appears on the board Arthur reads.
+Verdict: NEW.
+
 ## 4. Retired stories
 
 Not built (`mike.md` 3.3, 10, 12). One line each.

@@ -31,8 +31,8 @@
 | KEEP | 95 |
 | RENAME | 14 |
 | NARROW | 38 |
-| RETIRE | 41 |
-| CHALLENGE | 4 |
+| RETIRE | 43 |
+| CHALLENGE | 2 |
 
 | Term | Factory meaning (one line) | Source | Mike verdict | Mike term or why |
 |---|---|---|---|---|
@@ -187,6 +187,8 @@
 | already-assigned | none-eligible reason (#897) | [#1336](https://github.com/excaliwire/factory/issues/1336) | RETIRE | Planner reason |
 | Auto-steer | Seat eligibility for loop steering; stop sets it off | [spec:104](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L104) | RETIRE | Stop replaces it |
 | awaiting-response | Hold: a seat with a pull request awaiting response is not idle | [idle_steer:42](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/idle_steer.py#L42) | RETIRE | Send-back is the next assignment (mike.md 8) |
+| Conflict-steer | Ready conflicting PR steers its owner, or an idle worker | [spec:163](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L163) | RETIRE | Decided 2026-10-05: not a verb; a conflict is a change kind the control plane routes to the author seat (decision 5) |
+| Copilot-findings | Copilot threads steer the owner; a busy owner yields to an idle worker | [spec:406](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L406) | RETIRE | Decided 2026-10-05: not a verb; unresolved Copilot threads are a change kind routed to the author seat (decision 5) |
 | Harness-state | Git branch that seeds the direction list | [lex:337](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L337) | RETIRE | Config store is the source |
 | higher_unassigned | Steer refusal: a higher severity in the lane is unassigned | [#1336](https://github.com/excaliwire/factory/issues/1336) | RETIRE | Already removed (#1763) |
 | Hold | Planner outcome that plans nothing and names why | [spec:159](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L159) | RETIRE | A gate outcome is a refusal |
@@ -224,8 +226,6 @@
 | Taken (in-flight) | Issue taken by open PR, title, steer record, or pending create | [spec:159](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L159) | RETIRE | Assignment is the one source |
 | The box | Shared machine at `/home/box` hosting the harness and tmux seats | [lex:53](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L53) | RETIRE | 3 hosts now; name by job: control-plane host, seat host |
 | Worker planner | `plan`, `hold_why`, `_feed_key`: picks seat and issue | [#1336](https://github.com/excaliwire/factory/issues/1336) | RETIRE | Arthur decides |
-| Conflict-steer | Ready conflicting PR steers its owner, or an idle worker | [spec:163](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L163) | CHALLENGE | Q8 |
-| Copilot-findings | Copilot threads steer the owner; a busy owner yields to an idle worker | [spec:406](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L406) | CHALLENGE | Q9 |
 | SLA | How soon a severity must move; 0 code readers | [lex:407](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L407) | CHALLENGE | Q7 |
 | Tig | The human: merges, owns spend, only waiver source | [lex:31](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L31) | CHALLENGE | Q6 |
 
@@ -322,7 +322,7 @@ Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). A work domain named by
 
 ### Priorities list
 
-Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). What the human decided about prioritization: an ordered list of at most 3 rows, each naming a lane, in the config store, one per instance. A row's rank sets its share of workers; a lane not on the list gets no worker. Not the GitHub Priority field, which is severity. Fields: `lane`, `note`. Factory called it direction. **Binds:** gate 3; the API's `direction` command renames at the next major (decision 8); factory pin `test_direction.py` moves.
+Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). What the human decided about prioritization: an ordered list of at most 3 rows, each naming a lane and carrying an optional note, in the config store. A row's rank sets its share of workers; a lane not on the list gets no worker. The note is the human's intent in a sentence: it goes on the board and into every steer to that lane's lane-PE, and binds nothing. Not the GitHub Priority field, which is severity. Fields: `lane`, `note`. Factory called it direction. **Binds:** gate 3; the API's `direction` command renames at the next major (decision 8); factory pin `test_direction.py` moves.
 
 ### Arbiter
 
@@ -389,15 +389,15 @@ Each CHALLENGE row, plus the mike.md section 11 decisions this file depends on. 
 4. **Does SEV1 (Urgent) preempt an open assignment?** (Urgent.) Its steer class `interrupt` is reported, never acted on.
     Decided, Tig, 2026-10-05: sorts first, never preempts; the human may Stop a seat by hand (decision 14).
 5. **Priorities list form: lanes or free text, per instance or per project?** (Priorities list, Lane.) Free text drops the lane gate.
-   Recommend (decisions 2 and 6): lanes, one list per instance.
+    Decided, Tig, 2026-10-05: a lane plus an optional note shared with the lane-PE as context (decision 2). Per instance or per project is still decision 6.
 6. **Which word names the human?** (Tig.) "Tig", "operator" and "director" are all in use; mike.md writes "the human".
    Recommend: "the human" in Mike text; the merger account is instance config (`tig` on factory).
 7. **SLA: measure or drop?** (SLA.) 0 code readers today; prose and `seats.yaml` only.
    Recommend: retire the word for the first cut; if wanted, age per severity is a log line first, a Health row later.
 8. **Conflict-steer: keep?** (Conflict-steer.) "Or an idle worker" steers a non-author across work.
-   Recommend (decision 5): keep as a wake until the planner is gone, then route it as a send-back to the author seat.
+    Decided by decision 1, 2026-10-05: not a verb; a change kind the control plane routes to the author seat.
 9. **Copilot-findings: keep?** (Copilot-findings.) A busy owner yields to an idle worker, the same cross-work steer.
-   Recommend (decision 5): same as Q8.
+    Decided by decision 1, 2026-10-05: same as Q8.
 10. **Rename the seat field `harness` to `runtime`?** (harness seat field.)
     Decided, Tig, 2026-10-05: yes (decision 7).
 11. **Replace `direction` everywhere, the API command included?** (Direction.)
