@@ -368,9 +368,13 @@ Owner: [`mike.md` 5](mike.md#5-the-control-plane). Mike's code: it holds desired
 
 Owner: [`mike.md` 4](mike.md#4-runtimes-and-vendors). The agent on a machine that runs tmux seats: it checks in, pulls its own actuations from the control-plane store with a host token, runs them, and reports results. A stale seat host makes its seats `unmeasured`. Not the control-plane host, and it holds no shared master secret and no second, machine-local queue. **Binds:** test that a host token pulls only its own actuations.
 
+### Attached session
+
+Owner: [`mike.md` 2.1](mike.md#21-attached-sessions-non-seats-that-act-through-mike). A session the human drives (Infra Fable, Factory Fable, the director) that holds a session token and acts through Mike's verbs for every repository and Mike interaction. Not a seat: never minted, steered, assigned, or counted against the cap. Recorded as its own actor; writes under Mike's account with its `[Name]` prefix; bound by every gate; rights per its config row. Attaching is optional. Word not yet confirmed by the human (Q14). **Binds:** caller matrix `attached`; test that a session token cannot mint and cannot act as the human.
+
 ### Director
 
-Owner: [`mike.md` 2](mike.md#2-roles). The human's own portal session (Excaliwire PgM on factory). It is not a seat and holds no assignment; the caller matrix knows it by name beside the human. Authority runs human, director, TPM, lane-PE, then worker or reviewer. Not the human: only the human merges, waives a gate, or grants a reviewer. **Binds:** caller matrix `director`; test that a seat token cannot act as the director.
+Owner: [`mike.md` 2](mike.md#2-roles). The attached session the human uses as his portal (Excaliwire PgM on factory). It is not a seat and holds no assignment; the caller matrix knows it by name beside the human. Authority runs human, director, TPM, lane-PE, then worker or reviewer. Not the human: only the human merges, waives a gate, or grants a reviewer. **Binds:** caller matrix `director`; test that a seat token cannot act as the director.
 
 ## 4. Questions for the human
 
@@ -402,3 +406,5 @@ Each CHALLENGE row, plus the mike.md section 11 decisions this file depends on. 
     Recommend: accept; each lands with its schema in one change (rule 8).
 13. **Retire stand-down, resume, the hold words, the host ladder, rung, and retarget?**
     Decided, Tig, 2026-10-05: yes (decision 15). The RETIRE rows for them in section 2 are closed.
+14. **The word for a non-seat session that acts through Mike?** (Attached session, new.) Factory says only "not a seat"; Tig asked for the capability on 2026-10-05.
+    Recommend (decision 16): attached session; the director is one; default rights are issue and pull verbs like a seat, steer like a lane-PE, no mint.

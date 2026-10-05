@@ -895,6 +895,38 @@ Evidence: [agent-harness/agent_harness/gh.py:100](https://github.com/excaliwire/
 Acceptance: with GitHub returning 502, the tick records `unmeasured` for each read and 0 steers or mints.
 Verdict: NEW.
 
+### 3.11 Attached sessions
+
+**MS-159** As the human (Tig today), I want to issue a named, revocable session token to a session I drive (Infra Fable, Factory Fable, my portal), so that it can act through Mike without a seat and without my own credentials.
+Evidence: `mike.md` 2.1 and 4 (Identity); factory has only a seat token minted from a shared secret, [host/hgl-auth/agent_token.py:54](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/host/hgl-auth/agent_token.py#L54).
+Acceptance: the token carries the session name and its verb list; a revoked token is refused on the next call with a record; no shared secret can mint one.
+Verdict: NEW.
+
+**MS-160** As an attached session, I want every repository interaction (issue create, label, severity, comment, pull ready, request merge) to go through Mike's verbs with my token, so that each is recorded first and written under Mike's account with my `[Name]` prefix.
+Evidence: `mike.md` 2.1, 5 (GitHub), 9.3, 9.15.
+Acceptance: one decision record per call with `actor` = the session name; the GitHub write is by Mike's account and starts `[Name] `; a call with no record is refused.
+Verdict: NEW.
+
+**MS-161** As an attached session, I want to read the board, sessions, health and priorities over the same API a seat reads, so that my judgment uses the operator's view.
+Evidence: `mike.md` 2.1, 3.1; was: US-13 (for seats).
+Acceptance: `GET /dashboard/api/sessions` and the board route answer a session token with the same rows the page draws.
+Verdict: NEW.
+
+**MS-162** As an attached session whose config row allows it, I want to steer a seat through Mike bound by every gate, so that I can direct work at night without a comment Arthur must notice.
+Evidence: `mike.md` 2.1, 3.3; factory#1336 comment 2026-10-05 05:18 UTC (steers delivered as `Arthur:` comments).
+Acceptance: a steer from the session passes gates 1 to 6 or is refused with a record naming the gate; a session whose row lacks `steer` gets 403 and a refused record.
+Verdict: NEW.
+
+**MS-163** As the human (Tig today), I want attached sessions listed on the dashboard with last call and token age, apart from the Sessions tab, so that I can see who is acting through Mike and revoke one.
+Evidence: `mike.md` 2.1, 7.
+Acceptance: one row per token with name, verbs, last call time, issued-at; a Revoke verb with one confirm; the Sessions tab shows no attached session.
+Verdict: NEW.
+
+**MS-164** As an attached session, I want attaching to be optional, so that a session with no token works as today and Mike sees it only through GitHub.
+Evidence: `mike.md` 2.1.
+Acceptance: with no token set, the CLI's Mike verbs refuse and name the token; the session's direct GitHub comments carry no actor record and raise no Health row.
+Verdict: NEW.
+
 ## 4. Retired stories
 
 Not built (`mike.md` 3.3, 10, 12). One line each.

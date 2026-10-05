@@ -34,11 +34,20 @@ A seat has a name and a role. What it does comes from the role. Names are instan
 | `worker` | Artificer | Takes one assignment to a ready pull request, then waits. Owns nothing beyond its assignment. | By the loop, from the pool. |
 | `reviewer` | Warden | Independent review of one ready pull request it did not write. Never pushes. | By the loop, from the pool. |
 
-The **director** is the human's own portal session (Excaliwire PgM today). It is not a seat. A session the human opens for himself is not a seat. A human-driven engineer session (Infra Fable today) is not a seat. The caller matrix knows the director and the human; everything else is a seat or refused.
+### 2.1 Attached sessions: non-seats that act through Mike
+
+A session the human drives (Infra Fable and Factory Fable today, the director's portal session, Excaliwire PgM) is not a seat. Mike does not mint it, steer it, assign it, or count it against the cap. It may still be **attached** to Mike, and then every repository and Mike interaction it makes goes through Mike's verbs, the same door a seat uses:
+
+- The human issues it a named, revocable **session token** from the dashboard or CLI. The token names the session (its `[Name]` prefix) and the verbs it may run. It is not a seat token and not the human's token. There is no shared secret to derive it from.
+- With the token it runs the same CLI as a seat: issue and pull verbs (create, label, severity, comment, request merge), read the board, sessions, health and priorities, and, when its config row allows, steer a seat. Every call records first with the session as `actor`, writes through Mike's GitHub choke point under Mike's account with the `[Name]` prefix, and is bound by every gate in 3.3. It never writes as the human, never merges, never mints.
+- The dashboard shows attached sessions on their own list, with last call and token age, not on the Sessions tab.
+- Attaching is optional and per session. A session that is not attached works as it does today, and Mike sees it only through GitHub; its comments carry no actor record. The brief tells a human-driven session to attach when the token is present.
+
+The **director** is the attached session the human uses as his portal (Excaliwire PgM today). The caller matrix knows the human, the director, attached sessions, and seats; everything else is refused.
 
 The arbiter brief on factory `main` says "I am mechanism, not judgment" ([`briefs/arbiter.md:19`](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/briefs/arbiter.md)). That is the model factory#1336 replaces. In Mike, Arthur is judgment and Mike is mechanism. Harness engineering never lives in an orchestrator seat.
 
-Authority: human > director > TPM > lane-PE > worker or reviewer. Only the human merges, waives a gate, or grants a reviewer.
+Authority: human > director > TPM > lane-PE > worker or reviewer. An attached session that is not the director has the authority its config row gives it, by default that of a lane-PE for steers and of any seat for issue and pull verbs. Only the human merges, waives a gate, or grants a reviewer.
 
 ## 3. The seat model (factory#1336)
 
@@ -104,7 +113,7 @@ Today the actuator is Cursor-shaped: mint steps are Cursor creates, grok-tmux ha
 
 **Seat hosts pull.** A machine that runs tmux seats checks in and claims actuations from the store. The control plane holds no inbound path and no SSH key to a seat host. Every steer goes through the control plane store, from any caller on any machine. There is no second, machine-local queue.
 
-**Identity.** A seat token names one seat and acts only as that seat. A host token names one host and pulls only its own actuations. There is no shared master secret on a seat host (factory#1413, host.md:258). The human is a verified bearer, not a header any local process can set.
+**Identity.** A seat token names one seat and acts only as that seat. A session token names one attached session (2.1) and acts only as that session, with the verbs its config row lists. A host token names one host and pulls only its own actuations. There is no shared master secret on a seat host (factory#1413, host.md:258). The human is a verified bearer, not a header any local process can set.
 
 ## 5. The control plane
 
@@ -171,6 +180,8 @@ The carry-over table, one row per factory term, is [`mike-lexicon.md`](mike-lexi
 | assign-tig, Assign Tig | **request merge** | The merger is config. |
 | steer-idle (the verb) | **follow-up** | Only the orchestrator follow-up survives; the planner does not. |
 | Lexicon: Clear (review line) | retired | Already retired on factory by #1741; the review's line 1 verdict carries it. |
+
+New term, for the human to confirm: **attached session** (2.1). The audit had no word for a human-driven session that acts through Mike; factory says only "not a seat".
 
 Terms kept as-is include: seat, role, mint, remint, steer, stop, archive, restart, assignment, liveness and its four words, decision record, record before act, control plane, control loop, seat host, data plane, desired state, live state, config store, fleet mode, hard reboot, orchestrator reboot, worker reboot, fill-missing, reset defaults, loop window, Running, Paused, live, dry-run, send-back, severity, lane, gauge, tier, temporary seat, director, Geas, banned term, address contract (`seat:<name>` owns, `[Name] ` writes, `Name:` addresses). Full table and the open challenges are in the lexicon file.
 
@@ -245,6 +256,7 @@ Each with a recommendation. Decisions 1 to 6 are factory#1336 section 7 and are 
 13. Two orchestrator seats (Arthur, K) or one. The control-versus-noticing split is documented on factory; factory#1336 gives Arthur the judgment. Recommend: keep two for the first cut, measure K's follow-ups for one week, then decide.
 14. Does SEV1 (Urgent) preempt an open assignment. Its steer class on factory is `interrupt`, which steers a busy seat across work, and factory#1336 forbids that. Recommend: SEV1 sorts first and takes the next idle seat; it never preempts. The human may Stop a seat by hand.
 15. **Decided, Tig, 2026-10-05: yes.** Stand-down and resume, the hold words, the PE ladder and its rungs, and `retarget` retire (section 8 table; lexicon section 2).
+16. The word for a non-seat session that acts through Mike (2.1). Recommend **attached session**; the director is one. Its default rights: issue and pull verbs like a seat, steer like a lane-PE, no mint. Tig asked for the capability on 2026-10-05; the word and the default rights are his.
 
 ## 12. Done when
 
