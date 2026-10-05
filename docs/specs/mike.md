@@ -30,7 +30,7 @@ A seat has a name and a role. What it does comes from the role. Names are instan
 |---|---|---|---|
 | `arbiter` | Arthur | Judgment. Reads the board, decides which seat takes which issue, sets severity, orders send-backs, decides when to remint. Acts only through Mike's verbs. | By the human or the loop; one per instance. |
 | `tpm` | K (Kay today) | Keeps briefs and the roster current, turns the human's direction into issues with a severity, audits technical direction across lanes. Writes no development pull request. | By the human or the loop; one per instance. |
-| `lane-pe` | Factory PE, Presentation PE, Infrastructure PE | Technical judgment for one lane. Files issues with a severity and steers workers. Writes no development pull request. Minted wait-only (factory#1755). | Only by the human. |
+| `lane-pe` | Factory PE, Presentation PE, Infrastructure PE | Technical judgment for one lane. Files issues with a severity and steers workers. Writes no development pull request. Minted wait-only (factory#1755). | By the human, or by the loop when the role's fill-missing setting is on; that setting asks the human before it turns on. |
 | `worker` | Artificer | Takes one assignment to a ready pull request, then waits. Owns nothing beyond its assignment. | By the loop, from the pool. |
 | `reviewer` | Warden | Independent review of one ready pull request it did not write. Never pushes. | By the loop, from the pool. |
 
@@ -181,7 +181,7 @@ The carry-over table, one row per factory term, is [`mike-lexicon.md`](mike-lexi
 | steer-idle (the verb) | **follow-up** | Only the orchestrator follow-up survives; the planner does not. |
 | Lexicon: Clear (review line) | retired | Already retired on factory by #1741; the review's line 1 verdict carries it. |
 
-New term, for the human to confirm: **attached session** (2.1). The audit had no word for a human-driven session that acts through Mike; factory says only "not a seat".
+New term, confirmed by the human 2026-10-05: **attached session** (2.1). The audit had no word for a human-driven session that acts through Mike; factory says only "not a seat".
 
 Terms kept as-is include: seat, role, mint, remint, steer, stop, archive, restart, assignment, liveness and its four words, decision record, record before act, control plane, control loop, seat host, data plane, desired state, live state, config store, fleet mode, hard reboot, orchestrator reboot, worker reboot, fill-missing, reset defaults, loop window, Running, Paused, live, dry-run, send-back, severity, lane, gauge, tier, temporary seat, director, Geas, banned term, address contract (`seat:<name>` owns, `[Name] ` writes, `Name:` addresses). Full table and the open challenges are in the lexicon file.
 
@@ -237,7 +237,7 @@ Each is accidental complexity or a defect on factory `main`, with the evidence.
 20. One-shot migration verbs kept in the product (retitle, seat-rename). A stable seat id makes rename a config edit.
 21. Dashboard behaviors that patch the above: parsing server prose and human time strings, a 30-second command timeout with no job id, full repaint per log frame, a banned-word dodge in source (`rules.mjs:330`), hover text that re-derives a verb rule the server already answers.
 
-## 11. Open decisions for the human
+## 11. Decisions for the human
 
 Each with a recommendation. Decisions 1 to 6 are factory#1336 section 7 and are repeated here because Mike's cut depends on them. A decided item says so and is closed.
 
@@ -251,12 +251,12 @@ Each with a recommendation. Decisions 1 to 6 are factory#1336 section 7 and are 
 8. **Decided, Tig, 2026-10-05: yes.** The priorities list replaces the word direction everywhere, including the API's `direction` command, at the major bump #1 already needs.
 9. Shipped default names stay Arthurian (Arthur, K, Artificer, Warden). Recommend yes; an instance renames.
 10. Which vendor the budget rule in factory#1501 means by "Groq": the call notes say Groq; the seats run xAI Grok. Needs the human's word.
-11. Standing names or pool slots. Today every seat is a named row in `seats.yaml` (13 standing). Recommend: the pool is a cap and a list of names in config; Mike mints a name when the pool is below target and kills one only when stale or at the cap (factory#1336 section 1, point 6).
-12. Does the lane-PE role exist in Mike. factory#1501 names one PE per lane; factory#1755 measured the cost of a mint that was not wait-only. Recommend: keep the role, human-minted only, wait-only, no ladder.
-13. Two orchestrator seats (Arthur, K) or one. The control-versus-noticing split is documented on factory; factory#1336 gives Arthur the judgment. Recommend: keep two for the first cut, measure K's follow-ups for one week, then decide.
-14. Does SEV1 (Urgent) preempt an open assignment. Its steer class on factory is `interrupt`, which steers a busy seat across work, and factory#1336 forbids that. Recommend: SEV1 sorts first and takes the next idle seat; it never preempts. The human may Stop a seat by hand.
+11. **Decided, Tig, 2026-10-05: pool.** Config holds a cap and a list of names. Mike mints a name when the pool is below target and kills one only when stale or at the cap (factory#1336 section 1, point 6).
+12. **Decided, Tig, 2026-10-05: keep the role, and Mike may mint it.** One PE per lane, wait-only, no ladder. The loop mints a missing lane-PE when the role's fill-missing setting is on; turning it on asks the human first, because each mint spends money. A project may configure zero lane-PEs.
+13. **Decided, Tig, 2026-10-05: keep two, measure a week.** Arthur and K stay separate roles. Mike measures K's follow-ups per hour for one week after the first cut, recorded on #3, then the human decides whether K merges into Arthur.
+14. **Decided, Tig, 2026-10-05: sorts first, never preempts.** SEV1 takes the next idle seat. No seat is steered across open work. The human may Stop a seat by hand.
 15. **Decided, Tig, 2026-10-05: yes.** Stand-down and resume, the hold words, the PE ladder and its rungs, and `retarget` retire (section 8 table; lexicon section 2).
-16. The word for a non-seat session that acts through Mike (2.1). Recommend **attached session**; the director is one. Its default rights: issue and pull verbs like a seat, steer like a lane-PE, no mint. Tig asked for the capability on 2026-10-05; the word and the default rights are his.
+16. **Decided, Tig, 2026-10-05: yes.** The word is **attached session**; the director is one. Default rights: issue and pull verbs like a seat, steer like a lane-PE, no mint.
 
 ## 12. Done when
 

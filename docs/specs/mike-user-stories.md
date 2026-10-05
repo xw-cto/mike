@@ -171,10 +171,10 @@ Evidence: [agent-harness/agent_harness/settings.py:554](https://github.com/excal
 Acceptance: one picker per vendor; with no account named it is disabled and reads "unmeasured: <reason>"; no value of a secret reaches the page.
 Verdict: CHANGE: per vendor from config, not four fixed harness rows.
 
-**MS-032** As the human (Tig today), I want lane-PE seats minted only by me, so that an expensive seat is never spawned by an agent or the loop.
+**MS-032** As the human (Tig today), I want a lane-PE minted by me or by the loop only when that role's fill-missing setting is on, and turning it on to ask me first, so that an expensive seat is never spawned without my word.
 Evidence: [agent-harness/briefs/factory-pe.md:13](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/briefs/factory-pe.md#L13), `H/AGENTS.md:145`, `D/rules.mjs:1543`. was: US-46, OS-08.
-Acceptance: across a week of ticks, fill-missing, Hard Reboot and Arthur's verbs mint 0 lane-PE seats; a seat-token mint of a lane-PE is a refused record.
-Verdict: CHANGE: the `fill_missing_lane_pes` setting (seeded on in factory) is not re-created (`mike.md` 2).
+Acceptance: with the setting off, a week of ticks, Hard Reboot and Arthur's verbs mint 0 lane-PE seats; turning it on shows the confirm naming the mints and the spend; a seat-token mint of a lane-PE is a refused record; every lane-PE mint is wait-only.
+Verdict: CHANGE: the setting stays, off by default, human-only, with the confirm (`mike.md` 2, decision 12).
 
 **MS-033** As a worker (Artificer), I want mint and restart withheld while any actuation for me is pending, so that my session is not restarted twice and my first steer not sent twice.
 Evidence: [agent-harness/agent_harness/seat_actuator.py:318](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/seat_actuator.py#L318), `AH/seat_actuator.py:384`. was: US-47.
