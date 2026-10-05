@@ -228,7 +228,7 @@ Each is accidental complexity or a defect on factory `main`, with the evidence.
 
 ## 11. Open decisions for the human
 
-Each with a recommendation. Decisions 1 to 6 are factory#1336 section 7 and are repeated here because Mike's cut depends on them.
+Each with a recommendation. Decisions 1 to 6 are factory#1336 section 7 and are repeated here because Mike's cut depends on them. A decided item says so and is closed.
 
 1. Arthur each tick, or on each board change and each newly idle seat. Recommend: board change or idle seat.
 2. Priority rows are lanes, or free text. Recommend: lanes.
@@ -236,14 +236,15 @@ Each with a recommendation. Decisions 1 to 6 are factory#1336 section 7 and are 
 4. Mint cost is unmeasured. Recommend: measure 5 wait-only mints for 1 hour before the pool relies on remints.
 5. conflict-steer and copilot-findings: keep as wakes until the planner is gone, then route each as a send-back. Recommend that.
 6. The one priorities list is per instance, not per project. Lanes may belong to any project. Recommend per instance: the human has one attention.
-7. The seat's run-kind field is renamed from `harness` to `runtime`. Recommend yes; it is one config key and the system's name is now Mike.
-8. The priorities list replaces the word direction everywhere, including the API's `direction` command, at the next major. Recommend yes, at the major bump #1 already needs.
+7. **Decided, Tig, 2026-10-05: yes.** The system is Mike, not the harness, and the seat's run-kind field is renamed from `harness` to `runtime`.
+8. **Decided, Tig, 2026-10-05: yes.** The priorities list replaces the word direction everywhere, including the API's `direction` command, at the major bump #1 already needs.
 9. Shipped default names stay Arthurian (Arthur, K, Artificer, Warden). Recommend yes; an instance renames.
 10. Which vendor the budget rule in factory#1501 means by "Groq": the call notes say Groq; the seats run xAI Grok. Needs the human's word.
 11. Standing names or pool slots. Today every seat is a named row in `seats.yaml` (13 standing). Recommend: the pool is a cap and a list of names in config; Mike mints a name when the pool is below target and kills one only when stale or at the cap (factory#1336 section 1, point 6).
 12. Does the lane-PE role exist in Mike. factory#1501 names one PE per lane; factory#1755 measured the cost of a mint that was not wait-only. Recommend: keep the role, human-minted only, wait-only, no ladder.
 13. Two orchestrator seats (Arthur, K) or one. The control-versus-noticing split is documented on factory; factory#1336 gives Arthur the judgment. Recommend: keep two for the first cut, measure K's follow-ups for one week, then decide.
 14. Does SEV1 (Urgent) preempt an open assignment. Its steer class on factory is `interrupt`, which steers a busy seat across work, and factory#1336 forbids that. Recommend: SEV1 sorts first and takes the next idle seat; it never preempts. The human may Stop a seat by hand.
+15. **Decided, Tig, 2026-10-05: yes.** Stand-down and resume, the hold words, the PE ladder and its rungs, and `retarget` retire (section 8 table; lexicon section 2).
 
 ## 12. Done when
 

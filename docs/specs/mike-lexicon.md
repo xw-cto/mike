@@ -374,7 +374,7 @@ Owner: [`mike.md` 2](mike.md#2-roles). The human's own portal session (Excaliwir
 
 ## 4. Questions for the human
 
-Each CHALLENGE row, plus the mike.md section 11 decisions this file depends on. Recommendations match mike.md 11.
+Each CHALLENGE row, plus the mike.md section 11 decisions this file depends on. Recommendations match mike.md 11. A decided question says so.
 
 1. **Standing names or pool slots?** (Standing seat, Fill-missing, Seat cap.) Factory has 13 standing rows; 100 workers would be 100 `seats.yaml` rows.
    Recommend (decision 11): the pool is a cap and a list of names in config; Mike mints a name below target and kills one only when stale or at the cap.
@@ -395,8 +395,10 @@ Each CHALLENGE row, plus the mike.md section 11 decisions this file depends on. 
 9. **Copilot-findings: keep?** (Copilot-findings.) A busy owner yields to an idle worker, the same cross-work steer.
    Recommend (decision 5): same as Q8.
 10. **Rename the seat field `harness` to `runtime`?** (harness seat field.)
-    Recommend (decision 7): yes; one config key.
+    Decided, Tig, 2026-10-05: yes (decision 7).
 11. **Replace `direction` everywhere, the API command included?** (Direction.)
-    Recommend (decision 8): yes, at the major bump #1 already needs.
+    Decided, Tig, 2026-10-05: yes, at the major bump #1 already needs (decision 8).
 12. **Accept the new words this file proposes beyond mike.md 8:** activity (Live map), vendor account (Harness account), project list (Program)?
     Recommend: accept; each lands with its schema in one change (rule 8).
+13. **Retire stand-down, resume, the hold words, the host ladder, rung, and retarget?**
+    Decided, Tig, 2026-10-05: yes (decision 15). The RETIRE rows for them in section 2 are closed.
