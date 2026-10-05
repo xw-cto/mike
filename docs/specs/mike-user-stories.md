@@ -10,89 +10,89 @@
 
 ### 1.1 Observe the fleet
 
-**MS-001** As the human (Tig today), I want one table of every seat with its name and role, so that I see who exists without reading config files.
+**MS-001** As a human (Tig today), I want one table of every seat with its name and role, so that I see who exists without reading config files.
 Evidence: [agent-harness/dashboard/app.js:1646](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1646), `AH/api.py:2346`. was: US-01.
 Acceptance: row count equals the configured role seats plus the minted pool names; order is arbiter, TPM, lane-PEs, workers, reviewers; each row reads "Name - Role".
 Verdict: CHANGE: rows come from role config and the pool (`mike.md` 3.1, decision 11), not 13 standing names in `seats.yaml`.
 
-**MS-002** As the human (Tig today), I want each seat's liveness as one of four words with the reason on hover, identical for every runtime, so that "no session" and "session not responding" never look alike.
+**MS-002** As a human (Tig today), I want each seat's liveness as one of four words with the reason on hover, identical for every runtime, so that "no session" and "session not responding" never look alike.
 Evidence: [agent-harness/dashboard/rules.mjs:878](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L878), `AH/liveness.py:1`, `lex:257`. was: US-02, OS-47.
 Acceptance: for cursor-cloud, claude-cloud and grok-tmux seats the word is one of `not-minted`, `responding`, `not-responding`, `unmeasured`; every non-responding word has a non-empty reason; one function computes it (test).
 Verdict: KEEP.
 
-**MS-003** As the human (Tig today), I want the liveness cell to open the vendor session when a seat is minted, so that I can watch it in one click.
+**MS-003** As a human (Tig today), I want the liveness cell to open the vendor session when a seat is minted, so that I can watch it in one click.
 Evidence: [agent-harness/dashboard/rules.mjs:898](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L898), `D/app.js:1677`. was: US-03.
 Acceptance: a link exists if and only if the word is `responding` or `not-responding` and the URL is http(s).
 Verdict: KEEP.
 
-**MS-004** As the human (Tig today), I want each seat's assignment as a linked `owner/repo#N` with its title, or idle, so that I see what each seat is on and in which project.
+**MS-004** As a human (Tig today), I want each seat's assignment as a linked `owner/repo#N` with its title, or idle, so that I see what each seat is on and in which project.
 Evidence: [agent-harness/dashboard/rules.mjs:840](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L840), `AH/api.py:1996`. was: US-04.
 Acceptance: the cell matches the `seat:<name>` label on GitHub for 100% of rows in a 20-row sample; a pull request links to `/pull/N`.
 Verdict: CHANGE: the label is the truth and the store a cache (`mike.md` 3.1); the project is named on the cell.
 
-**MS-005** As the human (Tig today), I want each seat's last confirmed steer, clipped, with the full text on hover, so that I know what it was last told.
+**MS-005** As a human (Tig today), I want each seat's last confirmed steer, clipped, with the full text on hover, so that I know what it was last told.
 Evidence: [agent-harness/dashboard/app.js:1691](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1691). was: US-05.
 Acceptance: at most 40 characters shown; the full prompt is in the title when longer.
 Verdict: KEEP.
 
-**MS-006** As the human (Tig today), I want an open page to update by itself when state changes, so that I never reload.
+**MS-006** As a human (Tig today), I want an open page to update by itself when state changes, so that I never reload.
 Evidence: [agent-harness/dashboard/app.js:2685](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2685), `spec:51`. was: US-06.
 Acceptance: a store change reaches an open page in under 2 s plus network time.
 Verdict: KEEP.
 
-**MS-007** As the human (Tig today), I want a seat page with liveness, last mint, last steer, pending steer, and the stored session log, so that I can diagnose one seat.
+**MS-007** As a human (Tig today), I want a seat page with liveness, last mint, last steer, pending steer, and the stored session log, so that I can diagnose one seat.
 Evidence: [agent-harness/dashboard/app.js:2502](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2502), `AH/api.py:2166`. was: US-08.
 Acceptance: `/sessions/<seat>` shows all 5 blocks; a missing log reads `unmeasured`.
 Verdict: KEEP.
 
-**MS-008** As Arthur (arbiter), I want the seat list, verbs, assignments and Health over the same API with my seat token, so that my decisions use the human's view.
+**MS-008** As Arthur (arbiter), I want the seat list, verbs, assignments and Health over the same API with my seat token, so that my decisions use a human's view.
 Evidence: [agent-harness/dashboard/rules.mjs:7](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L7), `AH/api.py:3058`, `spec:13`. was: US-13.
 Acceptance: the sessions read with a seat token returns rows byte-identical to the rows the page draws.
 Verdict: KEEP.
 
-**MS-009** As the human (Tig today), I want each row to name the seat's runtime and host, so that I know where a seat runs without expecting it to carry a control-plane key.
+**MS-009** As a human (Tig today), I want each row to name the seat's runtime and host, so that I know where a seat runs without expecting it to carry a control-plane key.
 Evidence: [agent-harness/agent_harness/api.py:2210](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L2210). was: US-14.
 Acceptance: every row shows a runtime from the config list and a host or `cloud`; 0 rows carry the per-seat "acts through the control plane" text.
 Verdict: CHANGE: every seat acts through the control plane (`mike.md` 4), so the special-case marker goes.
 
 ### 1.2 Steer and assign
 
-**MS-010** As the human (Tig today), I want to type a steer on a seat's page and send it, so that I can redirect one seat fast.
+**MS-010** As a human (Tig today), I want to type a steer on a seat's page and send it, so that I can redirect one seat fast.
 Evidence: [agent-harness/dashboard/app.js:2513](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2513). was: US-15.
 Acceptance: one POST `{verb:steer, seats:[name], prompt}`; the button is disabled unless the row's `verbs` lists steer; the answer names confirmed or not confirmed.
 Verdict: KEEP.
 
-**MS-011** As the human (Tig today), I want to steer several checked seats at once with one prompt and an optional assignment, so that I can redirect a group.
+**MS-011** As a human (Tig today), I want to steer several checked seats at once with one prompt and an optional assignment, so that I can redirect a group.
 Evidence: [agent-harness/dashboard/app.js:1377](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1377), `D/app.js:1573`. was: US-16.
 Acceptance: one POST with `seats` equal to every checked name; refused before sending when prompt and assignment are both empty.
 Verdict: KEEP.
 
-**MS-012** As the human (Tig today), I want to set a seat's assignment (`owner/repo#N`) while minting, steering or restarting, and clear it with `idle`, so that I own the durable assignment.
+**MS-012** As a human (Tig today), I want to set a seat's assignment (`owner/repo#N`) while minting, steering or restarting, and clear it with `idle`, so that I own the durable assignment.
 Evidence: [agent-harness/dashboard/verbs.mjs:106](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L106), `D/app.js:1582`. was: US-17.
 Acceptance: after a save the `seat:<name>` label is on that issue within one tick; empty input changes nothing; `idle` removes the label.
 Verdict: CHANGE: the write is the label in the named project, recorded first.
 
-**MS-013** As the human (Tig today), I want a pending steer shown apart from the last confirmed one, with its age and why it waits, so that I know why a steer has not landed.
+**MS-013** As a human (Tig today), I want a pending steer shown apart from the last confirmed one, with its age and why it waits, so that I know why a steer has not landed.
 Evidence: [agent-harness/dashboard/rules.mjs:914](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L914), `D/app.js:2573`, `AH/api.py:2882`. was: US-18, US-66.
 Acceptance: with the loop Paused and a steer pending, the cell reads "pending, not delivered: Paused, <age>" and a second steer to that seat is refused.
 Verdict: CHANGE: at most one pending steer per seat (`mike.md` 3.3.5) with a reason, replacing the separate "Assignments untouched" finding.
 
-**MS-014** As the human (Tig today), I want Stop to set a seat idle and keep its session, and only me or Arthur to undo it, so that the loop leaves it alone.
+**MS-014** As a human (Tig today), I want Stop to set a seat idle and keep its session, and only me or Arthur to undo it, so that the loop leaves it alone.
 Evidence: [agent-harness/dashboard/verbs.mjs:66](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L66), `H/seats.yaml:70`, `lex:239`. was: US-19.
-Acceptance: after Stop the cell reads "stopped"; 0 loop steer records target the seat until a record by the human or Arthur clears Stop.
-Verdict: CHANGE: factory clears Stop on any human steer; Mike lets the human or Arthur clear it, nothing else (`mike.md` 3.3.8).
+Acceptance: after Stop the cell reads "stopped"; 0 loop steer records target the seat until a record by a human or Arthur clears Stop.
+Verdict: CHANGE: factory clears Stop on any human steer; Mike lets a human or Arthur clear it, nothing else (`mike.md` 3.3.8).
 
-**MS-015** As the human (Tig today), I want an ordered priorities list of at most 3 lanes that I can add to, edit, reorder by tap or drag, and delete from, so that I set what the fleet works on from phone or desk.
+**MS-015** As a human (Tig today), I want an ordered priorities list of at most 3 lanes that I can add to, edit, reorder by tap or drag, and delete from, so that I set what the fleet works on from phone or desk.
 Evidence: [agent-harness/dashboard/app.js:2143](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2143), `AH/__main__.py:4642`, `D/rules.mjs:1198`. was: US-20, OS-22.
 Acceptance: each action is one POST and one config-store version; a 4th row, an unknown lane or a duplicate lane is refused; up and down work without drag.
 Verdict: CHANGE: priorities list, not direction; 3 rows with a share each (`mike.md` 3.1); the API's `direction` command is renamed at the next major (decision 8).
 
-**MS-016** As the human (Tig today), I want the lane picker to offer only configured lanes not already listed, and a flag on a row whose lane is not configured, so that the list cannot contain a typo.
+**MS-016** As a human (Tig today), I want the lane picker to offer only configured lanes not already listed, and a flag on a row whose lane is not configured, so that the list cannot contain a typo.
 Evidence: [agent-harness/dashboard/rules.mjs:1227](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1227), `D/app.js:2047`. was: US-22.
 Acceptance: the picker excludes listed lanes, compared case-folded; an unknown lane row shows "not a lane: edit this row and pick one".
 Verdict: KEEP.
 
-**MS-017** As the human (Tig today), I want the priorities page to say when it cannot read the store, so that an unreadable store does not look empty.
+**MS-017** As a human (Tig today), I want the priorities page to say when it cannot read the store, so that an unreadable store does not look empty.
 Evidence: [agent-harness/dashboard/rules.mjs:558](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L558), `AH/api.py:3825`. was: US-23.
 Acceptance: with the store unreadable the page reads "unmeasured: <reason>", a save is refused, and every worker steer is refused.
 Verdict: CHANGE: no seed file view; shipped defaults and instance config are separate files (`mike.md` 5, section 10.16).
@@ -102,76 +102,76 @@ Evidence: [agent-harness/agent_harness/api.py:4686](https://github.com/excaliwir
 Acceptance: an allowed call answers with `actor=<seat>`; a denied one answers 403 and writes a record with `caller=<seat>`, outcome refused.
 Verdict: CHANGE: every gate in `mike.md` 3.3 applies to Arthur's steers as to the loop's.
 
-**MS-019** As the loop, I want to steer only issues and pull requests assigned to `gh_user`, and the human to confirm any change to it, so that a wrong login cannot start spending.
+**MS-019** As the loop, I want to steer only issues and pull requests assigned to `gh_user`, and a human to confirm any change to it, so that a wrong login cannot start spending.
 Evidence: [agent-harness/agent_harness/harness_gh_user.py:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/harness_gh_user.py#L1), `AH/settings.py:365`, `D/rules.mjs:1543`. was: US-25, OS-27.
 Acceptance: changing `gh_user` opens a confirm; with it empty or unmeasured, 0 steers apply and each is a refused record.
 Verdict: KEEP. Renamed from harness-gh-user.
 
 ### 1.3 Review and merge
 
-**MS-020** As the human (Tig today), I want ready pull requests in merge conflict listed with their author seat, so that each becomes a send-back.
+**MS-020** As a human (Tig today), I want ready pull requests in merge conflict listed with their author seat, so that each becomes a send-back.
 Evidence: [agent-harness/agent_harness/attention.py:136](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/attention.py#L136). was: US-27.
 Acceptance: one row per conflicting ready pull request with `owner/repo#N` and the author seat, linked.
 Verdict: CHANGE: shown on the review surface (MS-128), routed as a send-back (decision 5).
 
-**MS-021** As the human (Tig today), I want a reviewer whose assignment is a pull request to link to that pull request, so that I open the review in one click.
+**MS-021** As a human (Tig today), I want a reviewer whose assignment is a pull request to link to that pull request, so that I open the review in one click.
 Evidence: [agent-harness/agent_harness/api.py:2024](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L2024). was: US-28.
 Acceptance: the assignment URL ends in `/pull/N` when the item is a pull request.
 Verdict: KEEP.
 
-**MS-022** As the human (Tig today), I want to point a reviewer at a pull request by typing it as the reviewer's assignment with a steer, so that a review starts now.
+**MS-022** As a human (Tig today), I want to point a reviewer at a pull request by typing it as the reviewer's assignment with a steer, so that a review starts now.
 Evidence: [agent-harness/dashboard/verbs.mjs:109](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L109). was: US-29.
 Acceptance: the reviewer row shows `#N` on the next sessions frame; the steer is refused when the reviewer wrote the pull request or has another without a verdict.
 Verdict: CHANGE: reviewer independence and one-pull-request-per-reviewer are gates (`mike.md` 3.3.9, 3.4).
 
 ### 1.4 Manage seats
 
-**MS-023** As the human (Tig today), I want to mint a seat that has no session, optionally with an assignment, so that I bring it into being.
+**MS-023** As a human (Tig today), I want to mint a seat that has no session, optionally with an assignment, so that I bring it into being.
 Evidence: [agent-harness/dashboard/verbs.mjs:62](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L62), `D/app.js:1587`. was: US-32.
 Acceptance: enabled only when every selected row lists mint; one decision record per seat before the vendor call.
 Verdict: KEEP.
 
-**MS-024** As the human (Tig today), I want to restart a seat after one confirm, keeping its assignment, so that I replace a stuck session.
+**MS-024** As a human (Tig today), I want to restart a seat after one confirm, keeping its assignment, so that I replace a stuck session.
 Evidence: [agent-harness/dashboard/verbs.mjs:63](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L63), `D/app.js:1551`. was: US-33.
 Acceptance: body carries `confirm:"restart"`; the label is unchanged afterwards; one restart record exists.
 Verdict: KEEP.
 
-**MS-025** As the human (Tig today), I want to archive any seat's session after one confirm, keeping the name, so that I end it on any runtime.
+**MS-025** As a human (Tig today), I want to archive any seat's session after one confirm, keeping the name, so that I end it on any runtime.
 Evidence: [agent-harness/dashboard/verbs.mjs:65](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L65), `AH/seat_actuator.py:382`. was: US-34.
 Acceptance: for each configured runtime, archive leaves liveness `not-minted` on the next frame and one archive record.
 Verdict: CHANGE: factory archives cursor-cloud and claude-tmux only; Mike archives every runtime (`mike.md` 4).
 
-**MS-026** As the human (Tig today), I want to check rows, or all rows, and run one verb on all of them, so that I act on a group.
+**MS-026** As a human (Tig today), I want to check rows, or all rows, and run one verb on all of them, so that I act on a group.
 Evidence: [agent-harness/dashboard/app.js:1562](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1562), `D/app.js:1711`. was: US-35.
 Acceptance: the bar reads "N seats selected"; a verb is enabled only if every checked row lists it.
 Verdict: KEEP.
 
-**MS-027** As the human (Tig today), I want each verb button to say what it does and why it is off, in the server's words, so that I do not guess and the page cannot drift.
+**MS-027** As a human (Tig today), I want each verb button to say what it does and why it is off, in the server's words, so that I do not guess and the page cannot drift.
 Evidence: [agent-harness/dashboard/verbs.mjs:71](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L71), `AH/seat_actuator.py:353`. was: US-37.
 Acceptance: 0 why-off strings in the page source; each tooltip equals the server's field for that row and verb.
 Verdict: CHANGE: factory's `verbReason` re-derives the rule in prose and already disagrees with the server (section 10.21).
 
-**MS-028** As the human (Tig today), I want verbs offered only when the control plane lists them for the row, so that I cannot mint a responding seat.
+**MS-028** As a human (Tig today), I want verbs offered only when the control plane lists them for the row, so that I cannot mint a responding seat.
 Evidence: [agent-harness/dashboard/verbs.mjs:35](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L35), `spec:89`. was: US-38.
 Acceptance: no button is enabled for a verb a selected row's `verbs` lacks; the server refuses the verb anyway with a record.
 Verdict: KEEP.
 
-**MS-029** As the human (Tig today), I want each command I send shown as a notification that moves from sent to done, started or refused with the why, so that I know what happened without reading logs.
+**MS-029** As a human (Tig today), I want each command I send shown as a notification that moves from sent to done, started or refused with the why, so that I know what happened without reading logs.
 Evidence: [agent-harness/dashboard/rules.mjs:1032](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1032), `D/app.js:1253`. was: US-43.
 Acceptance: a notification appears at click time carrying the job id (MS-137) and is updated by the answer; an identical pending command is not re-sent.
 Verdict: CHANGE: keyed by job id, not by a 30-second wait.
 
-**MS-030** As the human (Tig today), I want to change a role's vendor, runtime and model and choose remint now, when idle, or at the next reboot, so that I control when the money is spent.
+**MS-030** As a human (Tig today), I want to change a role's vendor, runtime and model and choose remint now, when idle, or at the next reboot, so that I control when the money is spent.
 Evidence: [agent-harness/dashboard/app.js:1034](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1034), `AH/remint.py:1`, `AH/api.py:5146`. was: US-44, US-30, OS-14.
 Acceptance: the dialog lists exactly the seats of that role; only those seats remint; each keeps its old values until its trigger; the pending rows are written before the settings version.
 Verdict: CHANGE: the field is `runtime`, not `harness` (decision 7).
 
-**MS-031** As the human (Tig today), I want to pick which account each vendor bills, by secret name, so that a seat runs on the right subscription.
+**MS-031** As a human (Tig today), I want to pick which account each vendor bills, by secret name, so that a seat runs on the right subscription.
 Evidence: [agent-harness/agent_harness/settings.py:554](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/settings.py#L554), `D/rules.mjs:1415`. was: US-45.
 Acceptance: one picker per vendor; with no account named it is disabled and reads "unmeasured: <reason>"; no value of a secret reaches the page.
 Verdict: CHANGE: per vendor from config, not four fixed harness rows.
 
-**MS-032** As the human (Tig today), I want a lane-PE minted by me or by the loop only when that role's fill-missing setting is on, and turning it on to ask me first, so that an expensive seat is never spawned without my word.
+**MS-032** As a human (Tig today), I want a lane-PE minted by me or by the loop only when that role's fill-missing setting is on, and turning it on to ask me first, so that an expensive seat is never spawned without my word.
 Evidence: [agent-harness/briefs/factory-pe.md:13](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/briefs/factory-pe.md#L13), `H/AGENTS.md:145`, `D/rules.mjs:1543`. was: US-46, OS-08.
 Acceptance: with the setting off, a week of ticks, Hard Reboot and Arthur's verbs mint 0 lane-PE seats; turning it on shows the confirm naming the mints and the spend; a seat-token mint of a lane-PE is a refused record; every lane-PE mint is wait-only.
 Verdict: CHANGE: the setting stays, off by default, human-only, with the confirm (`mike.md` 2, decision 12).
@@ -188,42 +188,42 @@ Verdict: KEEP.
 
 ### 1.5 Configure
 
-**MS-035** As the human (Tig today), I want one Running/Paused switch for the loop that acts on click, so that I can stop all automated action at once.
+**MS-035** As a human (Tig today), I want one Running/Paused switch for the loop that acts on click, so that I can stop all automated action at once.
 Evidence: [agent-harness/dashboard/app.js:956](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L956), `H/retarget-loop.sh:38`, `lex:83`. was: US-49, OS-16.
 Acceptance: while Paused a tick records 0 seat actions; a repeat click answers "already Paused".
 Verdict: KEEP.
 
-**MS-036** As the human (Tig today), I want loop mode live or dry-run, with a confirm only when going live, so that dry-run is safe and live is deliberate.
+**MS-036** As a human (Tig today), I want loop mode live or dry-run, with a confirm only when going live, so that dry-run is safe and live is deliberate.
 Evidence: [agent-harness/dashboard/rules.mjs:1543](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1543), `lex:349`, `AH/__main__.py:748`. was: US-50, OS-16, OS-17.
 Acceptance: switching to live opens a confirm, to dry-run does not; in dry-run every verb writes a record and sends 0 bytes to any vendor or GitHub.
 Verdict: KEEP.
 
-**MS-037** As the human (Tig today), I want the loop cadence settable from 1 to 60 minutes, so that I trade responsiveness for cost.
+**MS-037** As a human (Tig today), I want the loop cadence settable from 1 to 60 minutes, so that I trade responsiveness for cost.
 Evidence: [agent-harness/agent_harness/settings.py:409](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/settings.py#L409). was: US-51.
 Acceptance: 0 and 61 are refused by the server; a non-integer is refused on the page.
 Verdict: KEEP.
 
-**MS-038** As the human (Tig today), I want every setting shown with its value, where it came from, and who changed it last and when, so that I can trust and audit settings.
+**MS-038** As a human (Tig today), I want every setting shown with its value, where it came from, and who changed it last and when, so that I can trust and audit settings.
 Evidence: [agent-harness/dashboard/app.js:1141](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1141). was: US-52.
 Acceptance: 4 columns: Setting, Value, From (shipped default or instance), Changed by "email, ISO time".
 Verdict: KEEP.
 
-**MS-039** As the human (Tig today), I want a value checked against the store's schema before it saves, so that a typo fails on the page and not in the loop.
+**MS-039** As a human (Tig today), I want a value checked against the store's schema before it saves, so that a typo fails on the page and not in the loop.
 Evidence: [agent-harness/dashboard/rules.mjs:1517](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1517). was: US-53.
 Acceptance: invalid input shows "<label> must be <type>" and writes no version; the page and the server use one schema file.
 Verdict: KEEP.
 
-**MS-040** As the human (Tig today), I want a View Settings dump of every effective value with its source that I can copy, so that I can paste the config into an issue.
+**MS-040** As a human (Tig today), I want a View Settings dump of every effective value with its source that I can copy, so that I can paste the config into an issue.
 Evidence: [agent-harness/dashboard/app.js:892](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L892), `AH/settings.py:1834`. was: US-54.
 Acceptance: JSON with `{value, source}` per key; a secret appears by name only; Copy says "Copied."
 Verdict: KEEP.
 
-**MS-041** As the human (Tig today), I want what I am typing kept when a frame arrives, so that live updates do not eat my edit.
+**MS-041** As a human (Tig today), I want what I am typing kept when a frame arrives, so that live updates do not eat my edit.
 Evidence: [agent-harness/dashboard/app.js:1202](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1202), `D/app.js:1749`. was: US-56.
 Acceptance: a field with unsaved text keeps its text and focus across 10 consecutive frames.
 Verdict: CHANGE: the page patches changed rows instead of rebuilding the tab per frame (workaround 14).
 
-**MS-042** As the human (Tig today), I want the page to say when the config store cannot be read, so that I know nothing is steered.
+**MS-042** As a human (Tig today), I want the page to say when the config store cannot be read, so that I know nothing is steered.
 Evidence: [agent-harness/dashboard/app.js:1170](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1170), `lex:343`. was: US-57.
 Acceptance: the lead line reads "The config store is unmeasured: <reason>. Nothing is steered until it reads." and the loop records 0 steers.
 Verdict: KEEP.
@@ -235,103 +235,103 @@ Verdict: CHANGE: the key set shrinks to Mike's (loop window, read reserve, fill-
 
 ### 1.6 Diagnose and health
 
-**MS-044** As the human (Tig today), I want Health as the first tab with the snapshot age ticking, so that I see at a glance whether the data is fresh.
+**MS-044** As a human (Tig today), I want Health as the first tab with the snapshot age ticking, so that I see at a glance whether the data is fresh.
 Evidence: [agent-harness/dashboard/app.js:606](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L606), `D/rules.mjs:1339`. was: US-59.
 Acceptance: "updated Ns ago" changes every second from an ISO `snapshot_ts`; with none it reads "update time not recorded".
 Verdict: KEEP.
 
-**MS-045** As the human (Tig today), I want a Needs attention block that groups every fault by kind, worst first, with counts and links, so that I triage in one read.
+**MS-045** As a human (Tig today), I want a Needs attention block that groups every fault by kind, worst first, with counts and links, so that I triage in one read.
 Evidence: [agent-harness/dashboard/app.js:640](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L640), `AH/attention.py:254`. was: US-60.
 Acceptance: the summary reads "N not ok, M unmeasured" or "Nothing needs attention."; not-ok groups precede unmeasured.
 Verdict: KEEP.
 
-**MS-046** As the human (Tig today), I want loop rows for heartbeat, mode, Running/Paused and timer, with the heartbeat stamped only by the loop, so that a stopped loop never reads as a Paused or healthy one.
+**MS-046** As a human (Tig today), I want loop rows for heartbeat, mode, Running/Paused and timer, with the heartbeat stamped only by the loop, so that a stopped loop never reads as a Paused or healthy one.
 Evidence: [agent-harness/dashboard/rules.mjs:635](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L635), `AH/__main__.py:523`, `H/retarget-loop.sh:28`. was: US-61, OS-43.
 Acceptance: a hand run of a verb leaves the heartbeat unchanged; timer not active is marked fault; Paused is marked paused.
 Verdict: CHANGE: no row for a poke heartbeat or a tick verb list; one loop, one heartbeat.
 
-**MS-047** As the human (Tig today), I want the header to read "Loop Paused: <reason>" or "Loop timer not active" on every tab, so that I never miss a stopped loop.
+**MS-047** As a human (Tig today), I want the header to read "Loop Paused: <reason>" or "Loop timer not active" on every tab, so that I never miss a stopped loop.
 Evidence: [agent-harness/dashboard/rules.mjs:969](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L969). was: US-62.
 Acceptance: the line is on all tabs while Paused and absent while Running with the timer active.
 Verdict: KEEP.
 
-**MS-048** As the human (Tig today), I want a Hosts table with reachability, seat count, check-in age, checkout commit and pending actuations, so that I see which seat host is down.
+**MS-048** As a human (Tig today), I want a Hosts table with reachability, seat count, check-in age, checkout commit and pending actuations, so that I see which seat host is down.
 Evidence: [agent-harness/dashboard/rules.mjs:775](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L775). was: US-63.
 Acceptance: a host with a stale check-in is red with a note row; a host with 0 seats that never checked in is not in the payload.
 Verdict: CHANGE: the server omits never-used hosts; the page filters nothing (workaround 8).
 
-**MS-049** As the human (Tig today), I want the commit this control plane serves and how far the loop checkout is behind `main`, linked, so that I know whether a merge is live.
+**MS-049** As a human (Tig today), I want the commit this control plane serves and how far the loop checkout is behind `main`, linked, so that I know whether a merge is live.
 Evidence: [agent-harness/dashboard/rules.mjs:577](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L577). was: US-64.
 Acceptance: "serving <branch · sha8>, started <ISO time>"; the loop checkout item says "N behind".
 Verdict: KEEP.
 
-**MS-050** As the human (Tig today), I want steers not confirmed counted per seat with a link to the matching log lines, so that I see lost deliveries.
+**MS-050** As a human (Tig today), I want steers not confirmed counted per seat with a link to the matching log lines, so that I see lost deliveries.
 Evidence: [agent-harness/agent_harness/attention.py:271](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/attention.py#L271), `D/app.js:708`. was: US-65.
 Acceptance: the count equals the not-confirmed steer records in the window, for every runtime; "Show in log" opens a log view with exactly those lines.
 Verdict: CHANGE: one delivery result for every runtime, not tmux pastes only.
 
-**MS-051** As the human (Tig today), I want a mint anomaly named from the mint records, so that runaway minting is visible.
+**MS-051** As a human (Tig today), I want a mint anomaly named from the mint records, so that runaway minting is visible.
 Evidence: [agent-harness/agent_harness/attention.py:119](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/attention.py#L119), `AH/api.py:2507`, `AH/api.py:2726`. was: US-67.
 Acceptance: Health shows "no seat minted twice for one issue" as ok or names each seat and issue; a vendor session with no mint record is one red item.
 Verdict: CHANGE: one check over mint records replaces six detectors for past defects (workaround 11).
 
-**MS-052** As the human (Tig today), I want platform faults named (GitHub read budget, vendor account, store not writable, another loop on this store, runtime launcher missing on a seat host, process and tree disagree), so that I fix the platform before the fleet.
+**MS-052** As a human (Tig today), I want platform faults named (GitHub read budget, vendor account, store not writable, another loop on this store, runtime launcher missing on a seat host, process and tree disagree), so that I fix the platform before the fleet.
 Evidence: [agent-harness/agent_harness/attention.py:212](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/attention.py#L212), `AH/attention.py:133`, `AH/attention.py:240`. was: US-68.
 Acceptance: each fault appears as its own labelled group when not ok and clears on the next snapshot after the fault clears.
 Verdict: CHANGE: the account check is per vendor, not Cursor only.
 
-**MS-053** As the human (Tig today), I want a verb that refused N times in a row named, with each refusal's reason in its record, so that a broken verb shows and one cause is not buried under hundreds of rows.
+**MS-053** As a human (Tig today), I want a verb that refused N times in a row named, with each refusal's reason in its record, so that a broken verb shows and one cause is not buried under hundreds of rows.
 Evidence: [agent-harness/agent_harness/api.py:606](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L606), `briefs/infrastructure-pe.md:48`. was: US-69, OS-52.
 Acceptance: "<verb> refusing (N in a row): <why>" appears at the threshold inside the window; a later applied record clears it.
 Verdict: CHANGE: refusal streaks only; Mike has no holds (`mike.md` section 10.1).
 
-**MS-054** As the human (Tig today), I want signed out, not allowed, unreachable and wrong version each said differently, so that a refusal never looks like a dead control plane.
+**MS-054** As a human (Tig today), I want signed out, not allowed, unreachable and wrong version each said differently, so that a refusal never looks like a dead control plane.
 Evidence: [agent-harness/dashboard/client.mjs:108](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/client.mjs#L108), `D/rules.mjs:31`. was: US-74.
 Acceptance: four distinct texts; 401 and 403 do not retry; other failures retry every 3 s.
 Verdict: KEEP.
 
-**MS-055** As the human (Tig today), I want the live stream to recover by itself after sleep, a proxy drop or a control plane restart, so that an open tab stays true.
+**MS-055** As a human (Tig today), I want the live stream to recover by itself after sleep, a proxy drop or a control plane restart, so that an open tab stays true.
 Evidence: [agent-harness/dashboard/client.mjs:280](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/client.mjs#L280), `D/app.js:2680`. was: US-75.
 Acceptance: 45 s with no bytes, or a return to the tab, opens a new stream that resends every opening frame.
 Verdict: KEEP.
 
-**MS-056** As the human (Tig today), I want Health built from a snapshot the tick wrote, and a stale snapshot said on open pages, so that polling the page costs nothing and silence never reads as healthy.
+**MS-056** As a human (Tig today), I want Health built from a snapshot the tick wrote, and a stale snapshot said on open pages, so that polling the page costs nothing and silence never reads as healthy.
 Evidence: [agent-harness/agent_harness/api.py:3995](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L3995), `spec:63`, `H/AGENTS.md:206`. was: US-76, OS-46.
 Acceptance: a Health request makes 0 vendor and 0 GitHub calls (test); within one keep-alive after the loop window passes, one frame says "health snapshot stale" and parts read `unmeasured`.
 Verdict: KEEP.
 
-**MS-057** As the human (Tig today), I want to watch a tmux seat's pane in the browser and take control to type, one human at a time, so that I can unstick it without SSH.
+**MS-057** As a human (Tig today), I want to watch a tmux seat's pane in the browser and take control to type, one human at a time, so that I can unstick it without SSH.
 Evidence: [agent-harness/dashboard/app.js:2451](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2451), `D/rules.mjs:1607`, `H/terminal.sh:2`. was: US-09, OS-51.
 Acceptance: view mode sends 0 keys; keys reach the pane only after Take control; the seat host defers steers and restarts while a human has control and runs each once after.
 Verdict: KEEP.
 
 ### 1.7 Audit records
 
-**MS-058** As the human (Tig today), I want the log under Health, filterable by level and up, component, seat, command, project and text, with the filter in the URL, so that I can share or reload a filtered view.
+**MS-058** As a human (Tig today), I want the log under Health, filterable by level and up, component, seat, command, project and text, with the filter in the URL, so that I can share or reload a filtered view.
 Evidence: [agent-harness/dashboard/app.js:1767](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1767), `D/rules.mjs:1126`. was: US-78.
 Acceptance: the URL carries `log_*` keys; Back and Forward restore the filter; Clear empties every field.
 Verdict: CHANGE: adds a project filter (`mike.md` 1.2).
 
-**MS-059** As the human (Tig today), I want a "since" log view that reads the whole window up to 2000 rows, so that a count on Health matches the lines I see.
+**MS-059** As a human (Tig today), I want a "since" log view that reads the whole window up to 2000 rows, so that a count on Health matches the lines I see.
 Evidence: [agent-harness/dashboard/rules.mjs:1151](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1151). was: US-79.
 Acceptance: a since query sends `limit=2000`; rereads come at most every 30 s, one in flight.
 Verdict: KEEP.
 
-**MS-060** As the human (Tig today), I want every dashboard command recorded with my identity and its outcome, so that I can audit who did what.
+**MS-060** As a human (Tig today), I want every dashboard command recorded with my identity and its outcome, so that I can audit who did what.
 Evidence: [agent-harness/agent_harness/api.py:4717](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L4717), `AH/api.py:4861`. was: US-80.
 Acceptance: one record per command, pending then applied, refused or cancelled, with `actor` and the job id.
 Verdict: KEEP.
 
-**MS-061** As the human (Tig today), I want every settings change stored as a new version with actor, and a history I can list, so that "who changed what" needs no pull request.
+**MS-061** As a human (Tig today), I want every settings change stored as a new version with actor, and a history I can list, so that "who changed what" needs no pull request.
 Evidence: [agent-harness/agent_harness/api.py:5131](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L5131), `AH/__main__.py:4662`, `lex:343`. was: US-81, OS-15.
 Acceptance: the answer says "saved as version N"; one log line names key, actor, from and to; `settings history` lists every version.
 Verdict: KEEP.
 
 ### 1.8 Install and recover
 
-**MS-062** As the human (Tig today), I want Hard Reboot (archive and remint every seat, restart the control plane), optionally with Reset Defaults, so that I can start the fleet clean.
+**MS-062** As a human (Tig today), I want Hard Reboot (archive and remint every seat, restart the control plane), optionally with Reset Defaults, so that I can start the fleet clean.
 Evidence: [agent-harness/dashboard/rules.mjs:1290](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1290), `AH/seat_actuator.py:31`, `lex:281`, `lex:287`. was: US-39, OS-56.
-Acceptance: one confirm; the record names the human actor; with Reset Defaults every seat ends idle and 0 `seat:` labels remain, written as one record; a seat token is refused.
+Acceptance: one confirm; the record names a human actor; with Reset Defaults every seat ends idle and 0 `seat:` labels remain, written as one record; a seat token is refused.
 Verdict: KEEP.
 
 **MS-063** As Arthur (arbiter), I want an Orchestrator Reboot to archive and remint K and me with idle assignments, so that a confused orchestrator starts fresh.
@@ -339,41 +339,41 @@ Evidence: [agent-harness/dashboard/rules.mjs:1291](https://github.com/excaliwire
 Acceptance: only the `arbiter` and `tpm` role seats are reminted; both read idle afterwards.
 Verdict: KEEP.
 
-**MS-064** As the human (Tig today), I want Fill-Missing to adopt or mint every absent pool seat and leave live ones alone, capped per window, so that gaps close in one click.
+**MS-064** As a human (Tig today), I want Fill-Missing to adopt or mint every absent pool seat and leave live ones alone, capped per window, so that gaps close in one click.
 Evidence: [agent-harness/dashboard/rules.mjs:1293](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1293), `lex:275`. was: US-41.
 Acceptance: 0 responding or unmeasured seats are reminted; at most `max_creates` per seat per `window_minutes`; the confirm states the mint count and the vendor each bills.
 Verdict: CHANGE: adopt, not claim; never a lane-PE; the cost line comes from vendor config, not fixed text.
 
-**MS-065** As the human (Tig today), I want a running fleet command shown as progress, and the server to refuse any command that collides with it, so that two commands cannot collide.
+**MS-065** As a human (Tig today), I want a running fleet command shown as progress, and the server to refuse any command that collides with it, so that two commands cannot collide.
 Evidence: [agent-harness/dashboard/rules.mjs:1005](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1005), `AH/api.py:4804`. was: US-42.
 Acceptance: "<mode>: step N of M, started by <actor>" shows to every viewer; the server answers 409 to a colliding seat verb or fleet mode.
 Verdict: CHANGE: factory's seat verbs have no server busy check, only a client lock (workaround 2).
 
-**MS-066** As the human (Tig today), I want to restart the control plane process from the page, even while Paused, so that I recover a stuck API without SSH.
+**MS-066** As a human (Tig today), I want to restart the control plane process from the page, even while Paused, so that I recover a stuck API without SSH.
 Evidence: [agent-harness/dashboard/rules.mjs:1294](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1294). was: US-55.
 Acceptance: one confirm; the stream reconnects in under 10 s; 0 seats reminted.
 Verdict: KEEP.
 
 ### 1.9 Identity and secrets
 
-**MS-067** As the human (Tig today), I want to sign in with Microsoft, renew silently, and be told when a renewal needs me, so that a long session does not just die.
+**MS-067** As a human (Tig today), I want to sign in with Microsoft, renew silently, and be told when a renewal needs me, so that a long session does not just die.
 Evidence: [agent-harness/dashboard/client.mjs:158](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/client.mjs#L158), `D/app.js:259`. was: US-77.
 Acceptance: a silent renewal shows "Your sign-in renewed silently." for 10 s; an interactive need redirects with a notice.
 Verdict: CHANGE: identity provider, base path and origins are instance config (`mike.md` 7, #1).
 
 ### 1.10 Cost
 
-**MS-068** As the human (Tig today), I want tokens per seat since its last mint and a fleet total that never counts unmeasured as zero, so that I see spend.
+**MS-068** As a human (Tig today), I want tokens per seat since its last mint and a fleet total that never counts unmeasured as zero, so that I see spend.
 Evidence: [agent-harness/dashboard/app.js:530](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L530), `D/rules.mjs:266`. was: US-10.
 Acceptance: the total reads "incomplete" with an unmeasured count when any seat is unmeasured; each bar is that seat's percent of the measured total.
 Verdict: KEEP.
 
-**MS-069** As the human (Tig today), I want each seat's context fullness, fullest first, so that I can remint a seat before it summarizes.
+**MS-069** As a human (Tig today), I want each seat's context fullness, fullest first, so that I can remint a seat before it summarizes.
 Evidence: [agent-harness/dashboard/rules.mjs:414](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L414), `D/app.js:491`. was: US-11.
 Acceptance: measured seats sorted by percent descending; "summarized" marked; unmeasured seats last with their reason.
 Verdict: KEEP.
 
-**MS-070** As the human (Tig today), I want each vendor's included pools with percent used, age and overage, so that I know when we start paying more.
+**MS-070** As a human (Tig today), I want each vendor's included pools with percent used, age and overage, so that I know when we start paying more.
 Evidence: [agent-harness/dashboard/app.js:363](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L363), `D/rules.mjs:427`, `AH/meters.py:16`. was: US-12.
 Acceptance: one row per configured pool reading "N% used, <age>" or "unmeasured, <reason>"; a pool with no gauge source is named as not shown.
 Verdict: CHANGE: pools come from vendor config, not two fixed Cursor names and a code tuple.
@@ -382,7 +382,7 @@ Verdict: CHANGE: pools come from vendor config, not two fixed Cursor names and a
 
 ### 2.1 Observe the fleet
 
-**MS-071** As a seat (any), I want to talk to the human by measurement, bad news first, with one recommendation, ordered decisions then merges then next, and cost unasked, so that the human reads one message and acts.
+**MS-071** As a seat (any), I want to talk to a human by measurement, bad news first, with one recommendation, ordered decisions then merges then next, and cost unasked, so that a human reads one message and acts.
 Evidence: [AGENTS.md:84](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/AGENTS.md#L84), `AGENTS.md:93`. was: OS 3.5.
 Acceptance: each loaded brief contains the five rules (test); a report with a cost has a number and a unit.
 Verdict: KEEP.
@@ -399,7 +399,7 @@ Evidence: [agent-harness/agent_harness/__main__.py:748](https://github.com/excal
 Acceptance: for 100% of steers the record's write time precedes the send; apply with no record id is refused.
 Verdict: KEEP.
 
-**MS-074** As the human (Tig today), I want any worker steer onto a Low issue, or one with no severity, refused for every caller, so that spare capacity is never spent on Low.
+**MS-074** As a human (Tig today), I want any worker steer onto a Low issue, or one with no severity, refused for every caller, so that spare capacity is never spent on Low.
 Evidence: [agent-harness/agent_harness/severity_floor.py:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/severity_floor.py#L1). was: OS-18.
 Acceptance: the refusal reads `severity floor: Low is never steered` with a record; an unreadable severity refuses as `unmeasured`.
 Verdict: KEEP. The severity field name is instance config (`Priority` on factory).
@@ -427,7 +427,7 @@ Verdict: KEEP.
 **MS-079** As the loop, I want a GitHub event on an issue or pull request routed to the seat its `seat:<name>` label names, so that the owner hears about a comment or review without polling.
 Evidence: [agent-harness/agent_harness/poke.py:525](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/poke.py#L525), `AH/webhook.py:1`, `H/README.md:240`. was: operator report table 1b (`poke`), OS-45.
 Acceptance: a signed webhook delivery produces one prompt of the form `[<owner>] GitHub poke (<reason>): <title>` within one tick; an unsigned delivery is refused.
-Verdict: CHANGE: signed webhook is the design; polling the human's notifications is a fallback (`mike.md` 5).
+Verdict: CHANGE: signed webhook is the design; polling a human's notifications is a fallback (`mike.md` 5).
 
 **MS-080** As K (TPM), I want to post one nudge when a ready pull request has no owner self-review on its head, so that the gate is met by the owner, not waived.
 Evidence: [agent-harness/briefs/tpm.md:55](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/briefs/tpm.md#L55). was: OS 3.2.
@@ -478,7 +478,7 @@ Evidence: [agent-harness/briefs/reviewer.md:17](https://github.com/excaliwire/fa
 Acceptance: the table has one main result and one head result per new test; a behavior finding without a failing test is not blocking.
 Verdict: KEEP.
 
-**MS-088** As a reviewer (Warden), I want my review in one fixed shape of at most 12 lines, so that the human reads it on a phone and the gate parses it.
+**MS-088** As a reviewer (Warden), I want my review in one fixed shape of at most 12 lines, so that a human reads it on a phone and the gate parses it.
 Evidence: [agent-harness/briefs/reviewer.md:27](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/briefs/reviewer.md#L27), `briefs/reviewer.md:35`, `H/tests/test_comment_limits_1741.py:1`. was: OS-33.
 Acceptance: line 1 matches the verdict pattern with a head sha; verdict is `Merge`, `Send back` or `Hold`; one line per blocking finding as `file:line, what is wrong, the fix`; one `Ran:` line; at most 12 lines outside `<details>`; non-blocking findings become issues, not comment text.
 ```
@@ -502,7 +502,7 @@ Next: <Seat> <does X>.
 ```
 Verdict: KEEP.
 
-**MS-090** As the human (Tig today), I want seat comments capped at 12 lines for a review, 20 for a pull request body, and 6 for any other comment, so that I read the fleet on a phone.
+**MS-090** As a human (Tig today), I want seat comments capped at 12 lines for a review, 20 for a pull request body, and 6 for any other comment, so that I read the fleet on a phone.
 Evidence: [AGENTS.md:104](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/AGENTS.md#L104), `H/tests/test_comment_limits_1741.py:54`. was: OS-70, OS 3.3.
 Acceptance: each loaded brief states the three limits (test); a pull request body has change, `Fixes #N` or `Advances #N`, test-first in one line, verdicts, merge order, follow-ups, and at most 20 lines.
 Verdict: KEEP.
@@ -512,7 +512,7 @@ Evidence: [agent-harness/briefs/reviewer.md:23](https://github.com/excaliwire/fa
 Acceptance: 0 commits by a reviewer seat on a development path; a bug a reviewer finds becomes 1 issue with a severity and a steer to a worker.
 Verdict: CHANGE: a push by a reviewer seat token is refused by mechanism, not only by the brief (`mike.md` 3.3.9).
 
-**MS-092** As the human (Tig today), I want every gate pinned to the head sha, so that a new commit voids self-review, CI and review.
+**MS-092** As a human (Tig today), I want every gate pinned to the head sha, so that a new commit voids self-review, CI and review.
 Evidence: [agent-harness/agent_harness/merge_gate.py:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/merge_gate.py#L1), `AH/pr_state.py:39`. was: OS 3.6.
 Acceptance: pushing one commit after a `Merge` review moves the pull request's next step back to self-review within one tick.
 Verdict: KEEP.
@@ -527,17 +527,17 @@ Evidence: [agent-harness/agent_harness/conflict_steer.py:243](https://github.com
 Acceptance: one send-back per pull request per head per cause; the prompt names the cause and says "Merge origin/main. Never rebase on a shared branch."
 Verdict: CHANGE: kept as wakes until the planner is gone, then routed as send-backs (decision 5).
 
-**MS-095** As the human (Tig today), I want Mike to request merge from the configured merger exactly when self-review, CI, ready and a `Merge` review all name the same head, so that my assignment list is my merge queue.
+**MS-095** As a human (Tig today), I want Mike to request merge from the configured merger exactly when self-review, CI, ready and a `Merge` review all name the same head, so that my assignment list is my merge queue.
 Evidence: [agent-harness/agent_harness/assign_tig.py:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/assign_tig.py#L1), `AH/merge_gate.py:30`. was: OS-38.
 Acceptance: a draft never gets a request; a pull request already assigned to the merger is not re-requested; the merger login comes from config.
 Verdict: CHANGE: request merge, not assign-tig.
 
-**MS-096** As the human (Tig today), I want Mike to have no merge verb, so that only a human merges.
+**MS-096** As a human (Tig today), I want Mike to have no merge verb, so that only a human merges.
 Evidence: [agent-harness/agent_harness/merge_gate.py:5](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/merge_gate.py#L5), `briefs/psde.md:11`. was: OS-38, OS 3.4.
 Acceptance: a test fails if any verb, route or GitHub call that merges is added.
 Verdict: KEEP.
 
-**MS-097** As the human (Tig today), I want to waive a gate with a comment and grant a reviewer with a comment, honored only from my account, so that I unblock without editing code.
+**MS-097** As a human (Tig today), I want to waive a gate with a comment and grant a reviewer with a comment, honored only from my account, so that I unblock without editing code.
 Evidence: [agent-harness/agent_harness/pr_state.py:89](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/pr_state.py#L89), `AH/merge_gate.py:44`, `H/README.md:139`. was: OS-39.
 Acceptance: a waiver or grant from any seat is ignored and recorded; an unpinned waiver expires on the next commit; each honored waiver is a record.
 ```
@@ -573,7 +573,7 @@ Evidence: [agent-harness/agent_harness/mint_standing.py:1](https://github.com/ex
 Acceptance: a pending mint or a live session for a name gives 0 new mints; an unreadable vendor listing gives 0 mints and a refused record.
 Verdict: CHANGE: the pool is a cap and a name list; a seat is killed only when stale or at the cap (decision 11).
 
-**MS-102** As the human (Tig today), I want a fleet read that names untracked, missing and duplicate vendor sessions per runtime, and an apply that adopts or archives them, so that orphan agents stop accumulating.
+**MS-102** As a human (Tig today), I want a fleet read that names untracked, missing and duplicate vendor sessions per runtime, and an apply that adopts or archives them, so that orphan agents stop accumulating.
 Evidence: [agent-harness/agent_harness/fleet.py:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/fleet.py#L1). was: OS-13.
 Acceptance: the read writes nothing; after apply each name has exactly 1 live session; a refused listing reads `unmeasured`.
 Verdict: CHANGE: one actuator listing per runtime, not Cursor only; adopt, not claim.
@@ -612,14 +612,14 @@ Evidence: [agent-harness/agent_harness/__main__.py:705](https://github.com/excal
 Acceptance: the count writes nothing and equals the applied mint and remint records for that seat in the range.
 Verdict: KEEP.
 
-**MS-109** As the human (Tig today), I want each reason the loop cannot run named as its own token, so that I never read healthy for a loop that does not run.
+**MS-109** As a human (Tig today), I want each reason the loop cannot run named as its own token, so that I never read healthy for a loop that does not run.
 Evidence: [agent-harness/README.md:208](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/README.md#L208). was: OS-04.
 Acceptance: timer absent, timer inactive, another loop on the store, and checkout off branch each read as a distinct Health value; an unreadable scheduler reads `unmeasured`, never empty.
 Verdict: CHANGE: one timer unit per instance and a store lock replace cron-line repair.
 
 ### 2.7 Install and recover
 
-**MS-110** As the human (Tig today), I want one command that installs the tool stack on Linux or Windows, so that a fresh machine reaches ready without a package list in my head.
+**MS-110** As a human (Tig today), I want one command that installs the tool stack on Linux or Windows, so that a fresh machine reaches ready without a package list in my head.
 Evidence: [agent-harness/install.sh:2](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/install.sh#L2), `H/install.md:11`. was: OS-01.
 Acceptance: the check exits 0 with every must-have present, exits 1 naming the installer to run; `--check-only` changes nothing.
 Verdict: KEEP.
@@ -634,12 +634,12 @@ Evidence: [agent-harness/deploy/control-plane/hgl-control-loop.timer:7](https://
 Acceptance: over 24 hours, 0 tick start times fall inside another tick's run; one loop per instance.
 Verdict: KEEP.
 
-**MS-113** As the human (Tig today), I want the control plane deployed from the instance's checkout and restarted by a narrow root helper, so that a deploy needs no shell on the control-plane host.
+**MS-113** As a human (Tig today), I want the control plane deployed from the instance's checkout and restarted by a narrow root helper, so that a deploy needs no shell on the control-plane host.
 Evidence: [agent-harness/deploy/control-plane/apply-unit.sh:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/deploy/control-plane/apply-unit.sh#L1). was: OS-06.
 Acceptance: the restart action neither fetches nor installs; the helper never starts or stops the loop timer.
 Verdict: KEEP.
 
-**MS-114** As the human (Tig today), I want an end-to-end proof on a real seat host for event routing, gauges and confirmed steer delivery, posted on the pull request before ready, so that a green contract test is not mistaken for a working host.
+**MS-114** As a human (Tig today), I want an end-to-end proof on a real seat host for event routing, gauges and confirmed steer delivery, posted on the pull request before ready, so that a green contract test is not mistaken for a working host.
 Evidence: [agent-harness/e2e-box.md:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/e2e-box.md#L1), `briefs/infrastructure-pe.md:36`. was: OS-07.
 Acceptance: stdout has one line per part, each a number, an id, or `unmeasured`; the pull request carries the output before ready.
 Verdict: CHANGE: the retarget and ladder lines go; one delivery line per runtime comes in.
@@ -671,7 +671,7 @@ Verdict: KEEP.
 
 ### 2.8 Identity and secrets
 
-**MS-120** As the human (Tig today), I want a vendor key stored by hidden prompt, mode 600, and its account checked against config, so that a key is never in history and spend lands on the right account.
+**MS-120** As a human (Tig today), I want a vendor key stored by hidden prompt, mode 600, and its account checked against config, so that a key is never in history and spend lands on the right account.
 Evidence: [agent-harness/agent_harness/__main__.py:2093](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/__main__.py#L2093), `AH/cursor_account.py:1`. was: OS-62.
 Acceptance: file mode 600; the key is in no log, record or argv; a key on the wrong account is a Health fault and mint refuses.
 Verdict: CHANGE: one check per vendor, not Cursor only.
@@ -681,7 +681,7 @@ Evidence: [agent-harness/load-secrets.sh:2](https://github.com/excaliwire/factor
 Acceptance: after deleting live state, the next verb finds its credentials; 0 secret values in logs, records or check-ins.
 Verdict: CHANGE: the config store names each secret; no wrapper exports all of them into every verb's environment.
 
-**MS-122** As the human (Tig today), I want no seat able to post, review, push or run GitHub calls as the human merger, and Arthur's GitHub token read-only, so that a waiver or approval in my name cannot be forged.
+**MS-122** As a human (Tig today), I want no seat able to post, review, push or run GitHub calls as a human merger, and Arthur's GitHub token read-only, so that a waiver or approval in my name cannot be forged.
 Evidence: [AGENTS.md:59](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/AGENTS.md#L59), `AH/gh.py:1`, `briefs/arbiter.md:41`. was: OS-64.
 Acceptance: a write as the merger account from Mike raises; `waive:` is honored only from that account.
 Verdict: KEEP.
@@ -708,7 +708,7 @@ Evidence: [agent-harness/agent_harness/write_meters.py:1](https://github.com/exc
 Acceptance: every absent source yields the literal `unmeasured` and a `why`; a `5% left` line parses to 95 used; text without a percent is `unparsed`.
 Verdict: CHANGE: gauge sources are config; a vendor usage API is preferred over a screen scrape (section 10.19).
 
-**MS-126** As a seat (any), I want to price a spend before it runs and report cost unasked, so that the human only says yes to money he can see.
+**MS-126** As a seat (any), I want to price a spend before it runs and report cost unasked, so that a human only says yes to money he can see.
 Evidence: [AGENTS.md:117](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/AGENTS.md#L117), `briefs/factory-pe.md:49`. was: OS-67.
 Acceptance: model-call spend under USD 100 needs no ask and is reported; any other spend, or over USD 100, waits for a yes; the price is a number from a measurement.
 Verdict: KEEP.
@@ -722,12 +722,12 @@ Verdict: CHANGE: per project across the instance; webhook events cut the reads f
 
 ### 3.1 Review surface
 
-**MS-128** As the human (Tig today), I want a review surface listing every ready pull request, the reviewer assigned to each, and each verdict on the current head, so that I see review state without opening GitHub.
+**MS-128** As a human (Tig today), I want a review surface listing every ready pull request, the reviewer assigned to each, and each verdict on the current head, so that I see review state without opening GitHub.
 Evidence: [agent-harness/dashboard/rules.mjs:57](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L57) (the router has no review route); `mike.md` 7.
 Acceptance: the rows equal the open non-draft pull requests across all projects; each shows reviewer or `none`, and `Merge`, `Send back`, `Hold` or `pending` for the head sha.
 Verdict: NEW.
 
-**MS-129** As the human (Tig today), I want the review surface ordered by the time each pull request went ready, oldest first, with send-backs and their author seats listed apart, so that the oldest wait is on top.
+**MS-129** As a human (Tig today), I want the review surface ordered by the time each pull request went ready, oldest first, with send-backs and their author seats listed apart, so that the oldest wait is on top.
 Evidence: [agent-harness/agent_harness/review.py:123](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/review.py#L123); `mike.md` 3.4.
 Acceptance: row order equals ascending ready time from GitHub events; each send-back row names the author seat and its next-assignment state.
 Verdict: NEW.
@@ -744,7 +744,7 @@ Evidence: [agent-harness/agent_harness/idle_steer.py:1279](https://github.com/ex
 Acceptance: the factory#1761 state yields a board naming the 3 send-backs as next assignments; a tick with idle workers writes 0 planner rows.
 Verdict: NEW.
 
-**MS-132** As the human (Tig today), I want the board Arthur last read shown on the dashboard with its tick time, so that I can judge his choices against the same input.
+**MS-132** As a human (Tig today), I want the board Arthur last read shown on the dashboard with its tick time, so that I can judge his choices against the same input.
 Evidence: [agent-harness/dashboard/rules.mjs:57](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L57) (no board view); `mike.md` 7.
 Acceptance: the page payload's board equals, byte for byte, the board in Arthur's last follow-up record.
 Verdict: NEW.
@@ -761,48 +761,48 @@ Verdict: NEW.
 
 ### 3.3 Target versus actual share
 
-**MS-135** As the human (Tig today), I want a share per priority rank in the config store (top 60, second 30, third 10 percent of workers) that I can change, with an empty row's share passed to the next, so that I set the split, not each assignment.
+**MS-135** As a human (Tig today), I want a share per priority rank in the config store (top 60, second 30, third 10 percent of workers) that I can change, with an empty row's share passed to the next, so that I set the split, not each assignment.
 Evidence: [factory#1336](https://github.com/excaliwire/factory/issues/1336) section 3; `mike.md` 3.1.
 Acceptance: the three shares are config-store keys summing to 100; a row with 0 open non-Low issues shows target 0 and the next row's target rises by its share.
 Verdict: NEW.
 
-**MS-136** As the human (Tig today), I want Health to show target versus actual share per priority row, so that a bad judgment by Arthur is visible.
+**MS-136** As a human (Tig today), I want Health to show target versus actual share per priority row, so that a bad judgment by Arthur is visible.
 Evidence: [factory#1336](https://github.com/excaliwire/factory/issues/1336) section 4; `mike.md` 9.17.
 Acceptance: each row shows target percent and actual percent of assigned workers from labels; a gap over 20 points for 3 ticks is one attention item.
 Verdict: NEW.
 
 ### 3.4 Job ids for commands
 
-**MS-137** As the human (Tig today), I want every command to return a job id at once, and its answer to land on a row I can see whenever it finishes, so that an answer after 30 s is not lost.
+**MS-137** As a human (Tig today), I want every command to return a job id at once, and its answer to land on a row I can see whenever it finishes, so that an answer after 30 s is not lost.
 Evidence: [agent-harness/agent_harness/api.py:4726](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L4726) (synchronous `run_verb`), `D/rules.mjs:1043`; `mike.md` 7.
 Acceptance: every command POST answers in under 1 s with a job id; a verb that takes 120 s shows its outcome on that job's row.
 Verdict: NEW.
 
-**MS-138** As the human (Tig today), I want every time on the wire in ISO 8601 with offset, so that the page never parses prose or guesses a year.
+**MS-138** As a human (Tig today), I want every time on the wire in ISO 8601 with offset, so that the page never parses prose or guesses a year.
 Evidence: [agent-harness/agent_harness/api.py:478](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L478) (`format_for_human`), `D/rules.mjs:490`; `mike.md` 7.
 Acceptance: a schema test finds 0 time fields not matching ISO 8601 with offset; the page has 0 time-zone tables.
 Verdict: NEW.
 
 ### 3.5 Phone layout
 
-**MS-139** As the human (Tig today), I want every tab readable on a phone, so that I run the fleet away from my desk.
+**MS-139** As a human (Tig today), I want every tab readable on a phone, so that I run the fleet away from my desk.
 Evidence: [agent-harness/dashboard/app.css:125](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.css#L125) (no breakpoint for the 8-column Sessions table). was: US-07.
 Acceptance: at 375 px width, 0 tabs need horizontal page scroll.
 Verdict: CHANGE: today Sessions fails; Mike lays out every tab, review surface and board included.
 
-**MS-140** As the human (Tig today), I want every single-seat verb reachable by tap, so that I need no right-click.
+**MS-140** As a human (Tig today), I want every single-seat verb reachable by tap, so that I need no right-click.
 Evidence: [agent-harness/dashboard/app.js:1598](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1598) (context menu, no touch path). was: US-36.
 Acceptance: on a touch device each of the 5 seat verbs is reachable within 2 taps from the Sessions row.
 Verdict: CHANGE: today the per-row menu needs a right-click.
 
 ### 3.6 Multi-project, single instance
 
-**MS-141** As the human (Tig today), I want one Mike instance to manage several projects with one loop, one store, one dashboard and one priorities list, so that I do not deploy Mike per repository.
+**MS-141** As a human (Tig today), I want one Mike instance to manage several projects with one loop, one store, one dashboard and one priorities list, so that I do not deploy Mike per repository.
 Evidence: [tig/mike#2](https://github.com/tig/mike/issues/2); `mike.md` 1.2, decision 6.
 Acceptance: an install with no factory checkout manages two projects from one instance and passes the ported contract tests.
 Verdict: NEW.
 
-**MS-142** As the human (Tig today), I want a verb on a repository not on the instance's project list refused before any call runs, for every caller, so that no seat works outside the program.
+**MS-142** As a human (Tig today), I want a verb on a repository not on the instance's project list refused before any call runs, for every caller, so that no seat works outside the program.
 Evidence: [agent-harness/agent_harness/__main__.py:1425](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/__main__.py#L1425) (`cmd_steer` does not check), `AH/__main__.py:121`; `mike.md` 3.3.2.
 Acceptance: a steer, mint or GitHub write naming an unlisted repository makes 0 GitHub or vendor calls and writes one refused record.
 Verdict: NEW.
@@ -814,7 +814,7 @@ Verdict: NEW.
 
 ### 3.7 Vendor budgets and mint threshold
 
-**MS-144** As the human (Tig today), I want each vendor to declare its pools, windows, probe and mint threshold in config, so that budgets change without code.
+**MS-144** As a human (Tig today), I want each vendor to declare its pools, windows, probe and mint threshold in config, so that budgets change without code.
 Evidence: [agent-harness/agent_harness/meters.py:16](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/meters.py#L16) (`GAUGES` is a code tuple); `mike.md` 4.
 Acceptance: adding a vendor pool is a config edit with 0 code changes and its gauge appears on the Gauges tab.
 Verdict: NEW.
@@ -829,7 +829,7 @@ Evidence: [agent-harness/agent_harness/meters.py:73](https://github.com/excaliwi
 Acceptance: with the vendor gauge `unmeasured`, 0 mints on that vendor; each attempt is a refused record naming the gauge; the gauge never reads 0.
 Verdict: NEW.
 
-**MS-147** As the human (Tig today), I want each mint run capped by a token and turn budget and cancelled with a record when over, so that a mint cannot burn millions of tokens.
+**MS-147** As a human (Tig today), I want each mint run capped by a token and turn budget and cancelled with a record when over, so that a mint cannot burn millions of tokens.
 Evidence: [factory#1755](https://github.com/excaliwire/factory/issues/1755); `mike.md` 3.2.
 Acceptance: a mint run over its budget ends cancelled with a record naming tokens and turns used.
 Verdict: NEW.
@@ -846,12 +846,12 @@ Evidence: [agent-harness/agent_harness/seat_host.py:934](https://github.com/exca
 Acceptance: each steer record ends `confirmed` with an id or `not confirmed` with a reason; a confirmed steer is never resent.
 Verdict: CHANGE: factory confirms tmux pastes and Cursor runs differently; Mike has one result field for all runtimes.
 
-**MS-150** As the human (Tig today), I want mint, archive, restart and kill each to write a decision record of one shape for every runtime, so that Health can show a row clear and "no seat minted twice for one issue".
+**MS-150** As a human (Tig today), I want mint, archive, restart and kill each to write a decision record of one shape for every runtime, so that Health can show a row clear and "no seat minted twice for one issue".
 Evidence: [agent-harness/agent_harness/seat_actuator.py:1499](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/seat_actuator.py#L1499) (log lines only); factory#1418.
 Acceptance: each actuation has one record before it acts; Health reads only that record shape (test with one runtime of each kind).
 Verdict: NEW.
 
-**MS-151** As the human (Tig today), I want no second steer to a seat while one is pending in the loop window, for every caller and every runtime, pending ones included, so that a seat never gets two tasks at once.
+**MS-151** As a human (Tig today), I want no second steer to a seat while one is pending in the loop window, for every caller and every runtime, pending ones included, so that a seat never gets two tasks at once.
 Evidence: [agent-harness/agent_harness/__main__.py:1054](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/__main__.py#L1054) (`_loop_steer_hold` covers the loop and applied rows only); `mike.md` 3.3.5.
 Acceptance: a human steer, an Arthur steer and a loop steer sent to one seat inside the window give 1 applied and 2 refused records.
 Verdict: NEW.
@@ -868,19 +868,19 @@ Evidence: [docs/host.md:258](https://github.com/excaliwire/factory/blob/bb2bf4c6
 Acceptance: a scan of each seat host finds 0 files that can mint a token for another seat; the control-plane host holds 0 SSH keys to seat hosts.
 Verdict: NEW.
 
-**MS-154** As the human (Tig today), I want to be a verified bearer, not a header any local process can set, so that a local script cannot act as me.
+**MS-154** As a human (Tig today), I want to be a verified bearer, not a header any local process can set, so that a local script cannot act as me.
 Evidence: [agent-harness/dashboard/serve.py:418](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/serve.py#L418) (adds `X-HGL-Email`); `mike.md` 4, section 10.8.
 Acceptance: a request with only an email header and no verified bearer is refused 401 on every human-only route.
 Verdict: NEW.
 
 ### 3.10 Config store apply-on-change
 
-**MS-155** As the human (Tig today), I want a setting change applied live by the smallest action (reload, remint the affected seats, or swap a key), recorded, so that a change takes effect without a reboot.
+**MS-155** As a human (Tig today), I want a setting change applied live by the smallest action (reload, remint the affected seats, or swap a key), recorded, so that a change takes effect without a reboot.
 Evidence: [factory#1524](https://github.com/excaliwire/factory/issues/1524); [agent-harness/agent_harness/settings.py:1258](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/settings.py#L1258); `mike.md` 5.
 Acceptance: each save writes one record naming the action taken; a cadence change remints 0 seats; a role model change remints only that role's seats.
 Verdict: NEW.
 
-**MS-156** As the human (Tig today), I want desired state (roles, roster, projects, lanes, hosts, vendors, briefs) as instance config changed by pull request, shipped defaults in a separate file, and live state never in git, so that one source holds each fact.
+**MS-156** As a human (Tig today), I want desired state (roles, roster, projects, lanes, hosts, vendors, briefs) as instance config changed by pull request, shipped defaults in a separate file, and live state never in git, so that one source holds each fact.
 Evidence: [agent-harness/agent_harness/store.py:3](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/store.py#L3); `mike.md` 5, section 10.16.
 Acceptance: the instance config repository holds 0 live-state files; each setting has exactly one source (shipped default, instance config, or config store).
 Verdict: NEW.
@@ -897,40 +897,40 @@ Verdict: NEW.
 
 ### 3.11 Attached sessions
 
-**MS-159** As the human (Tig today), I want to issue a named, revocable session token to a session I drive (Infra Fable, Factory Fable, my portal), so that it can act through Mike without a seat and without my own credentials.
-Evidence: `mike.md` 2.1 and 4 (Identity); factory has only a seat token minted from a shared secret, [host/hgl-auth/agent_token.py:54](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/host/hgl-auth/agent_token.py#L54).
+**MS-159** As a human (Tig today), I want to issue a named, revocable session token to a session I drive (Infra Fable, Factory Fable, my portal), so that it can act through Mike without a seat and without my own credentials.
+Evidence: `mike.md` 2.2 and 4 (Identity); factory has only a seat token minted from a shared secret, [host/hgl-auth/agent_token.py:54](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/host/hgl-auth/agent_token.py#L54).
 Acceptance: the token carries the session name and its verb list; a revoked token is refused on the next call with a record; no shared secret can mint one.
 Verdict: NEW.
 
 **MS-160** As an attached session, I want every repository interaction (issue create, label, severity, comment, pull ready, request merge) to go through Mike's verbs with my token, so that each is recorded first and written under Mike's account with my `[Name]` prefix.
-Evidence: `mike.md` 2.1, 5 (GitHub), 9.3, 9.15.
+Evidence: `mike.md` 2.2, 5 (GitHub), 9.3, 9.15.
 Acceptance: one decision record per call with `actor` = the session name; the GitHub write is by Mike's account and starts `[Name] `; a call with no record is refused.
 Verdict: NEW.
 
 **MS-161** As an attached session, I want to read the board, sessions, health and priorities over the same API a seat reads, so that my judgment uses the operator's view.
-Evidence: `mike.md` 2.1, 3.1; was: US-13 (for seats).
+Evidence: `mike.md` 2.2, 3.1; was: US-13 (for seats).
 Acceptance: `GET /dashboard/api/sessions` and the board route answer a session token with the same rows the page draws.
 Verdict: NEW.
 
 **MS-162** As an attached session whose config row allows it, I want to steer a seat through Mike bound by every gate, so that I can direct work at night without a comment Arthur must notice.
-Evidence: `mike.md` 2.1, 3.3; factory#1336 comment 2026-10-05 05:18 UTC (steers delivered as `Arthur:` comments).
+Evidence: `mike.md` 2.2, 3.3; factory#1336 comment 2026-10-05 05:18 UTC (steers delivered as `Arthur:` comments).
 Acceptance: a steer from the session passes gates 1 to 6 or is refused with a record naming the gate; a session whose row lacks `steer` gets 403 and a refused record.
 Verdict: NEW.
 
-**MS-163** As the human (Tig today), I want attached sessions listed on the dashboard with last call and token age, apart from the Sessions tab, so that I can see who is acting through Mike and revoke one.
-Evidence: `mike.md` 2.1, 7.
+**MS-163** As a human (Tig today), I want attached sessions listed on the dashboard with last call and token age, apart from the Sessions tab, so that I can see who is acting through Mike and revoke one.
+Evidence: `mike.md` 2.2, 7.
 Acceptance: one row per token with name, verbs, last call time, issued-at; a Revoke verb with one confirm; the Sessions tab shows no attached session.
 Verdict: NEW.
 
 **MS-164** As an attached session, I want attaching to be optional, so that a session with no token works as today and Mike sees it only through GitHub.
-Evidence: `mike.md` 2.1.
+Evidence: `mike.md` 2.2.
 Acceptance: with no token set, the CLI's Mike verbs refuse and name the token; the session's direct GitHub comments carry no actor record and raise no Health row.
 Verdict: NEW.
 
 ### 3.12 The control plane watches
 
 **MS-165** As the loop, I want to detect every board change myself, from signed webhooks and a diff of my own store each tick, so that no seat polls GitHub and no vendor scheduler watches anything for Mike.
-Evidence: `mike.md` 5 and rule 22; factory polls the human's notifications in [agent-harness/agent_harness/poke.py:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/poke.py#L1) and seats read GitHub themselves.
+Evidence: `mike.md` 5 and rule 22; factory polls a human's notifications in [agent-harness/agent_harness/poke.py:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/poke.py#L1) and seats read GitHub themselves.
 Acceptance: with the webhook delivering, a tick makes 0 GitHub reads that are not the budgeted store refresh; a brief contains no instruction to poll or watch GitHub; a seat's own `gh` read of issue state is a refused record.
 Verdict: NEW.
 
@@ -939,7 +939,7 @@ Evidence: `mike.md` 5, 3.4, decisions 1 and 5; was: OS-36, OS-37 (conflict-steer
 Acceptance: one steer record per change with `why` naming the change kind and the GitHub event or diff that produced it; the same change produces 0 further steers; the steer passes the gates or is a refused record.
 Verdict: NEW.
 
-**MS-167** As a lane-PE, I want the note on my lane's priorities row carried in every steer I receive, so that the human's intent for the row is my context without a comment I must find.
+**MS-167** As a lane-PE, I want the note on my lane's priorities row carried in every steer I receive, so that a human's intent for the row is my context without a comment I must find.
 Evidence: `mike.md` 3.1, decision 2.
 Acceptance: a steer to a lane-PE whose lane has a row with a note contains that note verbatim; a row with no note adds nothing; the note appears on the board Arthur reads.
 Verdict: NEW.
