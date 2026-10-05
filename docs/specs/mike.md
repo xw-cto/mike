@@ -69,7 +69,7 @@ These are mechanism. They refuse with a recorded reason and the caller sees the 
 4. **Severity floor.** A worker steer onto Low, or onto an issue with no severity, is refused.
 5. **One pending steer.** No second steer to a seat while one is pending inside the loop window, for every caller and for every runtime, queued included. Today it holds only for the loop caller and only for `applied` rows (factory `__main__.py:1054-1080`).
 6. **Record before act.** Every side effect has a decision record before it happens. `apply` refuses an unrecorded decision. A refusal is a record with its why.
-7. **No mint over busy or unmeasured.**
+7. **No mint over a seat whose liveness is responding or unmeasured.**
 8. **Human switches.** Loop Paused and seat Stop are the two human switches. The loop acts on neither until a human changes them. Arthur may undo a Stop; nothing else may.
 9. **Reviewer independence.** A reviewer never reviews its own pull request, and never pushes.
 10. **No merge verb.** There is none. A test fails if one is added.
