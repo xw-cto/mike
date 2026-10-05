@@ -36,7 +36,17 @@ A seat has a name and a role. What it does comes from the role. Mike ships no di
 
 ### 2.1 Humans
 
-Mike serves humans, plural. Instance config lists them by GitHub login, and each may merge, waive a gate, grant a reviewer, issue a session token, and edit the priorities list and the config store. A human is a verified bearer, never a header. Mike text and the dashboard say "a human" or "humans"; a name (Tig on factory) is instance config. Where this file says "a human", any listed human qualifies, and the record names which one acted.
+Mike serves humans, plural. Several humans create issues, comment on issues and pull requests, review, assign, and merge, each as themselves on GitHub, not through Mike. Instance config lists them by GitHub login. Mike text and the dashboard say "a human" or "humans"; a name (Tig on factory) is instance config.
+
+What a listed human's GitHub activity means to Mike, each routed by the control plane as a change (section 5, rule 22):
+
+- An issue a listed human creates or edits is on the board once it carries a lane and is assigned to `gh_user`. Assigning it is the handoff: before that it is theirs, after that it is Mike's. The severity they set is the severity; none set is Low.
+- A comment addressed `Name:` on an issue or pull request is a steer to that seat, carrying the comment. A comment with no address is context on the board, not a steer.
+- A review verdict or a review comment from a listed human on a ready pull request is a send-back to the author seat when it asks for a change, and counts as the independent review when it says Merge (config: `human_review_counts`).
+- `waive: <gate> [sha]` and `reviewer: <Name>` from a listed human bind the gates. From anyone else they are text.
+- Any listed human may merge, issue a session token, and edit the priorities list and the config store. The record names which human acted.
+
+A GitHub user not on the list is a contributor. Their issues and comments are shown on the board and routed nowhere; a listed human or K triages them (assigns, sets severity, addresses a seat). A human is a verified bearer on the API, never a header. A human is not a seat and not an attached session; where a human drives an agent session that should act through Mike, that session attaches (2.2).
 
 ### 2.2 Attached sessions: non-seats that act through Mike
 

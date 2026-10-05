@@ -944,6 +944,28 @@ Evidence: `mike.md` 3.1, decision 2.
 Acceptance: a steer to a lane-PE whose lane has a row with a note contains that note verbatim; a row with no note adds nothing; the note appears on the board Arthur reads.
 Verdict: NEW.
 
+### 3.13 Humans on GitHub
+
+**MS-168** As a human, I want an issue I create to reach the board when I give it a lane and assign it to `gh_user`, so that handing work to Mike is one GitHub action I already know.
+Evidence: `mike.md` 2.1; factory's harness-gh-user gate, [agent-harness/agent_harness/harness_gh_user.py:1](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/harness_gh_user.py#L1).
+Acceptance: within one tick of the assignment webhook the issue is on the board with my severity, or Low if I set none; before the assignment it is not on the board.
+Verdict: NEW.
+
+**MS-169** As a human, I want a comment I address `Name:` on an issue or pull request delivered to that seat as a steer, so that I direct a seat from GitHub on my phone without a dashboard.
+Evidence: `mike.md` 2.1, 9.15 (address contract); factory#1336 comment 2026-10-05 05:18 UTC (`Arthur:` comments as steers).
+Acceptance: one steer record per addressed comment with `why` naming the comment id and my login; the steer passes the gates or is a refused record; an unaddressed comment produces 0 steers.
+Verdict: NEW.
+
+**MS-170** As a human, I want my change request on a ready pull request to be the send-back and my Merge verdict to count as the independent review when config says so, so that a review I did is not redone by a reviewer seat.
+Evidence: `mike.md` 2.1, 3.4, 6; factory's `independent_review_writers` and `reviewer:` grant, [agent-harness/agent_harness/pr_state.py:45](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/pr_state.py#L45).
+Acceptance: a change request from a listed human returns the pull request to draft and steers the author seat; with `human_review_counts` on, a Merge verdict from a listed human satisfies the review gate for that head.
+Verdict: NEW.
+
+**MS-171** As a human, I want a GitHub user not on the instance's human list treated as a contributor, so that their issues and comments are seen but bind nothing.
+Evidence: `mike.md` 2.1.
+Acceptance: a contributor's issue shows on the board as unassigned contributor work; their `waive:`, `reviewer:` and `Name:` comments produce 0 records that act; a listed human's assignment of that issue puts it on the board.
+Verdict: NEW.
+
 ## 4. Retired stories
 
 Not built (`mike.md` 3.3, 10, 12). One line each.

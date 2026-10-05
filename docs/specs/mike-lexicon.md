@@ -374,7 +374,7 @@ Owner: [`mike.md` 2.2](mike.md#22-attached-sessions-non-seats-that-act-through-m
 
 ### Humans
 
-Owner: [`mike.md` 2.1](mike.md#21-humans). The people Mike serves, listed in instance config by GitHub login. Any listed human may merge, waive a gate, grant a reviewer, issue a session token, and edit the priorities list and the config store; the record names which one. A human is a verified bearer, never a header. Not a seat, not the director, and not one person: Tig is factory's config. **Binds:** caller matrix `human`; test that a seat token and a session token cannot act as a human.
+Owner: [`mike.md` 2.1](mike.md#21-humans). The people Mike serves, several, listed in instance config by GitHub login. They act on GitHub as themselves: create and edit issues, comment, review, assign, merge. The control plane watches that activity and routes it: an assignment to `gh_user` hands an issue to Mike, a `Name:` comment steers that seat, a change request on a ready pull request is a send-back, `waive:` and `reviewer:` bind the gates. Any listed human may merge, issue a session token, and edit priorities and settings; the record names which one. A user not on the list is a contributor: seen, shown, routed nowhere. Not a seat, not an attached session, not one person: Tig is factory's config. **Binds:** caller matrix `human`; the change router; test that a contributor's `waive:` binds nothing.
 
 ### Director
 
