@@ -292,7 +292,7 @@ Terminal control ([MS-057, watch and drive a tmux pane](mike-user-stories.md#ms-
 
 ## 9. Where this is tested
 
-The contract tests ship with Mike and run in CI. Each names a story or a section.
+The contract tests ship with Mike and run in CI. Each names a story or a section. They run the API server in-process against a fixture store with the fake runtime, with no control plane loop, no vendor and no GitHub ([mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested), tier 4).
 
 - **Version gate.** A schema edit without a recorded digest and a new version fails ([section 3](#3-version)).
 - **Opening frames.** Every opening frame, for each caller kind, validates against its shape, absent and unmeasured parts included.

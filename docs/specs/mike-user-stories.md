@@ -4,7 +4,7 @@
 
 **Source pin:** excaliwire/factory `bb2bf4c6` ([factory tree at the pinned commit](https://github.com/excaliwire/factory/tree/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8)). Each story's evidence links a factory file at that commit, naming the line and what it shows.
 
-**Rules for this file:** [mike.md, the Mike spec](mike.md) wins over factory and over these stories. Verdicts: KEEP (Mike does what factory does), CHANGE (the need stays, the shape changes), NEW (factory has no form of it). LEGACY stories are listed once in [section 4, retired stories](#4-retired-stories) and are not built ([mike.md §12, done when](mike.md#12-done-when)).
+**Rules for this file:** [mike.md, the Mike spec](mike.md) wins over factory and over these stories. Verdicts: KEEP (Mike does what factory does), CHANGE (the need stays, the shape changes), NEW (factory has no form of it). LEGACY stories are listed once in [section 4, retired stories](#4-retired-stories) and are not built ([mike.md §13, done when](mike.md#13-done-when)).
 
 ## 1. Dashboard and UI stories
 
@@ -1216,9 +1216,47 @@ Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-
 Acceptance: at 375 px a closed card is at most 3 lines tall; the expander and the hamburger each open with one tap; the switch is reachable without opening either; an open expander or menu survives a sessions frame.
 Verdict: NEW.
 
+### 3.16 Testing seams
+
+#### MS-185 A driver passes conformance alone
+As a human, I want every runtime driver to pass one conformance suite through the Runtime API with no control plane running, so that a driver is proven before it is installed and a vendor change is caught in one place.
+Evidence: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested), tier 2; [mike.md §4, runtimes](mike.md#4-runtimes).
+Acceptance: the suite covers config, mint, steer with confirmed delivery, stop, restart, archive, liveness, usage, session log; it runs against the fake runtime in CI and against the vendor sandbox on demand with cost recorded; a driver failing any case cannot be enabled by config.
+Verdict: NEW.
+
+#### MS-186 Mike ships a fake runtime
+As the loop, I want a fake runtime that implements the Runtime API in memory and records every call, so that the control plane and the seat suites run with no vendor.
+Evidence: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested), seams.
+Acceptance: the fake is loaded by the same driver path as a real driver; a control-plane tick against it makes 0 network calls; its recorded calls are asserted in tier 4 tests.
+Verdict: NEW.
+
+#### MS-187 Arthur tested alone on a synthetic board
+As a human, I want Arthur's behavior tested with no control plane and no other seat, from a synthetic board and a stub of Mike's verbs, so that a brief change is measured before it reaches the fleet.
+Evidence: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested), tier 3; [mike.md §3.5, what is judgment](mike.md#35-what-is-judgment).
+Acceptance: given the 2026-10-05 send-back board fixture, the stub records 3 send-back steers and 0 refusals; given a board with only `urgency:no` work, it records 0 steers; the suite runs against a replay of recorded model turns in CI and against a real model on demand.
+Verdict: NEW.
+
+#### MS-188 Worker and reviewer tested alone
+As a human, I want a worker and a reviewer each tested alone from a synthetic steer in a fixture repository, so that the pull request lifecycle shape is proven per role.
+Evidence: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested), tier 3; [mike.md §6, the pull request lifecycle](mike.md#6-the-pull-request-lifecycle).
+Acceptance: the worker opens a draft, posts `Self-Review: Done` with the head sha, and marks ready only after a green CI fixture; the reviewer posts a verdict of at most 12 lines in the required shape; each failure names the lifecycle step.
+Verdict: NEW.
+
+#### MS-189 Control plane tick against fakes
+As the loop, I want a full tick runnable against the fake runtime, a fake GitHub and an injected clock, so that routing, gates, records and frames are tested without a network.
+Evidence: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested), tier 4; [mike.md §5, the control plane](mike.md#5-the-control-plane).
+Acceptance: every change kind in section 5 has a tick test that asserts the routed steer and its record; every gate has a refusal test; the API's opening frames validate from the fixture store; 0 network calls.
+Verdict: NEW.
+
+#### MS-190 One live integration, on demand, recorded
+As a human, I want one live integration run (real driver, sandbox repository, real tick) that I start on demand, so that the seams are proven to agree without making every test depend on the whole.
+Evidence: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested), tier 5.
+Acceptance: the run is not in default CI; it writes its result, duration and cost to the issue that asked for it; no tier 1 to 4 test imports from it.
+Verdict: NEW.
+
 ## 4. Retired stories
 
-Not built ([mike.md §3.3, gates for every caller](mike.md#33-gates-mike-enforces-for-every-caller), [mike.md §10, what Mike does not re-create](mike.md#10-what-mike-does-not-re-create), [mike.md §12, done when](mike.md#12-done-when)). One line each.
+Not built ([mike.md §3.3, gates for every caller](mike.md#33-gates-mike-enforces-for-every-caller), [mike.md §10, what Mike does not re-create](mike.md#10-what-mike-does-not-re-create), [mike.md §13, done when](mike.md#13-done-when)). One line each.
 
 - The starved-lanes view ("as the control plane reads it"): every lane has a priorities row, so no lane is starved; [MS-136, target versus actual share](#ms-136-target-versus-actual-share) replaces it ([mike.md §9 rule 17, Health shows target versus actual share](mike.md#9-what-mike-keeps)); [gate 3, the lane gate](mike.md#33-gates-mike-enforces-for-every-caller) refuses an issue with no lane label or an unknown lane.
 - Redeliver-tries, the conflict-steer cooldown and the orchestrator cooldown: nothing is redelivered; Arthur's follow-up fires on a board change ([MS-131, Arthur reads the board](#ms-131-arthur-reads-the-board), [decision 1, Arthur steered on change](mike.md#11-decisions)).

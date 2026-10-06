@@ -28,7 +28,7 @@
 
 | Verdict | Rows |
 |---|---|
-| KEEP | 107 |
+| KEEP | 110 |
 | RENAME | 21 |
 | NARROW | 33 |
 | RETIRE | 46 |
@@ -57,7 +57,9 @@
 | dispatch | Banned; write steer or poke | [lexicon.md line 1122, dispatch](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1122) | KEEP | Ban stays |
 | Draft-sent-back | Convert a ready pull request to draft on `send_back` | [agent-harness spec line 406, Draft-sent-back](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L406) | KEEP | Same |
 | Driver | None; new in Mike | [mike.md §4, runtimes](mike.md#4-runtimes) | KEEP | New in Mike: one runtime's implementation of the Mike Runtime API, enabled or installed by config |
+| Driver conformance | none; factory tested only whole | [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested) | KEEP | new in Mike: the suite every runtime driver passes alone ([entry](#driver-conformance)) |
 | Dry run | Plans and records; does not act | [lexicon.md line 355, Dry run](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L355) | KEEP | Same |
+| Fake runtime | none | [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested) | KEEP | new in Mike: in-memory Runtime API that records calls ([entry](#fake-runtime)) |
 | farm | Banned; write steer | [lexicon.md line 1121, farm](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1121) | KEEP | Ban stays |
 | Fill-missing | Fleet mode: claim a live same-name session, else mint | [lexicon.md line 275, Fill-missing](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L275) | KEEP | Adopt, else mint; scope follows [Q1, standing names or a pool](#q1-standing-names-or-pool-slots) |
 | Finding | The permanent result; goes on the issue | [agent-harness spec line 125, Finding](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L125) | KEEP | Non-blocking review findings become issues |
@@ -124,6 +126,7 @@
 | stall | Banned; write Paused | [lexicon.md line 1145, stall](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1145) | KEEP | Ban stays |
 | stalled | Banned; write Paused | [lexicon.md line 1146, stalled](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1146) | KEEP | Ban stays |
 | Sync-tip | Control plane fast-forwards and restarts on tip | [agent-harness spec line 117, Sync-tip](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L117) | KEEP | Same |
+| Synthetic board | none | [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested) | KEEP | new in Mike: a fixture board for a seat test with no control plane ([entry](#synthetic-board)) |
 | Temporary seat | Seat a human mints for one conversation; not counted against the cap | [agent-harness spec line 51, Temporary seat](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L51) | KEEP | Proof is its mint record, not the retired board ([mike.md §8, the lexicon](mike.md#8-lexicon)) |
 | Terminal ticket | Single-use ticket bound to an email and a session | [agent-harness spec line 220, Terminal ticket](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L220) | KEEP | Not in Mike's API 1.0.0; the seat host's terminal contract carries it later ([Mike dashboard API §8, what changed and the terminal deferral](mike-dashboard-api.md#8-what-changed-from-the-starting-point)) |
 | Test-first | The test fails on the old code and passes on the new | [agent-harness spec line 403, Test-first](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L403) | KEEP | Reviewer verb runs it both sides |
@@ -278,7 +281,7 @@ Owner: [mike.md §1, what Mike is](mike.md#1-what-mike-is). The system: code and
 
 ### Instance
 
-Owner: [mike.md §1.2, multi-repository](mike.md#12-multi-repository-one-instance). One running Mike: one control plane, one loop, one store, one dashboard, one priorities list, managing a list of projects. There is no Mike deploy per repository. Not a vendor instance (factory's word for one vendor session); Mike says session. **Binds:** test `test_two_projects_one_instance` ([mike.md §12, done when](mike.md#12-done-when)).
+Owner: [mike.md §1.2, multi-repository](mike.md#12-multi-repository-one-instance). One running Mike: one control plane, one loop, one store, one dashboard, one priorities list, managing a list of projects. There is no Mike deploy per repository. Not a vendor instance (factory's word for one vendor session); Mike says session. **Binds:** test `test_two_projects_one_instance` ([mike.md §13, done when](mike.md#13-done-when)).
 
 ### Project
 
@@ -311,6 +314,18 @@ Owner: [mike.md §4, runtimes](mike.md#4-runtimes). A runtime capability: the st
 ### gh_user
 
 Owner: [mike.md §3.3, the gates](mike.md#33-gates-mike-enforces-for-every-caller). The GitHub user, per instance, whose assigned issues and pull requests Mike may steer. Empty or unmeasured refuses every steer. Not a human merger; Mike never writes as the merger. Factory: harness-gh-user. **Binds:** [gate 1, the owner gate](mike.md#33-gates-mike-enforces-for-every-caller), refusal text `not assigned to gh_user`.
+
+### Driver conformance
+
+Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). The one suite every runtime driver must pass through the [Mike Runtime API](#mike-runtime-api) with no control plane running: config, mint, steer with confirmed delivery, stop, restart, archive, liveness, usage, session log. Runs against the [fake runtime](#fake-runtime) in CI and against the vendor sandbox on demand. Not the control-plane tick test and not the live integration. **Binds:** a driver that fails is not enablable by config; [MS-185, a driver passes conformance alone](mike-user-stories.md#ms-185-a-driver-passes-conformance-alone).
+
+### Fake runtime
+
+Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). Mike's own in-memory implementation of the Runtime API, loaded by the same driver path as a real one, recording every call. It is what tiers 2, 3 and 4 run against so that no test needs a vendor. Not a mock of one vendor's API; it implements the interface. **Binds:** [MS-186, Mike ships a fake runtime](mike-user-stories.md#ms-186-mike-ships-a-fake-runtime).
+
+### Synthetic board
+
+Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). A fixture [board](#board) handed to a seat under test, with a stub of Mike's verbs that records calls and applies the gates, so Arthur or any role can be tested alone. Not live state. **Binds:** [MS-187, Arthur tested alone on a synthetic board](mike-user-stories.md#ms-187-arthur-tested-alone-on-a-synthetic-board).
 
 ### Seat card
 
