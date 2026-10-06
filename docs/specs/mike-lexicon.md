@@ -28,7 +28,7 @@
 
 | Verdict | Rows |
 |---|---|
-| KEEP | 110 |
+| KEEP | 111 |
 | RENAME | 21 |
 | NARROW | 33 |
 | RETIRE | 46 |
@@ -129,6 +129,7 @@
 | Synthetic board | none | [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested) | KEEP | new in Mike: a fixture board for a seat test with no control plane ([entry](#synthetic-board)) |
 | Temporary seat | Seat a human mints for one conversation; not counted against the cap | [agent-harness spec line 51, Temporary seat](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L51) | KEEP | Proof is its mint record, not the retired board ([mike.md §8, the lexicon](mike.md#8-lexicon)) |
 | Terminal ticket | Single-use ticket bound to an email and a session | [agent-harness spec line 220, Terminal ticket](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L220) | KEEP | Not in Mike's API 1.0.0; the seat host's terminal contract carries it later ([Mike dashboard API §8, what changed and the terminal deferral](mike-dashboard-api.md#8-what-changed-from-the-starting-point)) |
+| Test tier | none; factory named no tiers | [mike.md §12.1, the tiers](mike.md#121-the-tiers) | KEEP | new in Mike: unit, component, contract, integration, end-to-end; every test names one ([entry](#test-tier)) |
 | Test-first | The test fails on the old code and passes on the new | [agent-harness spec line 403, Test-first](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L403) | KEEP | Reviewer verb runs it both sides |
 | Tick | One control-loop pass, `run_tick`, 10 verbs today (no heading) | [agent-harness spec line 155, Tick](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L155) | KEEP | Add a heading; also names the loop (see retarget loop) |
 | Tier | How capable and expensive a seat's model is | [lexicon.md line 167, Tier](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L167) | KEEP | Property of a seat type's model; the ladder use retires ([mike.md §8, the lexicon](mike.md#8-lexicon)) |
@@ -315,13 +316,17 @@ Owner: [mike.md §4, runtimes](mike.md#4-runtimes). A runtime capability: the st
 
 Owner: [mike.md §3.3, the gates](mike.md#33-gates-mike-enforces-for-every-caller). The GitHub user, per instance, whose assigned issues and pull requests Mike may steer. Empty or unmeasured refuses every steer. Not a human merger; Mike never writes as the merger. Factory: harness-gh-user. **Binds:** [gate 1, the owner gate](mike.md#33-gates-mike-enforces-for-every-caller), refusal text `not assigned to gh_user`.
 
+### Test tier
+
+Owner: [mike.md §12.1, the tiers](mike.md#121-the-tiers). One of five levels of the test pyramid a test declares: **unit** (one function, everything faked), **component** (one part behind its seam, every other part faked), **contract** (an interface, one side real at a time), **integration** (several real parts of Mike, the vendor and GitHub faked), **end-to-end** (the whole system live, on demand). Unit and component tests run with no control plane; only end-to-end needs the whole system. Not a label for how long a test takes. **Binds:** [rule 23, every test names its tier](mike.md#9-what-mike-keeps); a test without a tier fails collection.
+
 ### Driver conformance
 
-Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). The one suite every runtime driver must pass through the [Mike Runtime API](#mike-runtime-api) with no control plane running: config, mint, steer with confirmed delivery, stop, restart, archive, liveness, usage, session log. Runs against the [fake runtime](#fake-runtime) in CI and against the vendor sandbox on demand. Not the control-plane tick test and not the live integration. **Binds:** a driver that fails is not enablable by config; [MS-185, a driver passes conformance alone](mike-user-stories.md#ms-185-a-driver-passes-conformance-alone).
+Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). The component-tier suite every runtime driver must pass through the [Mike Runtime API](#mike-runtime-api) with no control plane running: config, mint, steer with confirmed delivery, stop, restart, archive, liveness, usage, session log. Runs against the [fake runtime](#fake-runtime) in CI and, as a contract test, against the vendor sandbox on demand. Not the control-plane integration test and not the end-to-end run. **Binds:** a driver that fails is not enablable by config; [MS-185, a driver passes conformance alone](mike-user-stories.md#ms-185-a-driver-passes-conformance-alone).
 
 ### Fake runtime
 
-Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). Mike's own in-memory implementation of the Runtime API, loaded by the same driver path as a real one, recording every call. It is what tiers 2, 3 and 4 run against so that no test needs a vendor. Not a mock of one vendor's API; it implements the interface. **Binds:** [MS-186, Mike ships a fake runtime](mike-user-stories.md#ms-186-mike-ships-a-fake-runtime).
+Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). Mike's own in-memory implementation of the Runtime API, loaded by the same driver path as a real one, recording every call. It is what component, contract and integration tests run against so that none of them needs a vendor. Not a mock of one vendor's API; it implements the interface. **Binds:** [MS-186, Mike ships a fake runtime](mike-user-stories.md#ms-186-mike-ships-a-fake-runtime).
 
 ### Synthetic board
 

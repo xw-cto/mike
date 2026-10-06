@@ -290,7 +290,7 @@ Each is a rule factory paid for. Evidence is the factory file at [factory commit
 20. Comment limits: review 12 lines, pull request body 20, other 6, `Next:` last. [factory test_comment_limits_1741.py, the comment limits test](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/tests/test_comment_limits_1741.py).
 21. Talking to humans: measurement not adjective, bad news first, recommendation not menu, decisions then merges then next, cost unasked. [factory root AGENTS.md lines 84 to 96, talking to Tig](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/AGENTS.md?plain=1#L84-L96).
 22. The control plane is the only watcher; a change is routed to the seat it concerns as a steer; no seat polls and no vendor watches ([section 5, the control plane](#5-the-control-plane)). Tig, 2026-10-05.
-23. Every part tests alone: a driver, a seat role, and the control plane each have a seam and a suite that runs with nothing else running ([section 12, how Mike is tested](#12-how-mike-is-tested)). Tig, 2026-10-06.
+23. Every test names its tier of the test pyramid, and every part is covered at the unit and component tiers with nothing else running; only an end-to-end test needs the whole system ([section 12, how Mike is tested](#12-how-mike-is-tested)). Tig, 2026-10-06.
 
 ## 10. What Mike does not re-create
 
@@ -341,27 +341,37 @@ All 16 decided by Tig on 2026-10-05. Decisions 1 to 6 are [factory#1336, the har
 
 ## 12. How Mike is tested
 
-Factory's harness could be tested only whole: a verb needed the repository checkout, the live roster, a running loop, a live vendor, and often a second seat before anything could be observed ([factory#1501, the extraction call, "suggested first steps"](https://github.com/excaliwire/factory/issues/1501) tells a newcomer to run nothing with `--apply` and to set a temp state directory first). Mike is built so that every part tests alone.
+Factory's harness could be tested only whole: a verb needed the repository checkout, the live roster, a running loop, a live vendor, and often a second seat before anything could be observed ([factory#1501, the extraction call, "suggested first steps"](https://github.com/excaliwire/factory/issues/1501) tells a newcomer to run nothing with `--apply` and to set a temp state directory first). Mike uses the standard test taxonomy, the test pyramid ([Fowler, "The Practical Test Pyramid"](https://martinfowler.com/articles/practical-test-pyramid.html)), and every test names its tier.
 
-**The rule.** Every part of Mike has a seam, and a test that runs that part through its seam with nothing else running. No test needs a running control plane, a live vendor, GitHub, or a second seat, except the one live integration run in tier 5, which says so in its name. A part that cannot be tested alone is not done.
+### 12.1 The tiers
 
-**The seams the architecture must provide.**
+| Tier | What is under test | What is real | What is faked | Runs |
+|---|---|---|---|---|
+| 1. **Unit** | one function or class | the code | everything it calls | CI, every change, milliseconds |
+| 2. **Component** | one part behind its seam: a runtime driver, a seat role's behavior, the API server, the store, the board builder | the part | every other part, the vendor, GitHub, the clock | CI; the real-model and real-vendor variants on demand |
+| 3. **Contract** | an interface both sides depend on: the Runtime API, the dashboard API, the GitHub interface | the contract and one implementation at a time | the other side | CI against fakes; against the real vendor or GitHub sandbox on demand |
+| 4. **Integration** | several real parts together, for example a whole control-plane tick | the control plane, the store, the router, the gates, the API | the runtime (fake runtime), GitHub (fake), the clock | CI, no network |
+| 5. **End-to-end** | the whole system live | a real driver, a sandbox repository, a real tick, a real model | nothing | on demand; result, duration and cost recorded on the issue that asked |
 
-- The [Mike Runtime API](#4-runtimes) is an interface. Mike ships a **fake runtime** that implements it in memory and records every call, and every real driver is loaded by the same path as the fake.
+**The rule.** Every part has a seam and is covered at tiers 1 and 2 with nothing else running: no control plane, no vendor, no GitHub, no second seat. Tiers 3 and 4 may start real parts of Mike but never a live vendor or live GitHub; they run in CI with no network. Only tier 5 needs the whole system, and it is the proof that the seams agree, not the way a part is tested. A part that can be tested only at tier 4 or 5 is not done.
+
+### 12.2 The seams the architecture must provide
+
+- The [Mike Runtime API](#4-runtimes) is an interface. Mike ships a **fake runtime** that implements it in memory and records every call, loaded by the same path as a real driver.
 - GitHub is behind one interface with a fake that serves fixture repositories and accepts fixture webhook deliveries.
 - The clock is injected. The store runs on any directory. The API server runs in-process against a fixture store.
 - The brief renderer, the board builder, the share rule, the gates, the address parser and the urgency sort are pure functions: input in, output out, no I/O.
 - A seat's judgment is reachable without the control plane: the brief plus a **synthetic board** plus a stub of Mike's verbs that records calls and applies the gates.
 
-**The tiers.**
+### 12.3 The suites each tier must hold
 
-1. **Unit.** The pure functions, with fixtures and golden outputs. Runs in milliseconds, in CI, on every change.
-2. **Driver conformance.** One suite every runtime driver must pass through the Runtime API alone, with no control plane: load config; mint wait-only and return a session id; steer and confirm delivery; stop; restart; archive; liveness in exactly the four words; usage and context pressure, unmeasured with a reason when unread; session log with the last steer and latest response identifiable. The suite runs twice: against the fake runtime in CI, and against the real vendor in a sandbox account on demand, where it records cost. A driver that does not pass is not installable through config.
-3. **Seat behavior.** One suite per role, run with no control plane and no other seat, from synthetic inputs. Arthur alone: given a synthetic board and the verb stub, it produces the expected steers and no refused ones, for example the three send-back steers for the state factory measured on 2026-10-05, and never a steer onto `urgency:no`. A worker alone: given a steer onto an issue in a fixture repository, it opens a draft, posts the self-review block on the head, and marks ready only after CI is green. A reviewer alone: given a ready pull request, it posts a verdict in the 12-line shape. These run against a real model and cost money, so they run on demand and on every brief change, and a replay of recorded model turns runs in CI. A brief is config, so a brief change is test-first against this tier.
-4. **Control plane.** A tick against the fake runtime, the fake GitHub and the injected clock: routing of every change kind, every gate, record before act, the API frames, the jobs. No network. Runs in CI.
-5. **Live integration.** One real driver, one sandbox repository, one real tick, on demand. It proves the seams agree. Its result and cost are recorded on the issue that asked for it. It is not the way a part is tested; it is the way the whole is proved.
+- **Tier 2, driver conformance.** One suite every runtime driver must pass through the Runtime API alone: load config; mint wait-only and return a session id; steer and confirm delivery; stop; restart; archive; liveness in exactly the four words; usage and context pressure, unmeasured with a reason when unread; session log with the last steer and latest response identifiable. It runs against the fake runtime in CI and, as its tier 3 contract variant, against the real vendor in a sandbox account on demand, where it records cost. A driver that does not pass is not installable through config.
+- **Tier 2, seat behavior.** One suite per role, with no control plane and no other seat, from synthetic inputs. Arthur alone: given a synthetic board and the verb stub, it produces the expected steers and no refused ones, for example the three send-back steers for the state factory measured on 2026-10-05, and never a steer onto `urgency:no`. A worker alone: given a steer onto an issue in a fixture repository, it opens a draft, posts the self-review block on the head, and marks ready only after CI is green. A reviewer alone: given a ready pull request, it posts a verdict in the 12-line shape. A replay of recorded model turns runs in CI; the real model runs on demand and on every brief change, because a brief is config and a brief change is test-first against this suite.
+- **Tier 3, contracts.** The dashboard API's schema-digest and frame tests ([the dashboard API, where this is tested](mike-dashboard-api.md#9-where-this-is-tested)); the Runtime API conformance against each real vendor; the GitHub fake checked against recorded real responses.
+- **Tier 4, the tick.** A full tick against the fake runtime, the fake GitHub and the injected clock: routing of every change kind, every gate, record before act, the API frames, the jobs.
+- **Tier 5, live.** One real driver, one sandbox repository, one real tick, one real model turn, on demand.
 
-**What a test must still do.** Fail on main and pass on the head ([rule 7](#9-what-mike-keeps)). Name the seam it uses. Say the measurement it makes. A test that needs the whole thing running belongs in tier 5 or does not belong.
+**What a test must still do.** Fail on main and pass on the head ([rule 7](#9-what-mike-keeps)). Name its tier and the seam it uses. Say the measurement it makes.
 
 ## 13. Done when
 
