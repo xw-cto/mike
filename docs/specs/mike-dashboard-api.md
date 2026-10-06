@@ -50,11 +50,11 @@ Four callers exist. Each carries its own token as `Authorization: Bearer <token>
 
 `GET {base}/events` is one server-sent event stream. It is one-way: a client never publishes on it. Callers: `human`, `session`, `seat`.
 
-- A new connection receives one frame of each part, in this order: `version`, `health`, `sessions`, `board`, `priorities`, `review`, `gauges`, `settings`, `attached-sessions`, `logs`, `jobs`. A part the caller may not read is omitted, and the `version` frame lists the parts this stream will carry.
+- A new connection receives one frame of each part, in this order: `version`, `health`, `seats`, `board`, `priorities`, `review`, `gauges`, `settings`, `attached-sessions`, `logs`, `jobs`. A part the caller may not read is omitted, and the `version` frame lists the parts this stream will carry.
 - After the opening frames the control plane sends a frame for a part only when that part changes. A write to one part sends no other part.
 - The SSE event name is the part name. Every frame carries `version`, `part`, and `written_at`, the time the part was last written.
 - A part the loop has not written arrives as a frame with `state` `absent` and no rows. A part that cannot be read arrives with `state` `unmeasured` and a `reason`. The client says which; it never draws ok or 0 for either.
-- `sessions`, `board`, `review`, `gauges`, `attached-sessions` and `jobs` frames carry the whole part. `logs` frames carry only the new lines since the last frame, oldest first.
+- `seats`, `board`, `review`, `gauges`, `attached-sessions` and `jobs` frames carry the whole part. `logs` frames carry only the new lines since the last frame, oldest first.
 - An idle stream writes the comment `: keep-alive` every `api.keepalive_seconds` (config, default 15). The client draws nothing for it.
 - A client drops a stream with no bytes for three keep-alive intervals and opens a new one. It also reopens when its tab becomes visible again. A reopen receives every opening frame, so a reopen is a full read ([MS-055, live stream recovers itself](mike-user-stories.md#ms-055-live-stream-recovers-itself)).
 - The open's status decides the client's next step: 200 reads on, 401 asks for sign-in, 403 says the caller is refused, anything else retries every 3 seconds. 401 and 403 are not retried ([MS-054, four distinct connection failures](mike-user-stories.md#ms-054-four-distinct-connection-failures)).
@@ -71,9 +71,9 @@ Every read answers JSON, the payload named. The `Callers` column is the route's 
 |---|---|---|---|
 | `GET {base}/api/version` | `versionFrame` | API version, parts, served commit | all four |
 | `GET {base}/api/health` | `health` | the loop's last snapshot | all four |
-| `GET {base}/api/sessions` | `sessionsFrame` | one `sessionRow` per seat ([MS-001, one table of every seat](mike-user-stories.md#ms-001-one-table-of-every-seat)) | human, session, seat |
-| `GET {base}/api/sessions/{seat}` | `seatDetail` | that seat's row, its records, pending steer, vendor link ([MS-007, seat page for diagnosis](mike-user-stories.md#ms-007-seat-page-for-diagnosis)) | human, session, seat |
-| `GET {base}/api/sessions/{seat}/log` | `sessionLog` | the runtime's session log: inputs and responses, last steer, latest response ([MS-172, session log from every runtime](mike-user-stories.md#ms-172-session-log-from-every-runtime)) | human, session, seat (`own` seat) |
+| `GET {base}/api/seats` | `seatsFrame` | one `seatRow` per seat ([MS-001, one table of every seat](mike-user-stories.md#ms-001-one-table-of-every-seat)) | human, session, seat |
+| `GET {base}/api/seats/{seat}` | `seatDetail` | that seat's row, its records, pending steer, vendor link ([MS-007, seat page for diagnosis](mike-user-stories.md#ms-007-seat-page-for-diagnosis)) | human, session, seat |
+| `GET {base}/api/seats/{seat}/log` | `sessionLog` | the runtime's session log: inputs and responses, last steer, latest response ([MS-172, session log from every runtime](mike-user-stories.md#ms-172-session-log-from-every-runtime)) | human, session, seat (`own` seat) |
 | `GET {base}/api/board` | `boardFrame` | the board Arthur read on his last follow-up ([MS-132, board Arthur read is shown](mike-user-stories.md#ms-132-board-arthur-read-is-shown)) | human, session, seat |
 | `GET {base}/api/priorities` | `prioritiesFrame` | the priorities list, one `priorityRow` per lane | human, session, seat |
 | `GET {base}/api/review` | `reviewFrame` | open ready pull requests across all projects ([MS-128, review surface lists ready pulls](mike-user-stories.md#ms-128-review-surface-lists-ready-pulls)) | human, session, seat |
@@ -108,7 +108,7 @@ A command is a POST with a JSON body. Every command answers 202 at once with `{j
 | `POST {base}/api/issue` | `{project, number, urgency?, lane?}`; `urgency` one of `critical`, `high`, `normal`, `no`; `lane` a configured lane key | human; session when its row lists `issue`; seat per the caller matrix |
 
 - **Fleet mode.** One fleet mode runs at a time. A second fleet mode, or a seat verb on a seat a running fleet mode will touch, answers 409 with the running job's id and writes a refused record ([MS-065, fleet commands never collide](mike-user-stories.md#ms-065-fleet-commands-never-collide)). `reset-defaults` clears every assignment and every `seat:` label in one recorded write ([mint, remint, steer](mike.md#32-mint-remint-steer)). `restart-control-plane` persists its job; the outcome is on the first `jobs` frame after the reconnect.
-- **Seat verb.** One job covers every named seat; the job's `seats` list carries one outcome per seat. A verb fits a seat only when that seat's `sessionRow.verbs` lists it. The server refuses a verb that does not fit, with a record, even when a client sends it ([MS-028, verbs offered by the control plane](mike-user-stories.md#ms-028-verbs-offered-by-the-control-plane)). A steer with `prompt` and `assignment` both empty is 400. With an assignment, `Assignment: <work>` leads the delivered prompt on its own line. A steer's outcome names `confirmed` with the runtime's delivery id or `not confirmed` with a reason. A steer passes every [gate](mike.md#33-gates-mike-enforces-for-every-caller) or is refused naming the gate.
+- **Seat verb.** One job covers every named seat; the job's `seats` list carries one outcome per seat. A verb fits a seat only when that seat's `seatRow.verbs` lists it. The server refuses a verb that does not fit, with a record, even when a client sends it ([MS-028, verbs offered by the control plane](mike-user-stories.md#ms-028-verbs-offered-by-the-control-plane)). A steer with `prompt` and `assignment` both empty is 400. With an assignment, `Assignment: <work>` leads the delivered prompt on its own line. A steer's outcome names `confirmed` with the runtime's delivery id or `not confirmed` with a reason. A steer passes every [gate](mike.md#33-gates-mike-enforces-for-every-caller) or is refused naming the gate.
 - **Priorities.** Rows come from the lanes in instance config: one row per lane. A body that adds, deletes, or omits a lane is 400 and names the lanes config ([MS-015, edit the priorities list](mike-user-stories.md#ms-015-edit-the-priorities-list), [MS-016, rows follow configured lanes](mike-user-stories.md#ms-016-rows-follow-configured-lanes)). Each accepted edit is one config-store version.
 - **Settings.** Loop Running or Paused, live or dry-run, and loop cadence are setting keys. The server validates the value against the one settings schema the page also reads. A value that fails is 400 with `<key> must be <type>` and writes no version ([MS-039, schema check before save](mike-user-stories.md#ms-039-schema-check-before-save)). An `expected_version` that is not the current version is 409. A write of the value already stored is applied with why `already <value>`. A secret key takes a secret name, never a secret value.
 - **Attached-session token.** `issue` is the one answer that carries a secret: the 202 body adds `token`, once. The token is never on a frame, a read, a record, or a log line. `revoke` takes effect on the token's next call, which is 401 with a record ([MS-159, revocable attached session tokens](mike-user-stories.md#ms-159-revocable-attached-session-tokens)).
@@ -141,7 +141,7 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 | `process` | object | control plane `commit`, `branch`, `started_at` |
 | `tree` | object | loop checkout `commit`, `behind` count or `null` with `reason` ([MS-049, served commit and checkout lag](mike-user-stories.md#ms-049-served-commit-and-checkout-lag)) |
 
-**sessionRow**, one per seat, ordered arbiter, tpm, lane-pe, worker, reviewer, then name.
+**seatRow**, one per seat, ordered arbiter, tpm, lane-pe, worker, reviewer, then name.
 
 | Field | Type | Meaning |
 |---|---|---|
@@ -167,7 +167,7 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 | `verb_why` | object | verb to the server's one-line text for its button, for all five verbs ([MS-027, verb buttons explain themselves](mike-user-stories.md#ms-027-verb-buttons-explain-themselves)) |
 | `minted` | time or null | last mint; null with `reason` `never minted` or `unmeasured` |
 
-**seatDetail** is the `sessionRow` plus `records` (the seat's last 50 decision records) and `pending_job` (job id or null). **sessionLog** is `{state, reason, entries, last_steer, latest_response}`; each entry `{at, kind (input or response), text, latest}`.
+**seatDetail** is the `seatRow` plus `records` (the seat's last 50 decision records) and `pending_job` (job id or null). **sessionLog** is `{state, reason, entries, last_steer, latest_response}`; each entry `{at, kind (input or response), text, latest}`.
 
 **boardFrame**, the board as Arthur read it ([MS-131, Arthur reads the board](mike-user-stories.md#ms-131-arthur-reads-the-board)).
 
@@ -284,10 +284,11 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 | `droplet` joined not-ok string | dropped; `attention` groups | one reader, one source |
 | `harness`, `surface`, `state`, `watch` on a row | `runtime`, `vendor`, `access`, `liveness_source` | [runtimes](mike.md#4-runtimes) |
 | `verbs` list plus hover text the client derived | `verbs` list plus server `verb_why` | the server explains; the client derives nothing |
+| `sessions` part, `sessionRow`, `/sessions` routes | `seats` part, `seatRow`, `/seats` routes | the row is a seat; a session is what the runtime holds for it ([the Seats tab](mike.md#71-the-seats-tab-and-the-seat-card)) |
 | none | `board`, `review`, `gauges` per runtime, `attached-sessions`, `jobs`, session log | parts [the dashboard section](mike.md#7-the-dashboard) requires |
 | terminal ticket and WebSocket messages | **deferred** | see below |
 
-Terminal control ([MS-057, watch and drive a tmux pane](mike-user-stories.md#ms-057-watch-and-drive-a-tmux-pane)) is deferred to its own contract. It is served by the seat host, not the control plane, it is tmux-only, and it is a two-way WebSocket, which this one-way contract does not carry. Version `1.0.0` holds no terminal field. Adding a terminal URL and control holder to `sessionRow` later is a minor bump.
+Terminal control ([MS-057, watch and drive a tmux pane](mike-user-stories.md#ms-057-watch-and-drive-a-tmux-pane)) is deferred to its own contract. It is served by the seat host, not the control plane, it is tmux-only, and it is a two-way WebSocket, which this one-way contract does not carry. Version `1.0.0` holds no terminal field. Adding a terminal URL and control holder to `seatRow` later is a minor bump.
 
 ## 9. Where this is tested
 

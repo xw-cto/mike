@@ -28,8 +28,8 @@
 
 | Verdict | Rows |
 |---|---|
-| KEEP | 106 |
-| RENAME | 20 |
+| KEEP | 107 |
+| RENAME | 21 |
 | NARROW | 33 |
 | RETIRE | 46 |
 | CHALLENGE | 0 |
@@ -114,12 +114,12 @@
 | Running | Loop state in which each tick acts; the one config-store switch | [lexicon.md line 83, Running](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L83) | KEEP | Same |
 | Runtime kind names | `cursor-cloud`, `grok-tmux`, `claude-tmux`, `codex-tmux`, `claude-cloud` | [seats.yaml line 147, Runtime kind names](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/seats.yaml#L147) | KEEP | Each is a runtime, a driver under the Mike Runtime API ([mike.md §4, runtimes](mike.md#4-runtimes)) |
 | Seat actuator | One interface for mint, stop, steer, archive, restart, claim; Cursor only | [lexicon.md line 269, Seat actuator](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L269) | KEEP | The Mike Runtime API: one interface, one record shape, every runtime |
+| Seat card | none; factory draws a seat as a table row | [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card) | KEEP | new in Mike: the one component that draws a seat ([entry](#seat-card)) |
 | Seat host | Agent on a machine that hosts seats; pulls actuations, pushes check-in | [lexicon.md line 95, Seat host](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L95) | KEEP | Pulls with a host token; no inbound path |
 | Seat type | Seats of one role sharing vendor, runtime and model; no per-seat override | [lexicon.md line 453, Seat type](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L453) | KEEP | Remint on change |
 | Self code review | None; new in Mike (factory: Owner self-review) | [mike.md §3.4, review and send-back](mike.md#34-review-and-send-back) | KEEP | New in Mike: the assigned seat's review with its runtime code-review tool, posted as the self-review block |
 | Session log | None; new in Mike | [mike.md §4, runtimes](mike.md#4-runtimes) | KEEP | New in Mike: a runtime capability; inputs and responses, from which the last steer and the latest response are read |
 | Session token | None; new in Mike | [Mike dashboard API §2, identity](mike-dashboard-api.md#2-identity) | KEEP | New in Mike: the bearer a human issues to an attached session; revocable; shown once |
-| Sessions tab | Who is on what now, and the last poke | [agent-harness spec line 246, Sessions tab](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L246) | KEEP | Adds a phone layout; reads the `sessions` [part](#part) ([Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes)) |
 | Stale | Older than the window, by arithmetic | [agent-harness spec line 302, Stale](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L302) | KEEP | Same |
 | stall | Banned; write Paused | [lexicon.md line 1145, stall](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1145) | KEEP | Ban stays |
 | stalled | Banned; write Paused | [lexicon.md line 1146, stalled](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1146) | KEEP | Ban stays |
@@ -157,6 +157,7 @@
 | Medium | Ordinary work; `sev3`; steer class `feed` | [lexicon.md line 435, Medium](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L435) | RENAME | **`urgency:normal`**; drop `feed` |
 | Meter | A scraped reading of one vendor budget; `write-meters` | [meters.py line 16, Meter](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/meters.py#L16) | RENAME | **gauge source**; the gauge is the reading |
 | Retarget loop | `retarget-loop.sh` and `run_tick`, the loop's name | [retarget-loop.sh line 2, Retarget loop](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/retarget-loop.sh#L2) | RENAME | **tick**; `retarget-pe` retires with the host ladder |
+| Sessions tab | Who is on what now, and the last poke | [agent-harness spec line 246, Sessions tab](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L246) | RENAME | **Seats tab**: every seat as one [seat card](#seat-card) ([mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card)) |
 | Severity | Urgent, High, Medium, Low, plus steer class and SLA | [lexicon.md line 413, Severity](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L413) | RENAME | **urgency**: `urgency:<level>` labels order work inside a lane; no steer class ([mike.md §3.1, pool, assignment, share](mike.md#31-pool-assignment-share)) |
 | Severity floor | `severity floor: Low is never steered` (no heading) | [lexicon.md line 441, Severity floor](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L441) | RENAME | **urgency floor**; add a heading; [gate 4, the urgency floor](mike.md#33-gates-mike-enforces-for-every-caller) |
 | Steer-idle | Tick verb: planner for idle workers plus orchestrator follow-up | [agent-harness spec line 159, Steer-idle](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L159) | RENAME | **follow-up**; the planner is not re-created |
@@ -310,6 +311,10 @@ Owner: [mike.md §4, runtimes](mike.md#4-runtimes). A runtime capability: the st
 ### gh_user
 
 Owner: [mike.md §3.3, the gates](mike.md#33-gates-mike-enforces-for-every-caller). The GitHub user, per instance, whose assigned issues and pull requests Mike may steer. Empty or unmeasured refuses every steer. Not a human merger; Mike never writes as the merger. Factory: harness-gh-user. **Binds:** [gate 1, the owner gate](mike.md#33-gates-mike-enforces-for-every-caller), refusal text `not assigned to gh_user`.
+
+### Seat card
+
+Owner: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card). The one component that draws a seat: info on top (name, role, liveness LED with its word, driver, last mint, assignment and its time, last steer and its time, context pressure gauge, tokens since mint) and controls on the bottom (start-stop switch, Restart, Steer, Mint, Archive). Responsive by its container; on a phone the info sits behind an expander and the verbs behind a hamburger. Not a table row, and not a tab: the Seats tab is where cards are grouped by role. **Binds:** one component rendered on the Seats tab, the board and the review surface; test that a 375 px render has no horizontal scroll.
 
 ### Seat
 

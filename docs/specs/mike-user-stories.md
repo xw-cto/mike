@@ -178,7 +178,7 @@ Verdict: KEEP.
 As a human (Tig today), I want each verb button to say what it does and why it is off, in the server's words, so that I do not guess and the page cannot drift.
 Evidence: [factory dashboard verbs.mjs line 71, the verb hover text](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L71); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: 0 why-off strings in the page source; each tooltip equals the server's field for that row and verb.
-Verdict: CHANGE: factory's `verbReason` re-derives the rule in prose and already disagrees with the server ([mike.md §10 item 21, dashboard patches](mike.md#10-what-mike-does-not-re-create)); Mike's server sends `verb_why` per verb on each `sessionRow` ([Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes)).
+Verdict: CHANGE: factory's `verbReason` re-derives the rule in prose and already disagrees with the server ([mike.md §10 item 21, dashboard patches](mike.md#10-what-mike-does-not-re-create)); Mike's server sends `verb_why` per verb on each `seatRow` ([Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes)).
 
 #### MS-028 Verbs offered by the control plane
 As a human (Tig today), I want verbs offered only when the control plane lists them for the row, so that I cannot mint over a responding seat: one session per seat name.
@@ -461,7 +461,7 @@ Acceptance: each loaded brief contains the five rules (test); a report with a co
 Verdict: KEEP.
 
 #### MS-072 Focus stored in detail
-As a seat (any), I want my reported focus and check-in stored in the record's `detail`, never its `why`, so that the Sessions tab shows focus without hiding a refusal reason.
+As a seat (any), I want my reported focus and check-in stored in the record's `detail`, never its `why`, so that the Seats tab shows focus without hiding a refusal reason.
 Evidence: [factory harness __main__.py line 3024, the check-in detail field](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/__main__.py#L3024).
 Acceptance: `detail.focus` and `detail.checked_in` written, `detail.present_keys` holds names only; `why` unchanged.
 Verdict: KEEP.
@@ -948,12 +948,12 @@ Verdict: NEW.
 As a human (Tig today), I want every tab readable on a phone, so that I run the fleet away from my desk.
 Evidence: [factory dashboard app.css line 125, no breakpoint for the 8-column Sessions table](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.css#L125).
 Acceptance: at 375 px width, 0 tabs need horizontal page scroll.
-Verdict: CHANGE: today Sessions fails; Mike lays out every tab, review surface and board included.
+Verdict: CHANGE: today factory's Sessions tab fails; Mike lays out every tab, review surface and board included.
 
 #### MS-140 Every seat verb by tap
 As a human (Tig today), I want every single-seat verb reachable by tap, so that I need no right-click.
 Evidence: [factory dashboard app.js line 1598, context menu, no touch path](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1598).
-Acceptance: on a touch device each of the 5 seat verbs is reachable within 2 taps from the Sessions row.
+Acceptance: on a touch device each of the 5 seat verbs is reachable within 2 taps from the seat card.
 Verdict: CHANGE: today the per-row menu needs a right-click.
 
 ### 3.6 Multi-project, single instance
@@ -1097,7 +1097,7 @@ Verdict: NEW.
 #### MS-161 Attached sessions read the board
 As an attached session, I want to read the board, sessions, health and priorities over the same API a seat reads, so that my judgment uses the operator's view.
 Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [mike.md §3.1, pool, assignment and share](mike.md#31-pool-assignment-share); seats read the same API in [MS-008, Arthur reads the same API](#ms-008-arthur-reads-the-same-api); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
-Acceptance: `GET {base}/api/sessions` and `GET {base}/api/board` answer a session token with the same rows the page draws.
+Acceptance: `GET {base}/api/seats` and `GET {base}/api/board` answer a session token with the same rows the page draws.
 Verdict: NEW.
 
 #### MS-162 Attached sessions steer through gates
@@ -1107,9 +1107,9 @@ Acceptance: a steer from the session passes [gates 1 to 6, owner gate through re
 Verdict: NEW.
 
 #### MS-163 Attached sessions listed apart
-As a human (Tig today), I want attached sessions listed on the dashboard with last call and token age, apart from the Sessions tab, so that I can see who is acting through Mike and revoke one.
+As a human (Tig today), I want attached sessions listed on the dashboard with last call and token age, apart from the Seats tab, so that I can see who is acting through Mike and revoke one.
 Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [mike.md §7, the dashboard](mike.md#7-the-dashboard); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
-Acceptance: one row per token with name, verbs, last call time, issued-at; a Revoke verb with one confirm; the Sessions tab shows no attached session.
+Acceptance: one row per token with name, verbs, last call time, issued-at; a Revoke verb with one confirm; the Seats tab shows no attached session.
 Verdict: NEW.
 
 #### MS-164 Attaching is optional
@@ -1169,7 +1169,7 @@ Verdict: NEW.
 #### MS-177 Command outcome on the changed row
 As a human (Tig today), I want a command's outcome shown on the row it changed, however long it took, so that I see the result where I acted.
 Evidence: [mike.md §7, the dashboard](mike.md#7-the-dashboard); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands), [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
-Acceptance: each seat's outcome from `jobRow.seats` shows on that seat's Sessions row; a steer that takes 120 s shows its outcome there with no reload; a stream reopen restores it from the opening `jobs` frame; `GET {base}/api/jobs?job=<id>` answers the same row.
+Acceptance: each seat's outcome from `jobRow.seats` shows on that seat's card on the Seats tab; a steer that takes 120 s shows its outcome there with no reload; a stream reopen restores it from the opening `jobs` frame; `GET {base}/api/jobs?job=<id>` answers the same row.
 Verdict: NEW.
 
 #### MS-178 Stale settings write refused
@@ -1182,6 +1182,38 @@ Verdict: NEW.
 As a human (Tig today), I want each caller's open streams capped by config, so that a leaking client or a looping seat cannot exhaust the control plane.
 Evidence: [Mike dashboard API §4, the stream](mike-dashboard-api.md#4-the-stream).
 Acceptance: with the cap at N, the caller's open N+1 answers 429 and the first N stay open; the page says the stream cap is reached, not that the control plane is down.
+Verdict: NEW.
+
+### 3.15 The Seats tab and the seat card
+
+#### MS-180 One seat card component everywhere
+As a human, I want every seat drawn as the same seat card wherever it appears, so that I learn one shape and read it the same on every tab.
+Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [the approved mockup](mike.md#71-the-seats-tab-and-the-seat-card).
+Acceptance: the Seats tab, the board, and the review surface render a seat through one component; a change to the card's markup appears on all three without a second edit.
+Verdict: NEW.
+
+#### MS-181 Cards grouped by role, responsive
+As a human, I want cards grouped as orchestrators, lane-PEs, workers and reviewers, side by side on a desktop and stacked on a phone, so that I find a seat by its job on any screen.
+Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card).
+Acceptance: at 1180 px a group shows at least 2 cards per row; at 375 px one per row with no horizontal page scroll; the card's inner grid goes from two columns to one by its own container width.
+Verdict: NEW.
+
+#### MS-182 Seat card info block
+As a human, I want each card to show name, role, liveness LED with its word, driver, last mint, assignment with its time, last steer with its time, context pressure as a bar gauge, and tokens since mint, so that one glance answers who, what, how long, and how full.
+Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-002, liveness as one of four words](#ms-002-liveness-as-one-of-four-words).
+Acceptance: all nine fields present on every card; the LED color always has its word beside it; an unmeasured field reads unmeasured plus its reason and draws no bar; the gauge fill changes to warning at 60 percent and critical at 80 percent.
+Verdict: NEW.
+
+#### MS-183 Seat card controls
+As a human, I want a start-stop switch and Restart, Steer, Mint and Archive at the bottom of each card, with a verb disabled and explained when the seat's row does not list it, so that I act on one seat without a menu hunt.
+Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-027, the server explains a disabled verb](#ms-027-verb-buttons-say-what-and-why-off).
+Acceptance: the five controls are present on every card; a control not in the row's `verbs` is disabled with `verb_why` as its hover text; a click posts one command and the card shows the job outcome.
+Verdict: NEW.
+
+#### MS-184 Phone card: expander and hamburger
+As a human on a phone, I want the card's info behind a Details expander and its verbs behind a hamburger, with the start-stop switch still visible, so that the tab stays short and every verb has a touch path.
+Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-005, readable on a phone](#ms-005-readable-on-a-phone).
+Acceptance: at 375 px a closed card is at most 3 lines tall; the expander and the hamburger each open with one tap; the switch is reachable without opening either; an open expander or menu survives a sessions frame.
 Verdict: NEW.
 
 ## 4. Retired stories
