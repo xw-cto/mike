@@ -2,7 +2,7 @@
 
 **Status:** plan. Written before the code, as the companion to [`mike.md`](mike.md#8-lexicon).
 
-**What this is.** Every factory harness term, each with a verdict for Mike: KEEP, RENAME, NARROW, RETIRE, or CHALLENGE. The human edits this file; a CHALLENGE row stays open until he does. The lexicon is config, so once Mike has code a change to this file is test-first: a test fails on the old text and passes on the new. Test names on **Binds** lines in section 3 are the tests to write; none exists yet.
+**What this is.** Every factory harness term, each with a verdict for Mike: KEEP, RENAME, NARROW, RETIRE, or CHALLENGE. A human edits this file; a CHALLENGE row stays open until he does. The lexicon is config, so once Mike has code a change to this file is test-first: a test fails on the old text and passes on the new. Test names on **Binds** lines in section 3 are the tests to write; none exists yet.
 
 **Source pin:** excaliwire/factory [`bb2bf4c6`](https://github.com/excaliwire/factory/tree/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8) (2026-10-05). A `lex:<n>` source is `https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L<n>`; `spec:<n>` is `docs/specs/agent-harness.md#L<n>` at the same commit; other sources name their file. Input: the lexicon audit (194 rows, 309 terms). Where the audit and [`mike.md`](mike.md) sections 8 and 11 disagree, mike.md wins, and section 2.1 lists each disagreement.
 
@@ -15,7 +15,7 @@
 5. **Machine copy equals prose.** The Geas instance equals the extract of this file; a test fails when they differ.
 6. **Geas lint.** Every outbound prompt and every write is linted against banned terms as whole strings; backticks and fenced blocks are mentions; a run that read nothing refuses.
 7. **The lexicon is config.** A term change is test-first, like code, schema and briefs.
-8. **A new term needs a human.** The candidate is argued, the human picks, and the term lands with its schema in one change.
+8. **A new term needs a human.** The candidate is argued, a human picks, and the term lands with its schema in one change.
 9. **No pick history in an entry.** No "who named it" or dates; factory's test misses 5 such entries today.
 10. **Use the words.** A clearer synonym is still the wrong word; a code appears once, in parentheses, as a bridge.
 11. **Names are config.** Seat and role display names live in instance config; code classifies by role key, never by a display name.
@@ -28,11 +28,11 @@
 
 | Verdict | Rows |
 |---|---|
-| KEEP | 92 |
-| RENAME | 14 |
-| NARROW | 36 |
-| RETIRE | 41 |
-| CHALLENGE | 9 |
+| KEEP | 95 |
+| RENAME | 15 |
+| NARROW | 38 |
+| RETIRE | 44 |
+| CHALLENGE | 0 |
 
 | Term | Factory meaning (one line) | Source | Mike verdict | Mike term or why |
 |---|---|---|---|---|
@@ -66,6 +66,7 @@
 | Heartbeat | Loop stamp each tick, before any refusal, only from the loop | [spec:155](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L155) | KEEP | Same |
 | Independent review | Line 1 `[Name] Recommendation: Merge on <sha>.` | [spec:406](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L406) | KEEP | 12-line review (mike.md 6) |
 | Initial steer | Code-rendered first steer after a mint | [spec:192](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L192) | KEEP | Same |
+| Lane-PE | Expensive judgment seat for one lane; no merge, no mint | [lex:173](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L173) | KEEP | Decided 2026-10-05: role stays, wait-only, human or loop mint behind a confirmed setting (decision 12) |
 | Last mint | A time, `not-minted`, or `unmeasured`; never a liveness word | [spec:108](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L108) | KEEP | Same |
 | Live state | Who is on what now, session ids, meter readings, live tier; not in git | [lex:149](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L149) | KEEP | The store; readings are gauges |
 | Liveness | `not-minted`, `responding`, `not-responding`, `unmeasured`; not assignment | [lex:257](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L257) | KEEP | No fifth word; busy and idle are activity |
@@ -84,6 +85,7 @@
 | Needs IR (`needs_ir`) | Ready and waiting for independent review | [README](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/README.md) | KEEP | Same |
 | Orchestrator cooldown | Minimum minutes before the same board steers an orchestrator again | [spec:161](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L161) | KEEP | Trigger follows decision 1 |
 | Orchestrator reboot | Archive TPM and arbiter, reset their assignments, restart, mint both | [lex:293](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L293) | KEEP | TPM half follows Q3 |
+| Orchestrator seat | Arbiter or TPM; must not be one chat | [lex:459](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L459) | KEEP | Decided 2026-10-05: two seats stay; K measured for a week (decision 13) |
 | Owner self-review | `Self-Review: Done` naming `Head: <sha>` | [spec:402](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L402) | KEEP | Merge step 2 (mike.md 6) |
 | Paste | tmux steer delivery; delivered when the pane shows it | [spec:96](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L96) | KEEP | Pane echo is delivery confirmation |
 | Paste hold | Pastes and restarts to a pane are held while a human controls it | [spec:230](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L230) | KEEP | A human pane lock, not a planner hold |
@@ -98,8 +100,8 @@
 | Reset defaults | Reboot option: assignments idle, auto-steer on, seat labels removed, a record per seat | [lex:287](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L287) | KEEP | One recorded write clears every assignment and label (mike.md 3.2) |
 | Restart control plane | Bounce the control-plane process only | [lex:305](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L305) | KEEP | Resumes from the store |
 | Retired name | A name in `seats.yaml` `retired`; never minted again | [spec:45](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L45) | KEEP | Same |
-| Reviewer | Seat that independently reviews a ready pull request it did not write | [lex:201](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L201) | KEEP | Role key `reviewer`; Warden is the default name (mike.md 2) |
-| Reviewer grant | `reviewer: <Name>` from `tig` | [spec:422](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L422) | KEEP | From the human merger account (config) |
+| Reviewer | Seat that independently reviews a ready pull request it did not write | [lex:201](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L201) | KEEP | Role key `reviewer`; Warden is factory's name for it, not a Mike default (decision 9) |
+| Reviewer grant | `reviewer: <Name>` from `tig` | [spec:422](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L422) | KEEP | From a human merger account (config) |
 | Row verbs | A Sessions row lists the verbs that fit liveness; others refused | [spec:102](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L102) | KEEP | The page's only verb source |
 | Running | Loop state in which each tick acts; the one config-store switch | [lex:83](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L83) | KEEP | Same |
 | Runtime kind names | `cursor-cloud`, `grok-tmux`, `claude-tmux`, `codex-tmux`, `claude-cloud` | [seats.yaml:147](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/seats.yaml#L147) | KEEP | Each is a runtime (mike.md 8) |
@@ -112,17 +114,18 @@
 | stall | Banned; write Paused | [lex:1145](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1145) | KEEP | Ban stays |
 | stalled | Banned; write Paused | [lex:1146](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1146) | KEEP | Ban stays |
 | Sync-tip | Control plane fast-forwards and restarts on tip | [spec:117](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L117) | KEEP | Same |
-| Temporary seat | Seat the human mints for one conversation; not counted against the cap | [spec:51](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L51) | KEEP | Proof is its mint record, not the retired board (mike.md 8) |
+| Temporary seat | Seat a human mints for one conversation; not counted against the cap | [spec:51](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L51) | KEEP | Proof is its mint record, not the retired board (mike.md 8) |
 | Terminal ticket | Single-use ticket bound to an email and a session | [spec:220](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L220) | KEEP | Same |
 | Test-first | The test fails on the old code and passes on the new | [spec:403](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L403) | KEEP | Reviewer verb runs it both sides |
 | Tick | One control-loop pass, `run_tick`, 10 verbs today (no heading) | [spec:155](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L155) | KEEP | Add a heading; also names the loop (see retarget loop) |
 | Tier | How capable and expensive a seat's model is | [lex:167](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L167) | KEEP | Property of a seat type's model; the ladder use retires (mike.md 8) |
 | Title ownership | Which roles own which titles and development paths | [spec:66](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L66) | KEEP | Same |
+| TPM (Kay) | Roster and briefs; direction into issues; classification judgment | [spec:39](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L39) | KEEP | Decided 2026-10-05: stays as K; measured for a week (decision 13) |
 | Tree gate | A tick reaches no live seat unless the tree is confirmed | [spec:167](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L167) | KEEP | Same |
 | Unmeasured | A reading not taken; an answer; the path refuses to act (no heading) | [spec:74](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L74) | KEEP | Add a heading; never 0, never ok |
 | vendor-hook framework | Banned; write Geas | [lex:1143](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1143) | KEEP | Ban stays |
 | Wait-only mint | Mint with `MINT_WAIT`; the first steer is the assignment | [spec:192](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L192) | KEEP | Every role, lane-PE included (#1755) |
-| Waiver | `waive: <gate>` from the `tig` account, pinned to a sha | [spec:416](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L416) | KEEP | From the human merger account (config) |
+| Waiver | `waive: <gate>` from the `tig` account, pinned to a sha | [spec:416](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L416) | KEEP | From a human merger account (config) |
 | Warden | Factory's display name for a reviewer | [lex:207](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L207) | KEEP | Default display name in instance config |
 | Web terminal | Watch and take control of a tmux pane; human only | [spec:210](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L210) | KEEP | Same |
 | Work type | Feature, Bug, Task; not priority | [spec:383](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L383) | KEEP | Same |
@@ -131,9 +134,9 @@
 | Agent harness | Code-owned control plane for agent sessions; `agent-harness/` | [lex:45](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L45) | RENAME | **Mike**; harness carried 2 meanings |
 | Assign Tig | Merge step: assign `tig`; `pull assign-tig` | [spec:407](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L407) | RENAME | **request merge**; the merger is config |
 | Claim | Attach a live same-name vendor session to its seat; not a mint | [lex:251](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L251) | RENAME | **adopt**; claim stays for a host claiming an actuation |
-| Direction | The human's lane rows `{lane, note}` in the store; on enabled, off starved | [lex:379](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L379) | RENAME | **priorities list**; at most 3 ranked rows, each with a share |
+| Direction | A human's lane rows `{lane, note}` in the store; on enabled, off starved | [lex:379](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L379) | RENAME | **priorities list**; at most 3 ranked rows, each with a share |
 | Droplet | The host that runs the control plane (used 20+ times, no heading) | [spec:86](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L86) | RENAME | **control-plane host**; Mike runs on any host |
-| Excaliwire PgM (director) | The human's portal session; not a seat; caller kind `operator` | [spec:47](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L47) | RENAME | **director**; PgM is the instance's display name |
+| Excaliwire PgM (director) | A human's portal session; not a seat; caller kind `operator` | [spec:47](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L47) | RENAME | **director**; PgM is the instance's display name |
 | harness (seat field) | A seat's run kind, `harness: grok-tmux` | [lex:131](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L131) | RENAME | **runtime** (mike.md 8, decision 7) |
 | Harness account | One account per harness, named by secret file | [spec:347](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L347) | RENAME | **vendor account**; the vendor bills (mike.md 4); new word, Q12 |
 | Harness-gh-user | GitHub user whose assigned issues and pull requests may be steered | [lex:373](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L373) | RENAME | **gh_user**; same gate 1 |
@@ -142,6 +145,8 @@
 | Program | The repositories in `seats.yaml` `program` | [spec:76](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L76) | RENAME | **project list**: the instance's projects; gate 2 |
 | Retarget loop | `retarget-loop.sh` and `run_tick`, the loop's name | [retarget-loop:2](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/retarget-loop.sh#L2) | RENAME | **tick**; `retarget-pe` retires with the host ladder |
 | Steer-idle | Tick verb: planner for idle workers plus orchestrator follow-up | [spec:159](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L159) | RENAME | **follow-up**; the planner is not re-created |
+| Tig | A human: merges, owns spend, only waiver source | [lex:31](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L31) | RENAME | **humans** (plural): instance config lists them by login; Mike text says a human or humans; Tig is factory's config (Q6, mike.md 2.1) |
+| `seat:<name>` label | That seat owns the work; routes a poke | [spec:365](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L365) | NARROW | Marks the seat's one assignment |
 | Agent principal | Entra ID identity per machine trust boundary | [lex:107](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L107) | NARROW | Identity per trust boundary: seat token, host token; Entra is an implementation |
 | App role | Entra role checked per route: 4 roles | [lex:115](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L115) | NARROW | Keep the 4 roles; drop Entra |
 | Arbiter | Seat that owns the control plane, orders work, owns assignment | [lex:213](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L213) | NARROW | Judgment from the board; acts only through verbs |
@@ -167,21 +172,24 @@
 | Review-idle | Pair an idle reviewer with the oldest `needs_ir` pull request; holds | [README](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/README.md) | NARROW | One reviewer per ready pull request, in parallel; no holds |
 | Seat | An agent session the harness manages | [lex:161](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L161) | NARROW | Owns one assignment or nothing |
 | Seat cap (`max_seats`) | Worker cap in `seats.yaml`; control seats exempt | [spec:49](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L49) | NARROW | Cap per role; reviewers `ceil(workers / 3)` (decision 3) |
-| `seat:<name>` label | That seat owns the work; routes a poke | [spec:365](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L365) | NARROW | Marks the seat's one assignment |
 | Send-back | Merge-gate outcome: findings return to the owner | [spec:406](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L406) | NARROW | The author seat's next assignment; nothing held |
 | Severity | Urgent, High, Medium, Low, plus steer class and SLA | [lex:413](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L413) | NARROW | Orders work inside a lane; no steer class |
-| Sign-in gate | Front door in front of the API: `hgl-auth` or `oauth2-proxy` | [lex:121](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L121) | NARROW | Concept stays; product is config; the human is a verified bearer |
+| Sign-in gate | Front door in front of the API: `hgl-auth` or `oauth2-proxy` | [lex:121](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L121) | NARROW | Concept stays; product is config; a human is a verified bearer |
+| Standing seat | A seat named in `seats.yaml` | [spec:45](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L45) | NARROW | Decided 2026-10-05: the pool is a cap and a name list; a standing seat is a name in that list (decision 11) |
 | Steer | Wake and instruct; the entry restates 3 gates and the loop window | [lex:227](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L227) | NARROW | Next assignment or inside it; never across work |
 | Steer record | Record of a steer; in the planner it holds seat and issue | [AGENTS:113](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/AGENTS.md#L113) | NARROW | A record only |
 | Steer rules | Config-store steering settings, 11 listed | [lex:367](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L367) | NARROW | Gate and share parameters only; rest is Fleet |
-| Stop | Pause a seat, keep its session; auto-steer off | [lex:239](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L239) | NARROW | Human switch; the human or Arthur clears it (mike.md 3.3.8) |
+| Stop | Pause a seat, keep its session; auto-steer off | [lex:239](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L239) | NARROW | Human switch; a human or Arthur clears it (mike.md 3.3.8) |
 | Unassigned-urgent | Set of unassigned Urgent issues; a Health row | [spec:161](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L161) | NARROW | A board column |
 | unmeasured-liveness | Hold: the seat's reading is unmeasured | [idle_steer:55](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/idle_steer.py#L55) | NARROW | Refusal text of gate 7 only |
+| Urgent | Blocking; `sev1`; steer class `interrupt` | [lex:423](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L423) | NARROW | Decided 2026-10-05: SEV1 sorts first, never preempts; the `interrupt` steer class retires (decision 14) |
 | Vendor | System that runs a seat's session; truth for alive; also the biller | [lex:127](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L127) | NARROW | Who bills a runtime (mike.md 4); what runs it is the runtime |
 | `--allow-lower-severity` | Override flag for `higher_unassigned` | [#1336](https://github.com/excaliwire/factory/issues/1336) | RETIRE | Already removed (#1763) |
 | already-assigned | none-eligible reason (#897) | [#1336](https://github.com/excaliwire/factory/issues/1336) | RETIRE | Planner reason |
 | Auto-steer | Seat eligibility for loop steering; stop sets it off | [spec:104](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L104) | RETIRE | Stop replaces it |
 | awaiting-response | Hold: a seat with a pull request awaiting response is not idle | [idle_steer:42](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/idle_steer.py#L42) | RETIRE | Send-back is the next assignment (mike.md 8) |
+| Conflict-steer | Ready conflicting PR steers its owner, or an idle worker | [spec:163](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L163) | RETIRE | Decided 2026-10-05: not a verb; a conflict is a change kind the control plane routes to the author seat (decision 5) |
+| Copilot-findings | Copilot threads steer the owner; a busy owner yields to an idle worker | [spec:406](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L406) | RETIRE | Decided 2026-10-05: not a verb; unresolved Copilot threads are a change kind routed to the author seat (decision 5) |
 | Harness-state | Git branch that seeds the direction list | [lex:337](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L337) | RETIRE | Config store is the source |
 | higher_unassigned | Steer refusal: a higher severity in the lane is unassigned | [#1336](https://github.com/excaliwire/factory/issues/1336) | RETIRE | Already removed (#1763) |
 | Hold | Planner outcome that plans nothing and names why | [spec:159](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L159) | RETIRE | A gate outcome is a refusal |
@@ -213,21 +221,13 @@
 | Resume | Tick verb that resumes stood-down seats | [spec:78](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L78) | RETIRE | With stand-down |
 | Rung | One step on the lane-PE host ladder | [lex:67](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L67) | RETIRE | The ladder retires (mike.md 8) |
 | Seat-assignments board | Retired dashboard board | [spec:261](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L261) | RETIRE | Already retired; remove references |
+| SLA | How soon a severity must move; 0 code readers | [lex:407](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L407) | RETIRE | Decided 2026-10-05: retired for the first cut; 0 code readers; age per severity is a log line first if wanted (Q7) |
 | Stand-down | Live-state hold until a gate `name#N` clears | [spec:78](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L78) | RETIRE | Arthur steers "wait for #N" (mike.md 8) |
 | Steer class | Per severity: `interrupt`, `elevate`, `feed`, `never` | [seats.yaml:682](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/seats.yaml#L682) | RETIRE | Only `never` acted; severity floor replaces it |
 | Steer debt | Planner bookkeeping of refused or 409 steers | [#1336](https://github.com/excaliwire/factory/issues/1336) | RETIRE | No planner |
 | Taken (in-flight) | Issue taken by open PR, title, steer record, or pending create | [spec:159](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L159) | RETIRE | Assignment is the one source |
 | The box | Shared machine at `/home/box` hosting the harness and tmux seats | [lex:53](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L53) | RETIRE | 3 hosts now; name by job: control-plane host, seat host |
 | Worker planner | `plan`, `hold_why`, `_feed_key`: picks seat and issue | [#1336](https://github.com/excaliwire/factory/issues/1336) | RETIRE | Arthur decides |
-| Conflict-steer | Ready conflicting PR steers its owner, or an idle worker | [spec:163](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L163) | CHALLENGE | Q8 |
-| Copilot-findings | Copilot threads steer the owner; a busy owner yields to an idle worker | [spec:406](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L406) | CHALLENGE | Q9 |
-| Lane-PE | Expensive judgment seat for one lane; no merge, no mint | [lex:173](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L173) | CHALLENGE | Q2 |
-| Orchestrator seat | Arbiter or TPM; must not be one chat | [lex:459](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L459) | CHALLENGE | Q3 |
-| SLA | How soon a severity must move; 0 code readers | [lex:407](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L407) | CHALLENGE | Q7 |
-| Standing seat | A seat named in `seats.yaml` | [spec:45](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L45) | CHALLENGE | Q1 |
-| Tig | The human: merges, owns spend, only waiver source | [lex:31](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L31) | CHALLENGE | Q6 |
-| TPM (Kay) | Roster and briefs; direction into issues; classification judgment | [spec:39](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L39) | CHALLENGE | Q3 |
-| Urgent | Blocking; `sev1`; steer class `interrupt` | [lex:423](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L423) | CHALLENGE | Q4 |
 
 **PROJECT terms (123, not in the table).** The audit's 8 grouped rows hold 90 Excaliwire domain headings and 33 domain bans at [lex:471-1142](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L471): factory stages (12), Scabbard (7), quality checks (12), canon (33), presentation (10), originals (14), people and product (2), domain bans (33). They stay in factory's own lexicon and reach Mike only through the factory project's hook, which loads them as that project's Geas scope. Mike keeps the general rule (section 1, rule 10) and the scoped-ban mechanism, not the words. One pattern carries over: Model-call record's "unknown is recorded as unknown, never as zero" is the gauge rule.
 
@@ -238,7 +238,7 @@
 - Agent harness: audit keeps "harness" for the runtime kind; mike.md 8 renames it runtime.
 - Harness-gh-user: audit KEEP; mike.md 8 RENAME to gh_user.
 - Rung, Host ladder: audit CHALLENGE; mike.md 8 retires the ladder.
-- Reviewer: audit CHALLENGE on the role word; mike.md 2 settles it (role key `reviewer`, default name Warden).
+- Reviewer: audit CHALLENGE on the role word; mike.md 2 settles it (role key `reviewer`; Warden is factory's instance name).
 - Direction: audit CHALLENGE; mike.md 8 renames it priorities list.
 - Board: audit CHALLENGE; mike.md 3.1 defines it.
 - Temporary seat: audit CHALLENGE; mike.md 8 keeps it.
@@ -282,11 +282,11 @@ Owner: [`mike.md` 4](mike.md#4-runtimes-and-vendors). Who bills a runtime: Curso
 
 ### gh_user
 
-Owner: [`mike.md` 3.3](mike.md#33-gates-mike-enforces-for-every-caller). The GitHub user, per instance, whose assigned issues and pull requests Mike may steer. Empty or unmeasured refuses every steer. Not the human merger; Mike never writes as the merger. Factory: harness-gh-user. **Binds:** gate 1, refusal text `not assigned to gh_user`.
+Owner: [`mike.md` 3.3](mike.md#33-gates-mike-enforces-for-every-caller). The GitHub user, per instance, whose assigned issues and pull requests Mike may steer. Empty or unmeasured refuses every steer. Not a human merger; Mike never writes as the merger. Factory: harness-gh-user. **Binds:** gate 1, refusal text `not assigned to gh_user`.
 
 ### Seat
 
-Owner: [`mike.md` 2](mike.md#2-roles). A named agent session Mike manages, with one role. A worker or reviewer seat is in the pool and owns nothing beyond its current assignment: no lane, no issue history, no second label. The director, a session the human opens for himself, and a human-driven engineer session are not seats. **Binds:** caller matrix (anyone not the human or director is a seat or refused).
+Owner: [`mike.md` 2](mike.md#2-roles). A named agent session Mike manages, with one role. A worker or reviewer seat is in the pool and owns nothing beyond its current assignment: no lane, no issue history, no second label. The director, a session a human opens for himself, and a human-driven engineer session are not seats. **Binds:** caller matrix (anyone not a human or director is a seat or refused).
 
 ### Pool
 
@@ -302,11 +302,11 @@ Owner: [`mike.md` 3.3](mike.md#33-gates-mike-enforces-for-every-caller). Give an
 
 ### Board
 
-Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). What the arbiter reads: idle seats, each seat's assignment, send-backs with their author seat, ready pull requests per seat, and target versus actual share per priorities row. Mike builds it, and the dashboard shows the same board to the human. Not a dashboard page or tab, and not a GitHub Discussion board. **Binds:** the follow-up prompt carries the board; test `test_follow_up_carries_board`.
+Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). What the arbiter reads: idle seats, each seat's assignment, send-backs with their author seat, ready pull requests per seat, and target versus actual share per priorities row. Mike builds it, and the dashboard shows the same board to a human. Not a dashboard page or tab, and not a GitHub Discussion board. **Binds:** the follow-up prompt carries the board; test `test_follow_up_carries_board`.
 
 ### Share
 
-Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). The percent of workers a priorities row gets by rank; the config store holds one share per rank and the human sets them. A row with no open non-Low work gives its share to the next row. Target share is config; actual share is the arbiter's judgment, and Health shows both. **Binds:** config-store schema field per rank; Health target-versus-actual row.
+Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). The percent of workers a priorities row gets by rank; the config store holds one share per rank and a human sets them. A row with no open non-Low work gives its share to the next row. Target share is config; actual share is the arbiter's judgment, and Health shows both. **Binds:** config-store schema field per rank; Health target-versus-actual row.
 
 ### Severity
 
@@ -322,11 +322,11 @@ Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). A work domain named by
 
 ### Priorities list
 
-Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). What the human decided about prioritization: an ordered list of at most 3 rows, each naming a lane, in the config store, one per instance. A row's rank sets its share of workers; a lane not on the list gets no worker. Not the GitHub Priority field, which is severity. Fields: `lane`, `note`. Factory called it direction. **Binds:** gate 3; the API's `direction` command renames at the next major (decision 8); factory pin `test_direction.py` moves.
+Owner: [`mike.md` 3.1](mike.md#31-pool-assignment-share). What a human decided about prioritization: an ordered list of at most 3 rows, each naming a lane and carrying an optional note, in the config store. A row's rank sets its share of workers; a lane not on the list gets no worker. The note is a human's intent in a sentence: it goes on the board and into every steer to that lane's lane-PE, and binds nothing. Not the GitHub Priority field, which is severity. Fields: `lane`, `note`. Factory called it direction. **Binds:** gate 3; the API's `direction` command renames at the next major (decision 8); factory pin `test_direction.py` moves.
 
 ### Arbiter
 
-Owner: [`mike.md` 2](mike.md#2-roles). The role of the seat that reads the board and decides who does what: which seat takes which issue, the share each priorities row actually gets, when to remint, the order of send-backs, and recovery after a reboot. It acts only through Mike's verbs, and the gates bind it like any caller. It is judgment, not the control plane, which is code. One per instance; default name Arthur. **Binds:** caller matrix `arbiter`; gates 1 to 5.
+Owner: [`mike.md` 2](mike.md#2-roles). The role of the seat that reads the board and decides who does what: which seat takes which issue, the share each priorities row actually gets, when to remint, the order of send-backs, and recovery after a reboot. It acts only through Mike's verbs, and the gates bind it like any caller. It is judgment, not the control plane, which is code. One per instance; the name is the role key unless the instance overrides it; Arthur on factory. **Binds:** caller matrix `arbiter`; gates 1 to 5.
 
 ### Steer rules
 
@@ -370,34 +370,38 @@ Owner: [`mike.md` 4](mike.md#4-runtimes-and-vendors). The agent on a machine tha
 
 ### Attached session
 
-Owner: [`mike.md` 2.1](mike.md#21-attached-sessions-non-seats-that-act-through-mike). A session the human drives (Infra Fable, Factory Fable, the director) that holds a session token and acts through Mike's verbs for every repository and Mike interaction. Not a seat: never minted, steered, assigned, or counted against the cap. Recorded as its own actor; writes under Mike's account with its `[Name]` prefix; bound by every gate; rights per its config row. Attaching is optional. Word not yet confirmed by the human (Q14). **Binds:** caller matrix `attached`; test that a session token cannot mint and cannot act as the human.
+Owner: [`mike.md` 2.2](mike.md#22-attached-sessions-non-seats-that-act-through-mike). A session a human drives (Infra Fable, Factory Fable, the director) that holds a session token and acts through Mike's verbs for every repository and Mike interaction. Not a seat: never minted, steered, assigned, or counted against the cap. Recorded as its own actor; writes under Mike's account with its `[Name]` prefix; bound by every gate; rights per its config row. Attaching is optional. Word confirmed by a human 2026-10-05 (Q14). **Binds:** caller matrix `attached`; test that a session token cannot mint and cannot act as a human.
+
+### Humans
+
+Owner: [`mike.md` 2.1](mike.md#21-humans). The people Mike serves, several, listed in instance config by GitHub login. They act on GitHub as themselves: create and edit issues, comment, review, assign, merge. The control plane watches that activity and routes it: an assignment to `gh_user` hands an issue to Mike, a `Name:` comment steers that seat, a change request on a ready pull request is a send-back, `waive:` and `reviewer:` bind the gates. Any listed human may merge, issue a session token, and edit priorities and settings; the record names which one. A user not on the list is a contributor: seen, shown, routed nowhere. Not a seat, not an attached session, not one person: Tig is factory's config. **Binds:** caller matrix `human`; the change router; test that a contributor's `waive:` binds nothing.
 
 ### Director
 
-Owner: [`mike.md` 2](mike.md#2-roles). The attached session the human uses as his portal (Excaliwire PgM on factory). It is not a seat and holds no assignment; the caller matrix knows it by name beside the human. Authority runs human, director, TPM, lane-PE, then worker or reviewer. Not the human: only the human merges, waives a gate, or grants a reviewer. **Binds:** caller matrix `director`; test that a seat token cannot act as the director.
+Owner: [`mike.md` 2](mike.md#2-roles). The attached session a human uses as his portal (Excaliwire PgM on factory). It is not a seat and holds no assignment; the caller matrix knows it by name beside a human. Authority runs human, director, TPM, lane-PE, then worker or reviewer. Not a human: only a human merges, waives a gate, or grants a reviewer. **Binds:** caller matrix `director`; test that a seat token cannot act as the director.
 
-## 4. Questions for the human
+## 4. Questions for a human
 
 Each CHALLENGE row, plus the mike.md section 11 decisions this file depends on. Recommendations match mike.md 11. A decided question says so.
 
 1. **Standing names or pool slots?** (Standing seat, Fill-missing, Seat cap.) Factory has 13 standing rows; 100 workers would be 100 `seats.yaml` rows.
-   Recommend (decision 11): the pool is a cap and a list of names in config; Mike mints a name below target and kills one only when stale or at the cap.
+    Decided, Tig, 2026-10-05: pool, a cap plus a name list (decision 11).
 2. **Does the lane-PE role exist in Mike?** (Lane-PE, PE seat.) A mint that was not wait-only read 4.2M and 5.0M tokens in 30 minutes (#1755).
-   Recommend (decision 12): keep it, human-minted only, wait-only, no ladder.
+    Decided, Tig, 2026-10-05: keep the role; Mike may mint it behind a human-confirmed setting; wait-only; no ladder (decision 12).
 3. **Two orchestrator seats, or TPM merged into Arthur?** (Orchestrator seat, TPM.) Classification and "who should own this" overlap the arbiter's judgment.
-   Recommend (decision 13): keep two for the first cut, measure K's follow-ups for one week, then decide.
+    Decided, Tig, 2026-10-05: keep two; measure K for a week, then decide (decision 13).
 4. **Does SEV1 (Urgent) preempt an open assignment?** (Urgent.) Its steer class `interrupt` is reported, never acted on.
-   Recommend (decision 14): it sorts first and takes the next idle seat; it never preempts; the human may Stop a seat by hand.
+    Decided, Tig, 2026-10-05: sorts first, never preempts; a human may Stop a seat by hand (decision 14).
 5. **Priorities list form: lanes or free text, per instance or per project?** (Priorities list, Lane.) Free text drops the lane gate.
-   Recommend (decisions 2 and 6): lanes, one list per instance.
-6. **Which word names the human?** (Tig.) "Tig", "operator" and "director" are all in use; mike.md writes "the human".
-   Recommend: "the human" in Mike text; the merger account is instance config (`tig` on factory).
+    Decided, Tig, 2026-10-05: a lane plus an optional note shared with the lane-PE as context (decision 2). Per instance or per project is still decision 6.
+6. **Which word names a human?** (Tig.) "Tig", "operator" and "director" are all in use; mike.md writes "a human".
+    Decided, Tig, 2026-10-05: humans, plural. The system holds a list of humans in instance config; text says a human or humans; the name is config (mike.md 2.1).
 7. **SLA: measure or drop?** (SLA.) 0 code readers today; prose and `seats.yaml` only.
-   Recommend: retire the word for the first cut; if wanted, age per severity is a log line first, a Health row later.
+    Decided, Tig, 2026-10-05: retire for the first cut.
 8. **Conflict-steer: keep?** (Conflict-steer.) "Or an idle worker" steers a non-author across work.
-   Recommend (decision 5): keep as a wake until the planner is gone, then route it as a send-back to the author seat.
+    Decided by decision 1, 2026-10-05: not a verb; a change kind the control plane routes to the author seat.
 9. **Copilot-findings: keep?** (Copilot-findings.) A busy owner yields to an idle worker, the same cross-work steer.
-   Recommend (decision 5): same as Q8.
+    Decided by decision 1, 2026-10-05: same as Q8.
 10. **Rename the seat field `harness` to `runtime`?** (harness seat field.)
     Decided, Tig, 2026-10-05: yes (decision 7).
 11. **Replace `direction` everywhere, the API command included?** (Direction.)
@@ -407,4 +411,4 @@ Each CHALLENGE row, plus the mike.md section 11 decisions this file depends on. 
 13. **Retire stand-down, resume, the hold words, the host ladder, rung, and retarget?**
     Decided, Tig, 2026-10-05: yes (decision 15). The RETIRE rows for them in section 2 are closed.
 14. **The word for a non-seat session that acts through Mike?** (Attached session, new.) Factory says only "not a seat"; Tig asked for the capability on 2026-10-05.
-    Recommend (decision 16): attached session; the director is one; default rights are issue and pull verbs like a seat, steer like a lane-PE, no mint.
+    Decided, Tig, 2026-10-05: attached session; the director is one; default rights issue and pull verbs like a seat, steer like a lane-PE, no mint (decision 16).
