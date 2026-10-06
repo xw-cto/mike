@@ -4,7 +4,7 @@ The stories for retired stories, which are not built. Rules, verdicts and the ot
 
 ## Retired stories
 
-Not built ([mike.md §3.3, gates for every caller](../mike.md#33-gates-mike-enforces-for-every-caller), [mike.md §10, what Mike does not re-create](../mike.md#10-what-mike-does-not-re-create), [mike.md §13, done when](../mike.md#13-done-when)). One line each.
+Not built ([mike.md §3.3, gates for every caller](../mike.md#33-gates-mike-enforces-for-every-caller), [mike.md §10, what Mike does not re-create](../mike.md#10-what-mike-does-not-re-create), [mike.md §14, done when](../mike.md#14-done-when)). One line each.
 
 - The starved-lanes view ("as the control plane reads it"): every lane has a priorities row, so no lane is starved; [MS-136, target versus actual share](observe.md#ms-136-target-versus-actual-share) replaces it ([mike.md §9 rule 17, Health shows target versus actual share](../mike.md#9-what-mike-keeps)); [gate 3, the lane gate](../mike.md#33-gates-mike-enforces-for-every-caller) refuses an issue with no lane label or an unknown lane.
 - Redeliver-tries, the conflict-steer cooldown and the orchestrator cooldown: nothing is redelivered; Arthur's follow-up fires on a board change ([MS-131, Arthur reads the board](observe.md#ms-131-arthur-reads-the-board), [decision 1, Arthur steered on change](../mike.md#11-decisions)).
@@ -30,3 +30,4 @@ Not built ([mike.md §3.3, gates for every caller](../mike.md#33-gates-mike-enfo
 As a human (Tig today), I wanted each mint run capped by a token and turn budget and cancelled when over.
 Evidence: [factory#1755, lane-PE mint burns tokens](https://github.com/excaliwire/factory/issues/1755), its done-when.
 Verdict: LEGACY: the budget came from that issue's done-when, not from a human; Mike has no budgets. A wait-only mint ([MS-099, mint wait-only](seats.md#ms-099-mint-wait-only)) and gauges with a mint threshold ([MS-145, switch vendor at mint threshold](seats.md#ms-145-switch-vendor-at-mint-threshold), [mike.md §4, runtimes](../mike.md#4-runtimes)) cover the cost.
+Urgency: no · retired

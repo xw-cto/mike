@@ -212,7 +212,7 @@ Tests must fail on main and pass on the head. The reviewer's verb copies new tes
 
 ## 7. The dashboard
 
-The dashboard is how humans see and control Mike. It has its own spec, [`mike-dashboard.md`, the dashboard](mike-dashboard.md): what the client is, what each tab shows, and the approved mockup for each tab, inline. Its API is Mike's own contract, [`mike-dashboard-api.md`, the dashboard API](mike-dashboard-api.md); factory's dashboard API was a starting point, not law. The client is a full rewrite; factory's dashboard is not evolved, imported, or copied from.
+The dashboard is how humans see and control Mike. It has its own spec, [`mike-dashboard.md`, the dashboard](mike-dashboard.md): what the app is, what each tab shows, and the approved mockup for each tab, inline. Its API is Mike's own contract, [`mike-dashboard-api.md`, the dashboard API](mike-dashboard-api.md); factory's dashboard API was a starting point, not law. The app is a full rewrite; factory's dashboard is not evolved, imported, or copied from.
 
 ## 8. Lexicon
 
@@ -360,17 +360,56 @@ Factory's harness could be tested only whole: a verb needed the repository check
 
 ### 12.4 The dashboard
 
-The client is tested at the same tiers, with a headless browser as the runner where layout matters. It is not a sixth tier.
+The app is tested at the same tiers, with a headless browser as the runner where layout matters. It is not a sixth tier.
 
 - **Unit.** The page's pure rules (verb enablement from a row's `verbs`, age and time formatting from ISO 8601, share and gauge arithmetic) as functions with fixtures.
 - **Component.** Each UI component rendered alone from fixture payloads, the seat card first ([the dashboard spec, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card)): at 1180 px and at 375 px, no horizontal overflow, the LED word present beside the color, a disabled verb carrying `verb_why`, an unmeasured field drawn as the word and no bar. A screenshot per component and width is kept as a visual baseline, and a change to it is a reviewed diff, not a surprise.
-- **Contract.** The client fed the dashboard API's fixture frames draws without error, and the command bodies it builds equal the API's command examples byte for byte ([the dashboard API, where this is tested](mike-dashboard-api.md#9-where-this-is-tested)).
+- **Contract.** The app fed the dashboard API's fixture frames draws without error, and the command bodies it builds equal the API's command examples byte for byte ([the dashboard API, where this is tested](mike-dashboard-api.md#9-where-this-is-tested)).
 - **Integration.** The page in a headless browser against the in-process API server with the fake runtime and a fixture store: a pushed frame updates one card without a repaint, a half-typed steer and an open expander survive the frame, a command shows its job outcome on the row, the stream reopens after a cut, a major-version mismatch stops the page with "must update". No network beyond loopback.
 - **End-to-end.** The live run in tier 5 is driven through the page once, on a phone-width viewport and a desktop one.
 
 **What a test must still do.** Fail on main and pass on the head ([rule 7](#9-what-mike-keeps)). Name its tier and the seam it uses. Say the measurement it makes.
 
-## 13. Done when
+## 13. The cut: MLP, v1, backlog
+
+Factory's failure was building too much at once, up front. Mike is cut into three releases, and every user story carries an urgency that says which one it is in, in the same four words issues use ([section 3.1, urgency](#31-pool-assignment-share)):
+
+| Urgency | Means | Stories |
+|---|---|---|
+| `critical` | blocks progress on the current release | none today; a story becomes critical when it blocks the MLP |
+| `high` | in the **MLP** | the minimum lovable product, [section 13.1](#131-the-mlp) |
+| `normal` | in **v1**, after the MLP works end to end | [section 13.2](#132-v1) |
+| `no` | **backlog**, not planned | [section 13.3](#133-backlog) |
+
+The MLP is the cheapest Mike that Tig will love and that teaches us something: one seat pair working one project end to end, Tig steering by hand, with the least complexity and the least fragility. Every story's `Urgency:` line is in [the user stories, by file](stories/README.md), and [`stories/mlp.md`, the MLP build order](stories/mlp.md) lists the `high` stories in the order to build them.
+
+### 13.1 The MLP
+
+**What it is.** One instance, one project, two seats on one cloud runtime, and Tig. Tig assigns an issue to `gh_user` or writes `To: <worker>` on it; Mike steers the worker; the worker opens a draft, self-reviews, gets CI green, marks ready; Mike steers the reviewer; the reviewer posts a verdict; a send-back steers the worker back; a Merge verdict assigns Tig; Tig merges. Tig watches it on his phone.
+
+**What is in.**
+
+- **Seats:** one worker and one reviewer, both standing names in config. No arbiter, no TPM, no lane-PE. Tig is the judgment: he steers by `To: Name` on GitHub or from the seat card. The control plane routes only what needs no judgment: an issue assigned to `gh_user` goes to the worker when the worker is idle, oldest first by urgency, else it waits; a ready pull request goes to the reviewer; a send-back goes back to the worker; a Merge verdict assigns the human merger.
+- **Runtime:** the fake runtime and **one cloud driver**. Recommend the Claude cloud driver ([factory#1372, the claude-cloud seat harness](https://github.com/excaliwire/factory/issues/1372)): an API with queued messages, a session event stream that confirms delivery and is the session log, and no screen reading. tmux drivers, seat hosts and host tokens are v1; they are where factory's fragility lived.
+- **Gates:** owner (`gh_user`), project, urgency floor, one pending steer, record before act, one session per seat name, the two human switches, reviewer independence, no merge verb. The lane gate is v1 with lanes.
+- **Mint:** wait-only; remint carries the assignment; Reset defaults.
+- **Humans:** one listed human. `To: Name` addressing from a human comment. No attached sessions, no contributors handling beyond ignoring them, no `waive:` or `reviewer:` grants.
+- **Control plane:** signed webhook ingestion, the tick, the store, decision records, one log, the config store with versioned saves and reload-on-change, the read reserve.
+- **Dashboard:** phone-first from the start, with four tabs: Seats (the seat card), Health (Instance, Control plane, Loop, Problems; the rollups only as far as two seats need them), Logs (the full filter, no scenario presets), Settings (the two switches, `gh_user`, cadence; seat types stay in the config file). API parts: version, health, seats, settings, logs, jobs, read by **polling** every few seconds; the live stream is v1. Commands as jobs. Identity: a human bearer token issued at install and a seat token; identity-provider sign-in is v1.
+- **Testing:** unit; component suites for the one driver (against the fake and the vendor), the worker and the reviewer; the integration tick against fakes; one end-to-end run. The dashboard at the component and integration tiers.
+- **Install:** one package, one config file, no factory checkout.
+
+**What we learn.** Whether one cloud worker and one reviewer, steered by hand, merge work Tig is glad to merge. What a wait-only mint and a steer cost. Whether confirmed delivery over a cloud API removes the undelivered-steer class of failure. Whether the seat card and Health are enough on a phone. Each is a number on [tig/mike#3, the spec issue](https://github.com/tig/mike/issues/3) before v1 starts.
+
+### 13.2 v1
+
+Everything the seat model adds once the loop is trusted: the live stream and its recovery, identity-provider sign-in, the JSON editor and the full Settings groups; Arthur and the board, K, lane-PEs, the pool with shares, lanes and the priorities list with notes, SEV ordering across seats, send-back ordering, seat reuse. More runtimes: tmux drivers, seat hosts, host tokens, per-runtime gauges and the mint threshold. Several humans, attached sessions, `waive:` and `reviewer:` grants, contributor triage, conflict and Copilot change kinds. Several projects per instance. The Board, Review, Priorities, Gauges and Attached sessions tabs; Logs scenarios; the full Settings groups. The seat-behavior suite for Arthur.
+
+### 13.3 Backlog
+
+Terminal control from the browser. Overlapping-instance detection. Vendor-to-vendor shifting beyond the mint threshold. Visual regression baselines beyond the seat card. Anything else no story in `high` or `normal` names.
+
+## 14. Done when
 
 - The user stories in [the user stories index](stories/README.md) each name a test or a measurement, and the LEGACY ones are not built.
 - [The lexicon carry-over table](mike-lexicon.md#2-carry-over-table) has a verdict on every factory term and a human has edited it.

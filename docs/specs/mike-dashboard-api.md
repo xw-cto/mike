@@ -1,10 +1,10 @@
 # Mike dashboard API
 
-**Status:** draft for Tig's edit, written before the code. This file is the contract between Mike's control plane and every dashboard client. It defines version `1.0.0` of Mike's API.
+**Status:** draft for Tig's edit, written before the code. This file is the contract between Mike's control plane and every dashboard app. It defines version `1.0.0` of Mike's API.
 
 **Starting point.** [Factory's dashboard API at commit bb2bf4c6, the starting point](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/dashboard-api.md) was the starting point for this file and is not referenced as law. A reader needs nothing from factory to read or implement it.
 
-**Companion files.** [`mike.md`, the spec](mike.md) defines the domain: [humans](mike.md#21-humans), [attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [the seat model](mike.md#3-the-seat-model), [runtimes and gauges](mike.md#4-runtimes), [the control plane](mike.md#5-the-control-plane), and [the dashboard spec](mike-dashboard.md). The dashboard and UI stories and the stories the spec requires, [indexed by job in the user stories](stories/README.md), are the acceptance tests the client and this contract answer to.
+**Companion files.** [`mike.md`, the spec](mike.md) defines the domain: [humans](mike.md#21-humans), [attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [the seat model](mike.md#3-the-seat-model), [runtimes and gauges](mike.md#4-runtimes), [the control plane](mike.md#5-the-control-plane), and [the dashboard spec](mike-dashboard.md). The dashboard and UI stories and the stories the spec requires, [indexed by job in the user stories](stories/README.md), are the acceptance tests the app and this contract answer to.
 
 Routes below are written relative to `{base}`, the instance's configured base path.
 
@@ -35,33 +35,33 @@ Four callers exist. Each carries its own token as `Authorization: Bearer <token>
 - Every refusal, 401 and 403 included, writes a decision record with caller kind, the token's subject when one was read, route, and why. A 401 record holds no token text.
 - A host token reaches only `version` and `health` on this contract. Check-in and claim belong to the seat-host protocol, not to this file.
 - **CORS.** The control plane answers a cross-origin call only from an origin in config. It names that origin, never `*`, and varies on `Origin`. A preflight from any other origin is 403. A POST whose `Origin` is present and not an allowed origin is 403 before it runs. A POST with no `Origin` (the CLI, a seat) is not checked for origin. The webhook route gets no CORS header.
-- The page renews a human bearer without the human where the provider allows it, and says so ([MS-067, sign-in renews silently](stories/operate.md#ms-067-microsoft-sign-in-renews-silently)). The identity provider, its tenant, client id and scope are instance config.
+- The page renews a human bearer without the human where the provider allows it, and says so ([MS-067, sign-in renews silently](stories/operate.md#ms-067-microsoft-sign-in-renews-silently)). The identity provider, its tenant, app id and scope are instance config.
 
 ## 3. Version
 
 - `GET {base}/api/version` answers `versionFrame`. The version is semantic: `major.minor.patch`. A human writes it.
-- An added field, part, route, or enum value a client may ignore is a minor bump. An old client ignores a field it does not know.
+- An added field, part, route, or enum value an app may ignore is a minor bump. An old app ignores a field it does not know.
 - A removed or renamed field, a changed meaning, a changed type, or a changed event name is a major bump.
 - A wording change in a description is a patch bump.
-- A client reads the version before it opens the stream, and again from every frame. On a major it was not built for it stops and says it must be updated. It draws no half-compatible page.
+- An app reads the version before it opens the stream, and again from every frame. On a major it was not built for it stops and says it must be updated. It draws no half-compatible page.
 - The contract's machine form (a schema file generated from [section 7](#7-payload-shapes)) carries a digest. A test fails on any edit of that file whose digest is not recorded beside a new version.
 
 ## 4. The stream
 
-`GET {base}/events` is one server-sent event stream. It is one-way: a client never publishes on it. Callers: `human`, `session`, `seat`.
+`GET {base}/events` is one server-sent event stream. It is one-way: an app never publishes on it. Callers: `human`, `session`, `seat`.
 
 - A new connection receives one frame of each part, in this order: `version`, `health`, `seats`, `board`, `priorities`, `review`, `gauges`, `settings`, `attached-sessions`, `logs`, `jobs`. A part the caller may not read is omitted, and the `version` frame lists the parts this stream will carry.
 - After the opening frames the control plane sends a frame for a part only when that part changes. A write to one part sends no other part.
 - The SSE event name is the part name. Every frame carries `version`, `part`, and `written_at`, the time the part was last written.
-- A part the loop has not written arrives as a frame with `state` `absent` and no rows. A part that cannot be read arrives with `state` `unmeasured` and a `reason`. The client says which; it never draws ok or 0 for either.
+- A part the loop has not written arrives as a frame with `state` `absent` and no rows. A part that cannot be read arrives with `state` `unmeasured` and a `reason`. The app says which; it never draws ok or 0 for either.
 - `seats`, `board`, `review`, `gauges`, `attached-sessions` and `jobs` frames carry the whole part. `logs` frames carry only the new lines since the last frame, oldest first.
-- An idle stream writes the comment `: keep-alive` every `api.keepalive_seconds` (config, default 15). The client draws nothing for it.
-- A client drops a stream with no bytes for three keep-alive intervals and opens a new one. It also reopens when its tab becomes visible again. A reopen receives every opening frame, so a reopen is a full read ([MS-055, live stream recovers itself](stories/diagnose.md#ms-055-live-stream-recovers-itself)).
-- The open's status decides the client's next step: 200 reads on, 401 asks for sign-in, 403 says the caller is refused, anything else retries every 3 seconds. 401 and 403 are not retried ([MS-054, four distinct connection failures](stories/diagnose.md#ms-054-four-distinct-connection-failures)).
+- An idle stream writes the comment `: keep-alive` every `api.keepalive_seconds` (config, default 15). The app draws nothing for it.
+- An app drops a stream with no bytes for three keep-alive intervals and opens a new one. It also reopens when its tab becomes visible again. A reopen receives every opening frame, so a reopen is a full read ([MS-055, live stream recovers itself](stories/diagnose.md#ms-055-live-stream-recovers-itself)).
+- The open's status decides the app's next step: 200 reads on, 401 asks for sign-in, 403 says the caller is refused, anything else retries every 3 seconds. 401 and 403 are not retried ([MS-054, four distinct connection failures](stories/diagnose.md#ms-054-four-distinct-connection-failures)).
 - At each keep-alive the control plane compares the health snapshot's age with the loop window. When the loop has stopped writing, it sends one `health` frame with `stale` true and the attention item `health snapshot stale`, once per stale period. A log frame in the same pass does not suppress it ([MS-056, health from the tick snapshot](stories/diagnose.md#ms-056-health-from-the-tick-snapshot)).
 - A store change reaches an open stream in under 2 seconds ([MS-006, page updates by itself](stories/observe.md#ms-006-page-updates-by-itself)).
 - Open streams are capped per caller by config. An open over the cap answers 429.
-- There is no message broker. A client that cannot hold a stream polls the reads.
+- There is no message broker. An app that cannot hold a stream polls the reads.
 
 ## 5. Reads
 
@@ -84,14 +84,14 @@ Every read answers JSON, the payload named. The `Callers` column is the route's 
 | `GET {base}/api/jobs` | `jobsFrame` | recent jobs, newest first; `?job=<id>` for one | human; session, seat `own` |
 | `GET {base}/api/logs` | `logsFrame` | log lines, filtered | human, session, seat |
 
-`logs` filters, all optional: `level` (this level and above), `component` (comma list), `seat`, `project`, `command`, `text` (substring), `since` (ISO 8601 with offset: every match back to that time, no scan budget), `limit` (1 to 2000, default 200). The client keeps these in its URL ([MS-058, filterable log in the URL](stories/diagnose.md#ms-058-filterable-log-in-the-url)) and rereads a `since` view at most every 30 seconds, one read in flight ([MS-059, since view reads whole window](stories/diagnose.md#ms-059-since-view-reads-whole-window)).
+`logs` filters, all optional: `level` (this level and above), `component` (comma list), `seat`, `project`, `command`, `text` (substring), `since` (ISO 8601 with offset: every match back to that time, no scan budget), `limit` (1 to 2000, default 200). The app keeps these in its URL ([MS-058, filterable log in the URL](stories/diagnose.md#ms-058-filterable-log-in-the-url)) and rereads a `since` view at most every 30 seconds, one read in flight ([MS-059, since view reads whole window](stories/diagnose.md#ms-059-since-view-reads-whole-window)).
 
 Rules for every read:
 
 - A read makes no vendor call, no GitHub call, and no subprocess. It serves what the loop and the store last wrote. A test proves it for every route.
 - A read writes nothing except, for a refusal, its decision record.
 - A read with a seat or session token answers the same rows, byte for byte, as the page draws ([MS-008, Arthur reads the same API](stories/observe.md#ms-008-arthur-reads-the-same-api), [MS-161, attached sessions read the board](stories/operate.md#ms-161-attached-sessions-read-the-board)).
-- An absent part is `state` `absent`; the client says so. Unmeasured is `null` with a reason, never 0.
+- An absent part is `state` `absent`; the app says so. Unmeasured is `null` with a reason, never 0.
 - The session log read serves what the seat host or the cloud runtime last delivered to the store. A runtime that cannot read its log answers `unmeasured` with a reason.
 
 ## 6. Commands
@@ -108,7 +108,7 @@ A command is a POST with a JSON body. Every command answers 202 at once with `{j
 | `POST {base}/api/issue` | `{project, number, urgency?, lane?}`; `urgency` one of `critical`, `high`, `normal`, `no`; `lane` a configured lane key | human; session when its row lists `issue`; seat per the caller matrix |
 
 - **Fleet mode.** One fleet mode runs at a time. A second fleet mode, or a seat verb on a seat a running fleet mode will touch, answers 409 with the running job's id and writes a refused record ([MS-065, fleet commands never collide](stories/operate.md#ms-065-fleet-commands-never-collide)). `reset-defaults` clears every assignment and every `seat:` label in one recorded write ([mint, remint, steer](mike.md#32-mint-remint-steer)). `restart-control-plane` persists its job; the outcome is on the first `jobs` frame after the reconnect.
-- **Seat verb.** One job covers every named seat; the job's `seats` list carries one outcome per seat. A verb fits a seat only when that seat's `seatRow.verbs` lists it. The server refuses a verb that does not fit, with a record, even when a client sends it ([MS-028, verbs offered by the control plane](stories/seats.md#ms-028-verbs-offered-by-the-control-plane)). A steer with `prompt` and `assignment` both empty is 400. With an assignment, `Assignment: <work>` leads the delivered prompt on its own line. A steer's outcome names `confirmed` with the runtime's delivery id or `not confirmed` with a reason. A steer passes every [gate](mike.md#33-gates-mike-enforces-for-every-caller) or is refused naming the gate.
+- **Seat verb.** One job covers every named seat; the job's `seats` list carries one outcome per seat. A verb fits a seat only when that seat's `seatRow.verbs` lists it. The server refuses a verb that does not fit, with a record, even when an app sends it ([MS-028, verbs offered by the control plane](stories/seats.md#ms-028-verbs-offered-by-the-control-plane)). A steer with `prompt` and `assignment` both empty is 400. With an assignment, `Assignment: <work>` leads the delivered prompt on its own line. A steer's outcome names `confirmed` with the runtime's delivery id or `not confirmed` with a reason. A steer passes every [gate](mike.md#33-gates-mike-enforces-for-every-caller) or is refused naming the gate.
 - **Priorities.** Rows come from the lanes in instance config: one row per lane. A body that adds, deletes, or omits a lane is 400 and names the lanes config ([MS-015, edit the priorities list](stories/steer.md#ms-015-edit-the-priorities-list), [MS-016, rows follow configured lanes](stories/steer.md#ms-016-rows-follow-configured-lanes)). Each accepted edit is one config-store version.
 - **Settings.** Loop Running or Paused, live or dry-run, and loop cadence are setting keys. The server validates the value against the one settings schema the page also reads. A value that fails is 400 with `<key> must be <type>` and writes no version ([MS-039, schema check before save](stories/configure.md#ms-039-schema-check-before-save)). An `expected_version` that is not the current version is 409. A write of the value already stored is applied with why `already <value>`. A secret key takes a secret name, never a secret value.
 - **Attached-session token.** `issue` is the one answer that carries a secret: the 202 body adds `token`, once. The token is never on a frame, a read, a record, or a log line. `revoke` takes effect on the token's next call, which is 401 with a record ([MS-159, revocable attached session tokens](stories/operate.md#ms-159-revocable-attached-session-tokens)).
@@ -133,7 +133,7 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 
 | Field | Type | Meaning |
 |---|---|---|
-| `snapshot_at` | time | when the loop wrote the snapshot; the client counts ages from it ([MS-044, health first with snapshot age](stories/diagnose.md#ms-044-health-first-with-snapshot-age)) |
+| `snapshot_at` | time | when the loop wrote the snapshot; the app counts ages from it ([MS-044, health first with snapshot age](stories/diagnose.md#ms-044-health-first-with-snapshot-age)) |
 | `stale` | bool | true when `snapshot_at` is older than the loop window |
 | `loop` | object | `state` `Running` or `Paused`, `mode` `live` or `dry-run`, `paused_by`, `paused_why`, `last_tick_at`, `cadence_seconds` |
 | `attention` | list | groups, worst first: `not-ok` then `unmeasured`; each `{kind, severity, count, items}`, each item `{text, seat?, project?, url?}` ([MS-045, needs attention groups faults](stories/diagnose.md#ms-045-needs-attention-groups-faults)) |
@@ -163,7 +163,7 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 | `stopped` | bool | the human Stop switch |
 | `tokens` | object | since mint: `{input, output, cache_write, cache_read, total, read_at, reason}`; counts `null` when unmeasured ([MS-068, tokens per seat and fleet](stories/operate.md#ms-068-tokens-per-seat-and-fleet)) |
 | `context` | object | `{used, window, percent, summarized, read_at, reason}`; `null` counts when unmeasured ([MS-069, context fullness per seat](stories/operate.md#ms-069-context-fullness-per-seat)) |
-| `verbs` | string list | the seat verbs that fit this seat now; the client enables a verb only when every selected row lists it |
+| `verbs` | string list | the seat verbs that fit this seat now; the app enables a verb only when every selected row lists it |
 | `verb_why` | object | verb to the server's one-line text for its button, for all five verbs ([MS-027, verb buttons explain themselves](stories/seats.md#ms-027-verb-buttons-explain-themselves)) |
 | `minted` | time or null | last mint; null with `reason` `never minted` or `unmeasured` |
 
@@ -224,9 +224,9 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 |---|---|---|
 | `key` | string | store key |
 | `value` | any | value Mike reads now; a `secret` holds only `set` or `not set` beside its name |
-| `type` | string | `integer`, `number`, `boolean`, `string`, `choice`, `secret`, or `json`; a client draws the control from it, and `json` opens the editor |
+| `type` | string | `integer`, `number`, `boolean`, `string`, `choice`, `secret`, or `json`; an app draws the control from it, and `json` opens the editor |
 | `unit` | string or null | the unit the value is in, shown with the control: `min`, `h`, `s`, `%`, `MB`, `tokens`; null for a non-numeric type |
-| `range` | object or null | `{min, max}` for a number, `{options}` for a choice, `{schema}` name for json; the client validates before it posts and the server validates again |
+| `range` | object or null | `{min, max}` for a number, `{options}` for a choice, `{schema}` name for json; the app validates before it posts and the server validates again |
 | `help` | string | one line, what the setting does |
 | `changed_by` | string or null | actor of the last change |
 | `changed_at` | time or null | when |
@@ -277,17 +277,17 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 
 | Factory shape | Mike shape | Why |
 |---|---|---|
-| settings event outside the written contract | `settings` part, read, and command in the contract | a part a client relies on is versioned |
+| settings event outside the written contract | `settings` part, read, and command in the contract | a part an app relies on is versioned |
 | `direction` command and list | `priorities` command; reorder and note only | one row per lane ([decision 8, priorities replace direction](mike.md#11-decisions)) |
 | GitHub Priority field (Urgent, High, Medium, Low) | `urgency:<level>` label, four values | a label is settable from the GitHub mobile app |
 | synchronous command result, 30-second wait | 202 with job id; outcome on `jobs` | a slow answer still lands ([MS-029, commands shown as notifications](stories/seats.md#ms-029-commands-shown-as-notifications)) |
-| human time strings (`minted`, ages) | ISO 8601 with offset everywhere | the client parses no prose ([MS-138, ISO 8601 times on the wire](stories/diagnose.md#ms-138-iso-8601-times-on-the-wire)) |
+| human time strings (`minted`, ages) | ISO 8601 with offset everywhere | the app parses no prose ([MS-138, ISO 8601 times on the wire](stories/diagnose.md#ms-138-iso-8601-times-on-the-wire)) |
 | `X-HGL-Email` header, `?token=` query | verified bearer for every caller | a header any process can set is not identity |
 | health `boards` and per-defect detector fields | dropped; findings are `attention` items | one shape for every finding |
 | `droplet` joined not-ok string | dropped; `attention` groups | one reader, one source |
 | `harness`, `surface`, `state`, `watch` on a row | `runtime`, `vendor`, `access`, `liveness_source` | [runtimes](mike.md#4-runtimes) |
-| `verbs` list plus hover text the client derived | `verbs` list plus server `verb_why` | the server explains; the client derives nothing |
-| `settingRow.source` (`default`, `instance`, `store`) and a From column | dropped; `type`, `unit`, `range`, `help` added | every setting is in the config store, so source said nothing; a client needs the type and unit to draw a control (Tig, 2026-10-06) |
+| `verbs` list plus hover text the app derived | `verbs` list plus server `verb_why` | the server explains; the app derives nothing |
+| `settingRow.source` (`default`, `instance`, `store`) and a From column | dropped; `type`, `unit`, `range`, `help` added | every setting is in the config store, so source said nothing; an app needs the type and unit to draw a control (Tig, 2026-10-06) |
 | `sessions` part, `sessionRow`, `/sessions` routes | `seats` part, `seatRow`, `/seats` routes | the row is a seat; a session is what the runtime holds for it ([the Seats tab](mike-dashboard.md#3-the-seats-tab-and-the-seat-card)) |
 | none | `board`, `review`, `gauges` per runtime, `attached-sessions`, `jobs`, session log | parts [the dashboard spec](mike-dashboard.md) requires |
 | terminal ticket and WebSocket messages | **deferred** | see below |
@@ -306,5 +306,5 @@ The contract tests ship with Mike and run in CI. Each names a story or a section
 - **401/403 matrix.** Every route against no token, a bad token, and each caller kind answers the declared status, and every refusal writes a record.
 - **CORS.** A listed origin is named, never `*`; a preflight or POST from another origin is 403; the webhook carries no CORS header.
 - **Keep-alive and stale snapshot.** An idle stream sends a keep-alive inside one interval; a stopped loop yields one stale `health` frame even when a log line lands in the same pass.
-- **Second client.** A CLI or text client that imports nothing from the page reads every part and runs every command through this contract ([MS-008, Arthur reads the same API](stories/observe.md#ms-008-arthur-reads-the-same-api)).
-- **Phone.** Out of contract scope; the client's own component and integration tests hold [MS-139, every tab fits a phone](stories/observe.md#ms-139-every-tab-fits-a-phone) and [MS-191, dashboard tested at every tier](stories/testing.md#ms-191-dashboard-tested-at-every-tier) ([mike.md §12.4, the dashboard](mike.md#124-the-dashboard)).
+- **Second app.** A CLI or text app that imports nothing from the page reads every part and runs every command through this contract ([MS-008, Arthur reads the same API](stories/observe.md#ms-008-arthur-reads-the-same-api)).
+- **Phone.** Out of contract scope; the app's own component and integration tests hold [MS-139, every tab fits a phone](stories/observe.md#ms-139-every-tab-fits-a-phone) and [MS-191, dashboard tested at every tier](stories/testing.md#ms-191-dashboard-tested-at-every-tier) ([mike.md §12.4, the dashboard](mike.md#124-the-dashboard)).

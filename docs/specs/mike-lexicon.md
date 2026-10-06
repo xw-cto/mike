@@ -29,7 +29,7 @@
 | Verdict | Rows |
 |---|---|
 | KEEP | 111 |
-| RENAME | 21 |
+| RENAME | 22 |
 | NARROW | 33 |
 | RETIRE | 46 |
 | CHALLENGE | 0 |
@@ -39,19 +39,19 @@
 | Access method | None; new in Mike | [mike.md §4, runtimes](mike.md#4-runtimes) | KEEP | New in Mike: `cloud` (vendor APIs) or `tmux` (send-keys and screen reading), both under the Mike Runtime API |
 | Actuation | Unit a seat host pulls: paste, restart, kill, liveness, meter | [agent-harness spec line 300, Actuation](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L300) | KEEP | Add a heading; `meter` kind reads a gauge source |
 | Address | `seat:<name>` owns, `[Name] ` writes, `Name:` addresses | [agent-harness spec line 357, Address](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L357) | KEEP | `To: Name` addresses a seat (the email header word; several as `To: Name, Other`); `[Name]` at the start of a comment is the writer's prefix; factory's `Name:` form and the briefly proposed `[Name]:` both retire ([mike.md §9 rule 15, the address contract](mike.md#9-what-mike-keeps), [§2.1, humans](mike.md#21-humans)) |
-| app principal | Banned; write agent principal | [lexicon.md line 1144, app principal](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1144) | KEEP | Ban stays |
 | Applied / undelivered | Delivery outcomes; applied does not mean the seat acted | [agent-harness spec line 86, Applied / undelivered](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L86) | KEEP | An unconfirmed steer is not a steer |
 | Archive | End a seat's Cursor session so it reads `not-minted` | [lexicon.md line 245, Archive](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L245) | KEEP | Runtime-neutral; writes a decision record |
 | Artifact | Throwaway reproduction on a reserved-prefix branch; reaped past max age | [agent-harness spec line 127, Artifact](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L127) | KEEP | Same |
 | Artificer | Factory's display name for a worker | [lexicon.md line 195, Artificer](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L195) | KEEP | Default display name in instance config, not a core word |
 | Caller matrix | Who may call which verb; arbiter steers; lane-PE steers its own lane | [agent-harness spec line 102, Caller matrix](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L102) | KEEP | Keeps lane-PE own-lane steer ([mike.md §9 rule 12, the caller matrix](mike.md#9-what-mike-keeps)); knows director and human |
 | Check-in | A seat or host tells the control plane it is alive | [lexicon.md line 329, Check-in](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L329) | KEEP | Same |
+| client principal | Banned; write agent principal | [lexicon.md line 1144, client principal](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1144) | KEEP | Ban stays |
 | Command | None; new in Mike | [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands) | KEEP | New in Mike: a POST to the dashboard API; answers 202 with a job id at once |
 | Config store | Often-changed settings outside git; one writer; versioned | [lexicon.md line 343, Config store](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L343) | KEEP | Schema, append-only, human-only, logged |
 | Control plane | Holds desired state, reads live state, acts on the difference; refuses what policy forbids | [lexicon.md line 61, Control plane](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L61) | KEEP | Code, not a seat; the arbiter is separate |
 | Current main | Seats remint and steer on current main | [agent-harness spec line 186, Current main](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L186) | KEEP | Same |
-| Dashboard | A view, never the source of truth for policy | [agent-harness spec line 238, Dashboard](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L238) | KEEP | One client of [Mike's dashboard API](mike-dashboard-api.md), a full rewrite; factory's page and API were the starting point ([mike.md §7, the dashboard](mike.md#7-the-dashboard)) |
-| Dashboard API | None; new in Mike (factory's dashboard API was the starting point) | [Mike's dashboard API](mike-dashboard-api.md) | KEEP | New in Mike: Mike's own versioned contract between the control plane and every client |
+| Dashboard | A view, never the source of truth for policy | [agent-harness spec line 238, Dashboard](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L238) | KEEP | The **app**: one consumer of [Mike's dashboard API](mike-dashboard-api.md), a full rewrite; factory's page and API were the starting point ([mike.md §7, the dashboard](mike.md#7-the-dashboard)) |
+| Dashboard API | None; new in Mike (factory's dashboard API was the starting point) | [Mike's dashboard API](mike-dashboard-api.md) | KEEP | New in Mike: Mike's own versioned contract between the control plane and every app |
 | Data plane | The seats doing the work; must not reach around the control plane | [lexicon.md line 139, Data plane](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L139) | KEEP | Same |
 | Decision record | Seen, decided, why, written before the side effect; refusals recorded | [lexicon.md line 155, Decision record](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L155) | KEEP | [Gate 6, record before act](mike.md#33-gates-mike-enforces-for-every-caller); TPM clause follows [Q3, two orchestrator seats](#q3-two-orchestrator-seats-or-tpm-merged-into-arthur) |
 | dispatch | Banned; write steer or poke | [lexicon.md line 1122, dispatch](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L1122) | KEEP | Ban stays |
@@ -149,6 +149,7 @@
 | Agent harness | Code-owned control plane for agent sessions; `agent-harness/` | [lexicon.md line 45, Agent harness](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L45) | RENAME | **Mike**; harness carried 2 meanings |
 | Assign Tig | Merge step: assign `tig`; `pull assign-tig` | [agent-harness spec line 407, Assign Tig](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L407) | RENAME | **request merge**; the merger is config |
 | Claim | Attach a live same-name vendor session to its seat; not a mint | [lexicon.md line 251, Claim](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L251) | RENAME | **adopt**; claim stays for a host claiming an actuation |
+| client, dashboard client, the page | The web UI, called a client of the API | [dashboard-api spec line 5, one client](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/dashboard-api.md#L5) | RENAME | **app**: the dashboard UI humans use; no human thinks of a UI as a client (Tig, 2026-10-06). API consumers in general are callers ([entry](#app)) |
 | Direction | A human's lane rows `{lane, note}` in the store; on enabled, off starved | [lexicon.md line 379, Direction](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L379) | RENAME | **priorities list**; one ranked row per lane, each with a share; the API command is `priorities`, not `direction` ([Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands)) |
 | Droplet | The host that runs the control plane (used 20+ times, no heading) | [agent-harness spec line 86, Droplet](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L86) | RENAME | **control-plane host**; Mike runs on any host |
 | Excaliwire PgM (director) | A human's portal session; not a seat; caller kind `operator` | [agent-harness spec line 47, Excaliwire PgM](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L47) | RENAME | **director**; PgM is the instance's display name |
@@ -169,13 +170,13 @@
 | Urgent | Blocking; `sev1`; steer class `interrupt` | [lexicon.md line 423, Urgent](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L423) | RENAME | **`urgency:critical`**: sorts first, never preempts; the `interrupt` steer class retires ([decision 14, `urgency:critical` never preempts](mike.md#11-decisions)) |
 | `seat:<name>` label | That seat owns the work; routes a poke | [agent-harness spec line 365, `seat:<name>` label](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L365) | NARROW | Marks the seat's one assignment |
 | Agent principal | Entra ID identity per machine trust boundary | [lexicon.md line 107, Agent principal](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L107) | NARROW | Identity per trust boundary: seat token, host token; Entra is an implementation |
-| App role | Entra role checked per route: 4 roles | [lexicon.md line 115, App role](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L115) | NARROW | Keep the 4 roles; drop Entra |
 | Arbiter | Seat that owns the control plane, orders work, owns assignment | [lexicon.md line 213, Arbiter](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L213) | NARROW | Judgment from the board; acts only through verbs |
 | Arthur | Display name of the control-plane seat; spec title "harness aka Arthur" | [agent-harness spec line 1, Arthur](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L1) | NARROW | Default display name of the arbiter only |
 | Assignment | The work a seat is on; actuator stores it; label marks it | [lexicon.md line 263, Assignment](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L263) | NARROW | Exactly one; the label is the truth, the store caches |
 | At prompt | tmux pane reading: empty prompt is idle, spinner is busy | [agent-harness spec line 82, At prompt](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L82) | NARROW | The tmux source of activity |
 | Board | Follow-up input: open issues, priorities list, unassigned-urgent | [agent-harness spec line 161, Board](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L161) | NARROW | Arthur's whole input, each idle seat's last completed assignment included ([mike.md §3.1, pool, assignment, share](mike.md#31-pool-assignment-share)); pages say page or tab |
 | Board lane rule | Policy text: priorities list is ordered lanes, on or off | [agent-harness spec line 192, Board lane rule](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/agent-harness.md#L192) | NARROW | Moves into the arbiter brief and the priorities list entry; one row per lane |
+| Client role | Entra role checked per route: 4 roles | [lexicon.md line 115, Client role](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L115) | NARROW | Keep the 4 roles; drop Entra |
 | Control loop | Both one pass and the process that is Running or Paused | [lexicon.md line 75, Control loop](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L75) | NARROW | The process, one per instance; one pass is a tick |
 | Desired state | `seats.yaml`: names, harness, owner, tier, cap, `pe_retarget` | [lexicon.md line 145, Desired state](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L145) | NARROW | Instance config; drop owner and `pe_retarget` |
 | Lane | Domain named by a repo label; `policy.lanes` maps it to an owning lane-PE | [lexicon.md line 181, Lane](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/lexicon.md#L181) | NARROW | A large architectural body of work in the program; one lane label per issue, one priorities row per lane; no owner ([mike.md §3, the seat model](mike.md#3-the-seat-model)) |
@@ -282,7 +283,7 @@ Owner: [mike.md §1, what Mike is](mike.md#1-what-mike-is). The system: code and
 
 ### Instance
 
-Owner: [mike.md §1.2, multi-repository](mike.md#12-multi-repository-one-instance). One running Mike: one control plane, one loop, one store, one dashboard, one priorities list, managing a list of projects. There is no Mike deploy per repository. Not a vendor instance (factory's word for one vendor session); Mike says session. **Binds:** test `test_two_projects_one_instance` ([mike.md §13, done when](mike.md#13-done-when)).
+Owner: [mike.md §1.2, multi-repository](mike.md#12-multi-repository-one-instance). One running Mike: one control plane, one loop, one store, one dashboard, one priorities list, managing a list of projects. There is no Mike deploy per repository. Not a vendor instance (factory's word for one vendor session); Mike says session. **Binds:** test `test_two_projects_one_instance` ([mike.md §14, done when](mike.md#14-done-when)).
 
 ### Project
 
@@ -430,7 +431,7 @@ Owner: [mike.md §5, the control plane](mike.md#5-the-control-plane). Mike's cod
 
 ### Dashboard API
 
-Owner: [Mike's dashboard API](mike-dashboard-api.md). Mike's own versioned contract between the control plane and every client: the dashboard, the CLI, a seat, an attached session. It carries [parts](#part) as [frames](#frame) on one stream and as plain reads, and takes [commands](#command) that each return a [job](#job). Factory's dashboard API was its starting point, not its definition; nothing in Mike refers to factory's contract as law. Not the [Mike Runtime API](#mike-runtime-api), which faces vendors. **Binds:** the version-gate and second-client tests in [Mike dashboard API §9, where this is tested](mike-dashboard-api.md#9-where-this-is-tested).
+Owner: [Mike's dashboard API](mike-dashboard-api.md). Mike's own versioned contract between the control plane and every caller: the dashboard app, the CLI, a seat, an attached session. It carries [parts](#part) as [frames](#frame) on one stream and as plain reads, and takes [commands](#command) that each return a [job](#job). Factory's dashboard API was its starting point, not its definition; nothing in Mike refers to factory's contract as law. Not the [Mike Runtime API](#mike-runtime-api), which faces vendors. **Binds:** the version-gate and second-app tests in [Mike dashboard API §9, where this is tested](mike-dashboard-api.md#9-where-this-is-tested).
 
 ### Part
 
@@ -451,6 +452,10 @@ Owner: [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands). The
 ### Seat host
 
 Owner: [mike.md §4, runtimes](mike.md#4-runtimes). The agent on a machine that runs tmux seats: it checks in, pulls its own actuations from the control-plane store with a host token, runs them, and reports results. A stale seat host makes its seats `unmeasured`. Not the control-plane host, and it holds no shared master secret and no second, machine-local queue. **Binds:** test that a host token pulls only its own actuations.
+
+### App
+
+Owner: [the dashboard spec, what the dashboard is](mike-dashboard.md#1-what-the-dashboard-is). The dashboard UI humans use on a phone or a desktop: the tabs, the seat card, the editors. It is one caller of the [dashboard API](#dashboard-api) and is a full rewrite. Not "the client": no human thinks of a UI as a client, so Mike text never does. A program that calls the API is a caller; the app, a CLI, a seat and an attached session are callers. **Binds:** the app's component and integration tests ([mike.md §12.4, the dashboard](mike.md#124-the-dashboard)); a lint on the word client in Mike text.
 
 ### Attached session
 
