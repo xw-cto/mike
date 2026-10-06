@@ -68,6 +68,23 @@ The sections, top to bottom:
 
 <img src="mockups/health-phone.png" width="375" alt="The Health tab at 375 px: sections stacked, Loop open, rollups closed with one-line summaries, Problems last and open">
 
-## 5. Tabs still to mock up
+## 5. The Logs tab
 
-Board, Review, Priorities, Gauges, Settings, Logs, Attached sessions. Each lands here with a desktop and a phone image before its stories are built ([the user stories index](stories/README.md)).
+**Proposed 2026-10-06, awaiting Tig's word.** One log, two layers of filter. Source: [`mockups/logs.html`, the Logs tab at desktop and phone widths](mockups/logs.html).
+
+- **Scenario selector**, the high-level layer. A row of named presets for the common diagnostic questions: Last tick; Why was a seat not steered?; Undelivered steers; Refused by a gate; Mints and remints; Webhooks received; A human's commands; Everything red. Picking one fills the low-level filter and says, in one line under the row, what it set and for whom. A scenario that needs a subject (a seat, a human) asks for it. Editing the filter afterwards turns the chip to Custom. A human can save the current filter as a new scenario; scenarios are config, human-only, and ship with Mike's defaults.
+- **Filter**, the low-level layer, full control: level and above; component (multi-select); seat; actor (human, attached session, seat, loop); project; event; free text over message and fields; since and until with presets (15 m, 1 h, 6 h, 24 h, custom); limit; local or UTC. A set field is outlined. Live follows the stream; Pause stops the scroll, not the stream. Clear, Copy link, Download JSON. The whole filter is in the URL, so a view is a link that a problem line on Health or an issue comment can carry ([the dashboard API, logs read and filters](mike-dashboard-api.md#5-reads)).
+- **Lines.** Newest first: time (monospace), level as an LED with its word, component, seat, event as a chip, message. A count line above says how many lines and how many per level, and how many ticks the range covers. Tick boundaries are thin separators naming the tick's start, duration, steers and refusals. A line expands to its fields as key and value, with links to its decision record, its job, and the issue or pull request it names. Older pages load on demand.
+- **Phone.** The scenario row becomes a select; the filter sits behind a Filters expander whose summary line shows what is set; lines are cards with time, level, component and seat on the first line and the message under it, fields behind an expander.
+
+### 5.1 Desktop, 1180 px
+
+![The Logs tab at 1180 px: scenario chips with the active one explained beneath, the full filter row, a count line, and log lines with tick separators and one line expanded to its fields](mockups/logs-desktop.png)
+
+### 5.2 Phone, 375 px
+
+<img src="mockups/logs-phone.png" width="375" alt="The Logs tab at 375 px: a scenario select, a Filters expander summarizing what is set, and log lines as cards with tick separators">
+
+## 6. Tabs still to mock up
+
+Board, Review, Priorities, Gauges, Settings, Attached sessions. Each lands here with a desktop and a phone image before its stories are built ([the user stories index](stories/README.md)).

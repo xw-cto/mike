@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mike · Logs tab mockup</title>
+<style>
+:root{
+  --surface:#fcfcfb; --surface-2:#f3f2ef; --line:#e3e1dc; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#8a8880;
+  --accent:#2a78d6; --accent-soft:#e7f0fb; --good:#0ca30c; --warning:#fab219; --critical:#d03b3b; --gray:#b5b3ab;
+  --r:10px; --pad:12px; --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#e9e8e4;font:14px/1.4 var(--font);color:var(--ink)}
+h1{font-size:18px;margin:16px 20px 4px}
+.note{margin:0 20px 16px;color:var(--ink-2);max-width:980px}
+.stage{display:flex;gap:28px;align-items:flex-start;padding:0 20px 40px;flex-wrap:wrap}
+.frame{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.08);overflow:hidden}
+.frame .chrome{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);color:var(--ink-2);font-size:12px}
+.frame.desktop{width:1180px}
+.frame.phone{width:375px;border-radius:28px;border-width:6px;border-color:#2b2b2a}
+.frame.phone .chrome{justify-content:center}
+.tab{container-type:inline-size;padding:var(--pad)}
+.tabbar{display:flex;gap:16px;border-bottom:1px solid var(--line);margin:0 0 10px;padding:0 2px;overflow:auto;white-space:nowrap}
+.tabbar span{padding:8px 0;color:var(--ink-2)}
+.tabbar .on{color:var(--ink);border-bottom:2px solid var(--accent);font-weight:600}
+
+.sel{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.sel .lab{color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.03em;min-width:72px}
+.scen{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:13px;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.scen.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.scen.add{border-style:dashed;color:var(--ink-3)}
+.scen-desc{color:var(--ink-2);font-size:12px;margin:-2px 0 10px 80px}
+.scen-desc b{color:var(--ink)}
+
+.filters{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;display:grid;gap:8px;grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:10px}
+.f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f label{color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+.f .in{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f .in.set{border-color:var(--accent)}
+.f .in i{color:var(--ink-3);font-style:normal}
+.frow{grid-column:1 / -1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--ink-2)}
+.frow .spacer{flex:1}
+.btn{font:inherit;font-size:12px;padding:4px 9px;border:1px solid var(--line);background:var(--surface);border-radius:7px;color:var(--ink);cursor:pointer}
+.btn.primary{border-color:var(--accent);color:var(--accent)}
+.sw{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-2);white-space:nowrap}
+.sw .pill{width:30px;height:18px;border-radius:9px;background:var(--gray);position:relative}
+.sw .pill::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.sw input{display:none}.sw input:checked + .pill{background:var(--good)}.sw input:checked + .pill::after{left:14px}
+
+.count{display:flex;gap:12px;align-items:center;color:var(--ink-2);font-size:12px;margin:0 2px 6px;flex-wrap:wrap}
+.count b{color:var(--ink)}
+.led{display:inline-block;width:10px;height:8px;border-radius:2px;background:var(--gray);border:1px solid rgba(0,0,0,.15);vertical-align:middle}
+.led.info{background:var(--accent)} .led.warn{background:var(--warning)} .led.error{background:var(--critical)} .led.debug{background:var(--gray)}
+
+table.log{border-collapse:collapse;width:100%;font-size:13px}
+.log td,.log th{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.log th{color:var(--ink-3);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0;background:var(--surface)}
+.log td.t{font-family:var(--mono);font-size:12px;color:var(--ink-2);white-space:nowrap}
+.log td.c{color:var(--ink-2);white-space:nowrap}
+.log td.m{min-width:0}
+.log tr.tick td{background:var(--surface-2);color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:3px 6px}
+.log tr.open td{border-bottom:0}
+.log tr.fields td{padding-top:0}
+.fields .kv{display:grid;grid-template-columns:160px 1fr;gap:2px 10px;font-family:var(--mono);font-size:12px;background:var(--surface-2);border-radius:7px;padding:8px 10px}
+.fields .k{color:var(--ink-3)}
+a{color:var(--accent);text-decoration:none}
+.chev{color:var(--ink-3);cursor:pointer}
+.pill-ev{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:0 7px;font-size:12px;color:var(--ink-2);background:var(--surface-2);white-space:nowrap}
+.foot{display:flex;gap:10px;align-items:center;color:var(--ink-2);font-size:12px;margin-top:8px;flex-wrap:wrap}
+.foot .spacer{flex:1}
+
+/* phone */
+.phone .filters{grid-template-columns:1fr 1fr}
+.cardlog{display:flex;flex-direction:column;gap:6px}
+.lc{border:1px solid var(--line);border-radius:var(--r);padding:7px 10px;background:var(--surface)}
+.lc .h{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink-2)}
+.lc .h .t{font-family:var(--mono)}
+.lc .h .spacer{flex:1}
+.lc .m{margin-top:2px}
+.lc.tick{background:var(--surface-2);color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:3px 10px;border:0}
+details.fx>summary{list-style:none;cursor:pointer;color:var(--accent);font-size:12px}
+details.fx>summary::-webkit-details-marker{display:none}
+select,.in-sel{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:5px 8px;font:inherit;font-size:13px}
+</style>
+</head>
+<body>
+<h1>Mike · Logs tab · scenario selector over a full filter</h1>
+<p class="note">Two layers over one log. The <b>scenario</b> row is the high-level selector: a named preset for a common diagnostic question, which fills the low-level filter and says in one line what it set. The <b>filter</b> row is full control: level and above, component, seat, actor, project, event, text, a time range, a limit. Editing the filter after picking a scenario turns the chip to "Custom"; a human can save the current filter as a new scenario (config, human only). The filter is in the URL, so a view is a link. Lines show time, level, component, seat, event and message; a line expands to its fields and links to its decision record and the thing it names. Tick boundaries are thin separators. Live follows the stream; Pause stops the scroll, not the stream.</p>
+<div class="stage">
+
+<!-- DESKTOP -->
+<div class="frame desktop">
+  <div class="chrome">● ● ●&nbsp;&nbsp; mike.example.com/dashboard/logs?scenario=why-not-steered&seat=Brigid&since=1h &nbsp;·&nbsp; 1180 px</div>
+  <div class="tab">
+    <div class="tabbar"><span>Health</span><span>Seats</span><span>Board</span><span>Review</span><span>Priorities</span><span>Gauges</span><span>Settings</span><span class="on">Logs</span></div>
+
+    <div class="sel"><span class="lab">Scenario</span>
+      <span class="scen">Last tick</span><span class="scen on">Why was a seat not steered?</span><span class="scen">Undelivered steers</span><span class="scen">Refused by a gate</span><span class="scen">Mints and remints</span><span class="scen">Webhooks received</span><span class="scen">A human's commands</span><span class="scen">Everything red</span><span class="scen">Custom</span><span class="scen add">+ Save current filter…</span></div>
+    <div class="scen-desc">Shows every steer, hold and refusal that names <b>Brigid</b> in the last hour, plus the ticks around them. Set: component <b>loop, steer, gates</b> · seat <b>Brigid</b> · level <b>info and above</b> · since <b>1 h</b>.</div>
+
+    <div class="filters">
+      <div class="f"><label>Level and above</label><div class="in set">info</div></div>
+      <div class="f"><label>Component</label><div class="in set">loop, steer, gates <i>+3</i></div></div>
+      <div class="f"><label>Seat</label><div class="in set">Brigid</div></div>
+      <div class="f"><label>Actor</label><div class="in"><i>any: human, session, seat, loop</i></div></div>
+      <div class="f"><label>Project</label><div class="in"><i>all 3</i></div></div>
+      <div class="f"><label>Event</label><div class="in"><i>any</i></div></div>
+      <div class="f" style="grid-column:span 2"><label>Text</label><div class="in"><i>search message and fields…</i></div></div>
+      <div class="f" style="grid-column:span 2"><label>Since · until</label><div class="in set">last 1 h <i>· 15 m · 6 h · 24 h · custom…</i></div></div>
+      <div class="f"><label>Limit</label><div class="in">500</div></div>
+      <div class="f"><label>Time</label><div class="in">local <i>· UTC</i></div></div>
+      <div class="frow"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Live</label><button class="btn">Pause</button><span class="spacer"></span><button class="btn">Clear</button><button class="btn">Copy link</button><button class="btn">Download JSON</button></div>
+    </div>
+
+    <div class="count"><b>23 lines</b><span><span class="led error"></span> 1 error</span><span><span class="led warn"></span> 4 warn</span><span><span class="led info"></span> 18 info</span><span>·</span><span>4 ticks in range</span><span>·</span><span>newest first</span></div>
+
+    <table class="log">
+      <tr><th style="width:150px">Time</th><th style="width:60px">Level</th><th style="width:90px">Component</th><th style="width:80px">Seat</th><th style="width:150px">Event</th><th>Message</th><th style="width:28px"></th></tr>
+      <tr class="tick"><td colspan="7">tick 14:32:10 · 6.2 s · 2 steers · 1 refused</td></tr>
+      <tr class="open"><td class="t">14:32:14.102</td><td><span class="led warn"></span> warn</td><td class="c">gates</td><td>Brigid</td><td><span class="pill-ev">steer refused</span></td><td class="m">One pending steer: a steer to Brigid is already queued, 25 min, not yet delivered. <a href="#">record 8f3a</a></td><td><span class="chev">▴</span></td></tr>
+      <tr class="fields"><td colspan="7"><div class="fields"><div class="kv"><span class="k">gate</span><span>5 one-pending-steer</span><span class="k">pending_record</span><a href="#">7c21 · queued 14:07:02</a><span class="k">caller</span><span>loop · change: send-back on <a href="#">#1723</a></span><span class="k">runtime</span><span>grok-tmux · excaliwire-dev</span><span class="k">job</span><a href="#">job 0b9e</a><span class="k">project</span><span>excaliwire/factory</span></div></div></td></tr>
+      <tr><td class="t">14:32:12.880</td><td><span class="led info"></span> info</td><td class="c">loop</td><td>Brigid</td><td><span class="pill-ev">change routed</span></td><td class="m">Send-back on <a href="#">#1723</a> by tig → steer Brigid (owner).</td><td><span class="chev">▾</span></td></tr>
+      <tr><td class="t">14:32:10.411</td><td><span class="led info"></span> info</td><td class="c">loop</td><td></td><td><span class="pill-ev">tick start</span></td><td class="m">13 seats · 3 projects · 2 changes since last tick.</td><td><span class="chev">▾</span></td></tr>
+      <tr class="tick"><td colspan="7">tick 14:27:10 · 5.8 s · 0 steers</td></tr>
+      <tr><td class="t">14:27:11.030</td><td><span class="led warn"></span> warn</td><td class="c">runtime</td><td>Brigid</td><td><span class="pill-ev">liveness</span></td><td class="m">not-responding: no pane output for 20 min. <a href="#">record 8e90</a></td><td><span class="chev">▾</span></td></tr>
+      <tr class="tick"><td colspan="7">tick 14:22:10 · 6.0 s · 0 steers</td></tr>
+      <tr><td class="t">14:22:11.014</td><td><span class="led warn"></span> warn</td><td class="c">runtime</td><td>Brigid</td><td><span class="pill-ev">liveness</span></td><td class="m">not-responding: no pane output for 15 min.</td><td><span class="chev">▾</span></td></tr>
+      <tr class="tick"><td colspan="7">tick 14:07:10 · 7.1 s · 3 steers</td></tr>
+      <tr><td class="t">14:07:02.550</td><td><span class="led error"></span> error</td><td class="c">actuation</td><td>Brigid</td><td><span class="pill-ev">steer undelivered</span></td><td class="m">Paste not confirmed on excaliwire-dev: pane did not echo within 10 s. Queued for redelivery by the host. <a href="#">record 7c21</a></td><td><span class="chev">▾</span></td></tr>
+      <tr><td class="t">14:06:58.201</td><td><span class="led info"></span> info</td><td class="c">steer</td><td>Brigid</td><td><span class="pill-ev">steer queued</span></td><td class="m">To: Brigid. Answer the send-back on #1723: file:line… <a href="#">record 7c21</a></td><td><span class="chev">▾</span></td></tr>
+      <tr><td class="t">14:06:57.990</td><td><span class="led info"></span> info</td><td class="c">github</td><td></td><td><span class="pill-ev">webhook</span></td><td class="m">pull_request_review.submitted · <a href="#">#1723</a> · changes_requested by tig.</td><td><span class="chev">▾</span></td></tr>
+    </table>
+    <div class="foot"><span>Showing 23 of 23 in range</span><span class="spacer"></span><button class="btn">Older…</button></div>
+  </div>
+</div>
+
+<!-- PHONE -->
+<div class="frame phone">
+  <div class="chrome">375 px · Logs</div>
+  <div class="tab">
+    <div class="tabbar"><span>Health</span><span>Seats</span><span>Board</span><span>Review</span><span class="on">Logs</span></div>
+    <div class="sel" style="margin-bottom:6px"><select class="in-sel" style="flex:1"><option>Why was a seat not steered? · Brigid · 1 h</option><option>Last tick</option><option>Undelivered steers</option><option>Refused by a gate</option><option>Mints and remints</option><option>Webhooks received</option><option>A human's commands</option><option>Everything red</option><option>Custom</option></select></div>
+    <details class="fx" style="margin-bottom:8px"><summary>Filters ▾ · level info · component loop, steer, gates · seat Brigid · since 1 h</summary>
+      <div class="filters" style="margin-top:6px">
+        <div class="f"><label>Level</label><div class="in set">info</div></div>
+        <div class="f"><label>Seat</label><div class="in set">Brigid</div></div>
+        <div class="f"><label>Component</label><div class="in set">loop, steer… <i>+3</i></div></div>
+        <div class="f"><label>Since</label><div class="in set">1 h</div></div>
+        <div class="f" style="grid-column:span 2"><label>Text</label><div class="in"><i>search…</i></div></div>
+        <div class="frow"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Live</label><span class="spacer"></span><button class="btn">Copy link</button></div>
+      </div>
+    </details>
+    <div class="count"><b>23 lines</b><span><span class="led error"></span> 1</span><span><span class="led warn"></span> 4</span><span><span class="led info"></span> 18</span></div>
+    <div class="cardlog">
+      <div class="lc tick">tick 14:32:10 · 6.2 s</div>
+      <div class="lc"><div class="h"><span class="led warn"></span><span class="t">14:32:14</span><span>gates · Brigid</span><span class="spacer"></span><span class="pill-ev">steer refused</span></div><div class="m">One pending steer: a steer to Brigid is already queued, 25 min, not delivered.</div><details class="fx"><summary>fields · record 8f3a</summary><div class="fields" style="margin-top:4px"><div class="kv" style="grid-template-columns:90px 1fr"><span class="k">gate</span><span>5 one-pending</span><span class="k">pending</span><a href="#">7c21</a><span class="k">caller</span><span>loop</span></div></div></details></div>
+      <div class="lc"><div class="h"><span class="led info"></span><span class="t">14:32:12</span><span>loop · Brigid</span><span class="spacer"></span><span class="pill-ev">change routed</span></div><div class="m">Send-back on <a href="#">#1723</a> by tig → steer Brigid.</div></div>
+      <div class="lc tick">tick 14:27:10 · 5.8 s</div>
+      <div class="lc"><div class="h"><span class="led warn"></span><span class="t">14:27:11</span><span>runtime · Brigid</span><span class="spacer"></span><span class="pill-ev">liveness</span></div><div class="m">not-responding: no pane output for 20 min.</div></div>
+      <div class="lc tick">tick 14:07:10 · 7.1 s</div>
+      <div class="lc"><div class="h"><span class="led error"></span><span class="t">14:07:02</span><span>actuation · Brigid</span><span class="spacer"></span><span class="pill-ev">undelivered</span></div><div class="m">Paste not confirmed on excaliwire-dev: no echo in 10 s. Queued for redelivery.</div></div>
+      <div class="lc"><div class="h"><span class="led info"></span><span class="t">14:06:58</span><span>steer · Brigid</span><span class="spacer"></span><span class="pill-ev">steer queued</span></div><div class="m">To: Brigid. Answer the send-back on #1723…</div></div>
+    </div>
+    <div class="foot"><span>23 of 23</span><span class="spacer"></span><button class="btn">Older…</button></div>
+  </div>
+</div>
+</div>
+<script>
+const f=new URLSearchParams(location.search).get('frame');
+if(f){document.querySelectorAll('h1,.note').forEach(e=>e.remove());
+  document.querySelectorAll('.frame').forEach(e=>{if(!e.classList.contains(f))e.remove();});
+  document.body.style.background='transparent';document.querySelector('.stage').style.padding='0';}
+</script>
+</body>
+</html>
