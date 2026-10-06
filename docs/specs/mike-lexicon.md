@@ -322,15 +322,15 @@ Owner: [mike.md §12.1, the tiers](mike.md#121-the-tiers). One of five levels of
 
 ### Driver conformance
 
-Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). The component-tier suite every runtime driver must pass through the [Mike Runtime API](#mike-runtime-api) with no control plane running: config, mint, steer with confirmed delivery, stop, restart, archive, liveness, usage, session log. Runs against the [fake runtime](#fake-runtime) in CI and, as a contract test, against the vendor sandbox on demand. Not the control-plane integration test and not the end-to-end run. **Binds:** a driver that fails is not enablable by config; [MS-185, a driver passes conformance alone](mike-user-stories.md#ms-185-a-driver-passes-conformance-alone).
+Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). The component-tier suite every runtime driver must pass through the [Mike Runtime API](#mike-runtime-api) with no control plane running: config, mint, steer with confirmed delivery, stop, restart, archive, liveness, usage, session log. Runs against the [fake runtime](#fake-runtime) in CI and, as a contract test, against the vendor sandbox on demand. Not the control-plane integration test and not the end-to-end run. **Binds:** a driver that fails is not enablable by config; [MS-185, a driver passes conformance alone](stories/testing.md#ms-185-a-driver-passes-conformance-alone).
 
 ### Fake runtime
 
-Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). Mike's own in-memory implementation of the Runtime API, loaded by the same driver path as a real one, recording every call. It is what component, contract and integration tests run against so that none of them needs a vendor. Not a mock of one vendor's API; it implements the interface. **Binds:** [MS-186, Mike ships a fake runtime](mike-user-stories.md#ms-186-mike-ships-a-fake-runtime).
+Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). Mike's own in-memory implementation of the Runtime API, loaded by the same driver path as a real one, recording every call. It is what component, contract and integration tests run against so that none of them needs a vendor. Not a mock of one vendor's API; it implements the interface. **Binds:** [MS-186, Mike ships a fake runtime](stories/testing.md#ms-186-mike-ships-a-fake-runtime).
 
 ### Synthetic board
 
-Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). A fixture [board](#board) handed to a seat under test, with a stub of Mike's verbs that records calls and applies the gates, so Arthur or any role can be tested alone. Not live state. **Binds:** [MS-187, Arthur tested alone on a synthetic board](mike-user-stories.md#ms-187-arthur-tested-alone-on-a-synthetic-board).
+Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). A fixture [board](#board) handed to a seat under test, with a stub of Mike's verbs that records calls and applies the gates, so Arthur or any role can be tested alone. Not live state. **Binds:** [MS-187, Arthur tested alone on a synthetic board](stories/testing.md#ms-187-arthur-tested-alone-on-a-synthetic-board).
 
 ### Seat card
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check every markdown link under docs/specs.
+"""Check every markdown link under docs/specs, subdirectories included.
 
 Rules this enforces, from tig/mike#4 review (2026-10-05):
 1. A relative link to a .md file must name a file that exists, and its #anchor
@@ -73,7 +73,7 @@ def check(path: pathlib.Path, cache: dict) -> list[str]:
     return findings
 
 def main(argv):
-    files = [pathlib.Path(a) for a in argv] or sorted(SPECS.glob("*.md"))
+    files = [pathlib.Path(a) for a in argv] or sorted(SPECS.rglob("*.md"))
     cache, findings = {}, []
     for f in files: findings += check(f, cache)
     for x in findings: print(x)

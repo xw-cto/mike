@@ -4,7 +4,7 @@
 
 **Sources read:** excaliwire/factory at [factory at commit bb2bf4c6, the tree this spec read](https://github.com/excaliwire/factory/tree/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8) (2026-10-05): `agent-harness/`, `docs/specs/agent-harness.md`, `docs/specs/dashboard-api.md`, `docs/lexicon.md`; [factory#1336, the harness redesign](https://github.com/excaliwire/factory/issues/1336) and its comments; [factory#1501, the extraction call of 2026-10-01](https://github.com/excaliwire/factory/issues/1501); [tig/mike#1, the dashboard rewrite](https://github.com/tig/mike/issues/1); [tig/mike#2, the master plan](https://github.com/tig/mike/issues/2). Tracking issue: [tig/mike#3, this spec](https://github.com/tig/mike/issues/3).
 
-**Companion files:** [`mike-user-stories.md`, what each role needs](mike-user-stories.md) with the factory evidence for each; [`mike-lexicon.md`, every factory term kept, renamed, retired or challenged](mike-lexicon.md); [`mike-dashboard.md`, the dashboard with its mockups](mike-dashboard.md); [`mike-dashboard-api.md`, the dashboard API contract](mike-dashboard-api.md).
+**Companion files:** [`stories/`, the user stories by job: what each role needs](stories/README.md) with the factory evidence for each; [`mike-lexicon.md`, every factory term kept, renamed, retired or challenged](mike-lexicon.md); [`mike-dashboard.md`, the dashboard with its mockups](mike-dashboard.md); [`mike-dashboard-api.md`, the dashboard API contract](mike-dashboard-api.md).
 
 **Self-contained.** These files define Mike completely. A link to factory is provenance, where a rule or a story came from, never a definition a reader must go and fetch. Factory's specs are not Mike's contract.
 
@@ -29,6 +29,24 @@ A rule written anywhere else, in a chat, a pull request comment, or one agent's 
 An **instance** is one running Mike: one control plane, one loop, one store, one dashboard, one priorities list. A **project** is one repository the instance manages. An instance manages a set of projects; the set of projects is called the **program** (`program.repositories`). Every verb that touches GitHub names the project.
 
 You run one Mike for all of your repositories. You do not install or run a separate Mike for each repository ([tig/mike#2, the master plan, "cross-repo requirement"](https://github.com/tig/mike/issues/2)).
+
+### 1.3 Overlapping instances
+
+Two Mike instances may manage the same repository, for example a project that two organizations each run a swarm on, or a staging Mike beside a production one. Mike does not solve for this in the first cut. This section says how the overlap shows and what keeps it harmless.
+
+GitHub is the shared surface. Everything an instance reads from a repository, another instance can also read, write, or claim.
+
+| Where they overlap | How a conflict shows | What keeps it harmless |
+|---|---|---|
+| **`gh_user`**, the owner gate. Each instance steers only issues and pull requests assigned to its own GitHub user. | Two instances with the same `gh_user` both see every assigned issue, both route it to a seat, and the issue ends with two `seat:` labels and two pull requests. | Each instance has its own GitHub user. A human assigns an issue to one of them. An issue assigned to two Mike users is a human's mistake, and the first cut does not detect it. |
+| **Seat names**, in `seat:<name>` labels, `[Name]` writer prefixes, `To: Name` addresses, branch names and tmux session names. | Two instances that both have an Avalon each read `seat:Avalon` as their own, both route `To: Avalon` as a steer, and on a shared seat host both try to own one tmux session. | Seat names are unique across every instance that touches a repository, orchestrator names included: instance config renames any role, so one instance's Arthur is another's Merlin. |
+| **Unknown labels and names.** An instance meets `seat:` labels, `[Name]` prefixes and `To:` addresses it did not issue. | Treated as anomalies, they turn Health red for the other instance's normal work; treated as steers, they misfire. | An instance treats a seat label or name it does not know the way it treats a contributor's: shown on the board as another owner's work, routed nowhere, never a finding. |
+| **Webhooks and reads.** Every instance receives every event for the repository and reads the same issues. | Each instance's GitHub read budget is spent on the other's events; the reserve trips sooner. | Each instance drops at ingress every event that names no seat, label or user of its own. The budget is per instance, so the cost is load, not a wrong action. |
+| **Lanes and urgency labels.** Both instances read the same label set. | An issue whose lane is one instance's and not the other's is simply refused by the other's lane gate. No conflict, as long as `gh_user` differs. | Lane labels may be shared or disjoint; the urgency labels are one vocabulary and are shared. |
+| **The human merger.** Both instances assign ready pull requests to the same human. | One merge queue holds two instances' work with no mark of which. | The `[Name]` prefix and the `seat:` label name the instance's seat, and unique names make the source readable. |
+| **Grants.** `waive:` and `reviewer:` are text in the repository that both instances read. | A grant naming the other instance's seat is read by both. | A grant binds only a gate the reading instance holds; one naming an unknown seat is text to it. |
+
+The one case the mitigations do not cover is two instances that share a `gh_user` or a seat name; that produces the first two rows and the first cut does not detect it. A later cut may let an instance list its peers so it can refuse an issue assigned to two Mike users and flag a duplicate name; that is a decision for then.
 
 ## 2. Roles
 
@@ -354,7 +372,7 @@ The client is tested at the same tiers, with a headless browser as the runner wh
 
 ## 13. Done when
 
-- The user stories in [the user stories file](mike-user-stories.md) each name a test or a measurement, and the LEGACY ones are not built.
+- The user stories in [the user stories index](stories/README.md) each name a test or a measurement, and the LEGACY ones are not built.
 - [The lexicon carry-over table](mike-lexicon.md#2-carry-over-table) has a verdict on every factory term and a human has edited it.
 - moms passes its own contract tests ([`mike-dashboard-api.md`, the dashboard API](mike-dashboard-api.md)) with an empty `PINNED` list, from an install with no factory checkout, managing two projects from one instance.
 - A tick with idle workers writes no planner row; Arthur's steers pass the [section 3.3, the gates](#33-gates-mike-enforces-for-every-caller); Health shows target versus actual share.

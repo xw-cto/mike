@@ -18,7 +18,7 @@ The dashboard is how humans see and control Mike: the fleet, the board, the prio
 
 ## 2. The client
 
-**The client is a full rewrite.** Factory's dashboard is not evolved, imported, or copied from. The user stories in [the user stories, section 1, dashboard and UI](mike-user-stories.md#1-dashboard-and-ui-stories) and [section 3, what the spec requires](mike-user-stories.md#3-stories-mikemd-requires-that-neither-source-had) are its requirements. What it must be that factory's page is not:
+**The client is a full rewrite.** Factory's dashboard is not evolved, imported, or copied from. The dashboard and UI stories and the stories the spec requires, [indexed by job in the user stories](stories/README.md), are its requirements. What it must be that factory's page is not:
 
 - **Responsive and phone-first.** Every tab lays out at 375 px with no horizontal page scroll; every single-seat verb has a touch path; a human on a phone can read the board, steer a seat, and request a merge.
 - **A review surface**: ready pull requests by urgency and age, which reviewer holds each, each verdict, and send-backs with their owner seat.
@@ -49,4 +49,4 @@ The tab factory calls Sessions is the **Seats** tab in Mike. It shows every seat
 
 ## 4. Tabs still to mock up
 
-Health, Board, Review, Priorities, Gauges, Settings, Logs, Attached sessions. Each lands here with a desktop and a phone image before its stories are built ([the user stories, section 1, dashboard and UI](mike-user-stories.md#1-dashboard-and-ui-stories)).
+Health, Board, Review, Priorities, Gauges, Settings, Logs, Attached sessions. Each lands here with a desktop and a phone image before its stories are built ([the user stories index, by job](stories/README.md)).
