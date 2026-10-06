@@ -544,7 +544,7 @@ Head: <sha>
 Verdict: CHANGE: the old four-line form (`Lexicon: Clear.` and the rest) is refused by the gate, not only banned in briefs; the review behind it is the runtime's code-review tool ([MS-176, self-review with the runtime's code-review tool](#ms-176-self-review-with-the-runtimes-code-review-tool)).
 
 #### MS-084 pr-check names rule breaks
-As a worker (Artificer), I want `pr-check` to name mechanical rule breaks (one `seat:` label naming a real seat, no `[Name]:` title, `Closes` in the same project, no development pull request from an orchestrator or lane-PE), so that review time is not spent on them.
+As a worker (Artificer), I want `pr-check` to name mechanical rule breaks (one `seat:` label naming a real seat, no `[Name]` or `Name:` title, `Closes` in the same project, no development pull request from an orchestrator or lane-PE), so that review time is not spent on them.
 Evidence: [factory harness __main__.py line 2149, the pr-check verb](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/__main__.py#L2149).
 Acceptance: `--strict` exits 1 on any finding; a cross-repository `Closes` is a finding.
 Verdict: KEEP.
@@ -819,13 +819,14 @@ Verdict: KEEP.
 #### MS-124 Fixed writer, owner, addressee marks
 As a seat (any), I want writer, owner and addressee carried by fixed marks, so that nobody is ambiguous across GitHub accounts.
 Evidence: [factory AGENTS.md line 48, the address marks](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/AGENTS.md#L48).
-Acceptance: gate parsers accept an optional `[Name] ` prefix and nothing else; `[Name]:` at the start of a comment is an address, `[Name]` with no colon is the writer; 0 open titles match `[Name]:`; ownership reads only the label.
+Acceptance: gate parsers accept an optional `[Name] ` prefix and nothing else; `To: Name` at the start of the body (after the prefix, if any) is the address; 0 open titles carry a `[Name]` or `Name:` prefix; ownership reads only the label.
 ```
-[Name] <text>        written by seat Name
-[Name]: <text>       addressed to seat Name
-seat:<name>          label: the seat that owns this issue or pull request
+[Name] <text>              written by seat Name
+To: Name. <text>           addressed to seat Name (a human writes this with no prefix)
+[Name] To: Other. <text>   written by Name, addressed to Other
+seat:<name>                label: the seat that owns this issue or pull request
 ```
-Verdict: CHANGE: the colon is the address; factory's `Name:` address form retires ([mike.md §2.1, humans](mike.md#21-humans), [mike.md §9 rule 15, the address contract](mike.md#9-what-mike-keeps)).
+Verdict: CHANGE: `To: Name` is the address, the email header word; factory's `Name:` form retires because it means the speaker in a transcript and the addressee on IRC ([mike.md §2.1, humans](mike.md#21-humans), [mike.md §9 rule 15, the address contract](mike.md#9-what-mike-keeps)).
 
 ### 2.9 Cost
 
@@ -1146,9 +1147,9 @@ Acceptance: within one tick of the assignment webhook the issue is on the board 
 Verdict: NEW.
 
 #### MS-169 Addressed comments become steers
-As a human, I want a comment I address `[Name]:` on an issue or pull request delivered to that seat as a steer, so that I direct a seat from GitHub on my phone without a dashboard.
+As a human, I want a comment I start with `To: Name` on an issue or pull request delivered to that seat as a steer, so that I direct a seat from GitHub on my phone without a dashboard.
 Evidence: [mike.md §2.1, humans](mike.md#21-humans), [mike.md §9 rule 15, the address contract](mike.md#9-what-mike-keeps) (address contract); [factory#1336 comment 2026-10-05 05:18 UTC, the harness redesign](https://github.com/excaliwire/factory/issues/1336) (`Arthur:` comments as steers).
-Acceptance: one steer record per addressed comment with `why` naming the comment id and my login; the steer passes the gates or is a refused record; an unaddressed comment, one starting `[Name]` with no colon, or factory's `Name:` form produces 0 steers.
+Acceptance: one steer record per addressed comment with `why` naming the comment id and my login; the steer passes the gates or is a refused record; an unaddressed comment, one starting only with a writer prefix `[Name]`, or one using factory's `Name:` or the retired `[Name]:` form produces 0 steers and one lint line.
 Verdict: NEW.
 
 #### MS-170 Human reviews count when configured
@@ -1160,7 +1161,7 @@ Verdict: NEW.
 #### MS-171 Unlisted users are contributors
 As a human, I want a GitHub user not on the instance's human list treated as a contributor, so that their issues and comments are seen but bind nothing.
 Evidence: [mike.md §2.1, humans](mike.md#21-humans).
-Acceptance: a contributor's issue shows on the board as unassigned contributor work; their `waive:`, `reviewer:` and `[Name]:` comments produce 0 records that act; a listed human's assignment of that issue puts it on the board.
+Acceptance: a contributor's issue shows on the board as unassigned contributor work; their `waive:`, `reviewer:` and `To: Name` comments produce 0 records that act; a listed human's assignment of that issue puts it on the board.
 Verdict: NEW.
 
 ### 3.14 Dashboard API contract
