@@ -4,7 +4,7 @@
 
 **Starting point.** [Factory's dashboard API at commit bb2bf4c6, the starting point](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/dashboard-api.md) was the starting point for this file and is not referenced as law. A reader needs nothing from factory to read or implement it.
 
-**Companion files.** [`mike.md`, the spec](mike.md) defines the domain: [humans](mike.md#21-humans), [attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [the seat model](mike.md#3-the-seat-model), [runtimes and gauges](mike.md#4-runtimes), [the control plane](mike.md#5-the-control-plane), and [the dashboard requirements](mike.md#7-the-dashboard). [The user stories, section 1, dashboard and UI](mike-user-stories.md#1-dashboard-and-ui-stories) and [section 3, what the spec requires](mike-user-stories.md#3-stories-mikemd-requires-that-neither-source-had) are the acceptance tests the client and this contract answer to.
+**Companion files.** [`mike.md`, the spec](mike.md) defines the domain: [humans](mike.md#21-humans), [attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [the seat model](mike.md#3-the-seat-model), [runtimes and gauges](mike.md#4-runtimes), [the control plane](mike.md#5-the-control-plane), and [the dashboard spec](mike-dashboard.md). [The user stories, section 1, dashboard and UI](mike-user-stories.md#1-dashboard-and-ui-stories) and [section 3, what the spec requires](mike-user-stories.md#3-stories-mikemd-requires-that-neither-source-had) are the acceptance tests the client and this contract answer to.
 
 Routes below are written relative to `{base}`, the instance's configured base path.
 
@@ -284,8 +284,8 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 | `droplet` joined not-ok string | dropped; `attention` groups | one reader, one source |
 | `harness`, `surface`, `state`, `watch` on a row | `runtime`, `vendor`, `access`, `liveness_source` | [runtimes](mike.md#4-runtimes) |
 | `verbs` list plus hover text the client derived | `verbs` list plus server `verb_why` | the server explains; the client derives nothing |
-| `sessions` part, `sessionRow`, `/sessions` routes | `seats` part, `seatRow`, `/seats` routes | the row is a seat; a session is what the runtime holds for it ([the Seats tab](mike.md#71-the-seats-tab-and-the-seat-card)) |
-| none | `board`, `review`, `gauges` per runtime, `attached-sessions`, `jobs`, session log | parts [the dashboard section](mike.md#7-the-dashboard) requires |
+| `sessions` part, `sessionRow`, `/sessions` routes | `seats` part, `seatRow`, `/seats` routes | the row is a seat; a session is what the runtime holds for it ([the Seats tab](mike-dashboard.md#3-the-seats-tab-and-the-seat-card)) |
+| none | `board`, `review`, `gauges` per runtime, `attached-sessions`, `jobs`, session log | parts [the dashboard spec](mike-dashboard.md) requires |
 | terminal ticket and WebSocket messages | **deferred** | see below |
 
 Terminal control ([MS-057, watch and drive a tmux pane](mike-user-stories.md#ms-057-watch-and-drive-a-tmux-pane)) is deferred to its own contract. It is served by the seat host, not the control plane, it is tmux-only, and it is a two-way WebSocket, which this one-way contract does not carry. Version `1.0.0` holds no terminal field. Adding a terminal URL and control holder to `seatRow` later is a minor bump.

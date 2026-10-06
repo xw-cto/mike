@@ -322,5 +322,12 @@ h1{font-size:18px;margin:16px 20px 4px}
 </div>
 
 </div>
+<script>
+// ?frame=desktop or ?frame=phone renders one frame alone, for the spec's inline images.
+const f=new URLSearchParams(location.search).get('frame');
+if(f){document.querySelectorAll('h1,.note,.legend').forEach(e=>e.remove());
+  document.querySelectorAll('.frame').forEach(e=>{if(!e.classList.contains(f))e.remove();});
+  document.body.style.background='transparent';document.querySelector('.stage').style.padding='0';}
+</script>
 </body>
 </html>

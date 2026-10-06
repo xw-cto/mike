@@ -1188,31 +1188,31 @@ Verdict: NEW.
 
 #### MS-180 One seat card component everywhere
 As a human, I want every seat drawn as the same seat card wherever it appears, so that I learn one shape and read it the same on every tab.
-Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [the approved mockup](mike.md#71-the-seats-tab-and-the-seat-card).
+Evidence: [the dashboard spec §3, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card); [the approved mockup](mike-dashboard.md#3-the-seats-tab-and-the-seat-card).
 Acceptance: the Seats tab, the board, and the review surface render a seat through one component; a change to the card's markup appears on all three without a second edit.
 Verdict: NEW.
 
 #### MS-181 Cards grouped by role, responsive
 As a human, I want cards grouped as orchestrators, lane-PEs, workers and reviewers, side by side on a desktop and stacked on a phone, so that I find a seat by its job on any screen.
-Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card).
+Evidence: [the dashboard spec §3, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card).
 Acceptance: at 1180 px a group shows at least 2 cards per row; at 375 px one per row with no horizontal page scroll; the card's inner grid goes from two columns to one by its own container width.
 Verdict: NEW.
 
 #### MS-182 Seat card info block
 As a human, I want each card to show name, role, liveness LED with its word, driver, last mint, assignment with its time, last steer with its time, context pressure as a bar gauge, and tokens since mint, so that one glance answers who, what, how long, and how full.
-Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-002, liveness in four words](#ms-002-liveness-in-four-words).
+Evidence: [the dashboard spec §3, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card); [MS-002, liveness in four words](#ms-002-liveness-in-four-words).
 Acceptance: all nine fields present on every card; the LED color always has its word beside it; an unmeasured field reads unmeasured plus its reason and draws no bar; the gauge fill changes to warning at 60 percent and critical at 80 percent.
 Verdict: NEW.
 
 #### MS-183 Seat card controls
 As a human, I want a start-stop switch and Restart, Steer, Mint and Archive at the bottom of each card, with a verb disabled and explained when the seat's row does not list it, so that I act on one seat without a menu hunt.
-Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-027, verb buttons explain themselves](#ms-027-verb-buttons-explain-themselves).
+Evidence: [the dashboard spec §3, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card); [MS-027, verb buttons explain themselves](#ms-027-verb-buttons-explain-themselves).
 Acceptance: the five controls are present on every card; a control not in the row's `verbs` is disabled with `verb_why` as its hover text; a click posts one command and the card shows the job outcome.
 Verdict: NEW.
 
 #### MS-184 Phone card: expander and hamburger
 As a human on a phone, I want the card's info behind a Details expander and its verbs behind a hamburger, with the start-stop switch still visible, so that the tab stays short and every verb has a touch path.
-Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-005, last confirmed steer shown](#ms-005-last-confirmed-steer-shown).
+Evidence: [the dashboard spec §3, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card); [MS-005, last confirmed steer shown](#ms-005-last-confirmed-steer-shown).
 Acceptance: at 375 px a closed card is at most 3 lines tall; the expander and the hamburger each open with one tap; the switch is reachable without opening either; an open expander or menu survives a sessions frame.
 Verdict: NEW.
 
@@ -1256,7 +1256,7 @@ Verdict: NEW.
 
 #### MS-191 Dashboard tested at every tier
 As a human, I want the dashboard client tested at the same tiers as the rest of Mike, with the seat card and every tab rendered alone from fixtures in a headless browser at 1180 px and 375 px, so that a layout or responsiveness break is caught before I open it on my phone.
-Evidence: [mike.md §12.4, the dashboard](mike.md#124-the-dashboard); [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card).
+Evidence: [mike.md §12.4, the dashboard](mike.md#124-the-dashboard); [the dashboard spec §3, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card).
 Acceptance: each component has a render test at both widths asserting no horizontal overflow and a kept screenshot baseline; the client's command bodies equal the API fixtures byte for byte; an integration test against the in-process API shows a pushed frame updating one card while typed text survives; none of these needs a live control plane, vendor or GitHub.
 Verdict: NEW.
 

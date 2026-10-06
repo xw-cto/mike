@@ -4,7 +4,7 @@
 
 **Sources read:** excaliwire/factory at [factory at commit bb2bf4c6, the tree this spec read](https://github.com/excaliwire/factory/tree/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8) (2026-10-05): `agent-harness/`, `docs/specs/agent-harness.md`, `docs/specs/dashboard-api.md`, `docs/lexicon.md`; [factory#1336, the harness redesign](https://github.com/excaliwire/factory/issues/1336) and its comments; [factory#1501, the extraction call of 2026-10-01](https://github.com/excaliwire/factory/issues/1501); [tig/mike#1, the dashboard rewrite](https://github.com/tig/mike/issues/1); [tig/mike#2, the master plan](https://github.com/tig/mike/issues/2). Tracking issue: [tig/mike#3, this spec](https://github.com/tig/mike/issues/3).
 
-**Companion files:** [`mike-user-stories.md`, what each role needs](mike-user-stories.md) with the factory evidence for each; [`mike-lexicon.md`, every factory term kept, renamed, retired or challenged](mike-lexicon.md); [`mike-dashboard-api.md`, the dashboard API contract](mike-dashboard-api.md).
+**Companion files:** [`mike-user-stories.md`, what each role needs](mike-user-stories.md) with the factory evidence for each; [`mike-lexicon.md`, every factory term kept, renamed, retired or challenged](mike-lexicon.md); [`mike-dashboard.md`, the dashboard with its mockups](mike-dashboard.md); [`mike-dashboard-api.md`, the dashboard API contract](mike-dashboard-api.md).
 
 **Self-contained.** These files define Mike completely. A link to factory is provenance, where a rule or a story came from, never a definition a reader must go and fetch. Factory's specs are not Mike's contract.
 
@@ -194,38 +194,7 @@ Tests must fail on main and pass on the head. The reviewer's verb copies new tes
 
 ## 7. The dashboard
 
-The dashboard is how humans see and control Mike: the fleet, the board, the priorities list, review state, gauges, settings, logs, and every verb a human may run. It is a client of the **Mike dashboard API**, and it is the only client Mike ships; an attached session or a second client speaks the same API.
-
-**The API is Mike's own contract**, written in [`mike-dashboard-api.md`, the dashboard API](mike-dashboard-api.md). Factory's dashboard API was the starting point for that file, nothing more: parts of it were never hardened, its spec text lagged its code, and it was shaped by one client. Nothing in Mike refers to factory's contract as law. What the Mike contract must hold:
-
-- **One version, one gate.** The API carries a semantic version. An added field is a minor bump; a removed or renamed field, a changed meaning or a changed event name is a major bump. A client reads the version first and stops, saying it must be updated, on a major it was not built for. It never draws a half-compatible page. A test fails on any schema edit that has no version bump.
-- **Live by push, complete by read.** One server-sent stream carries a frame per part (version, health, seats, board, priorities, review, gauges, settings, attached sessions, logs, jobs) when that part changes, with a keep-alive so a dead stream is noticed. Every part is also a plain JSON read, so a client that cannot hold a stream still works. No message broker.
-- **A command is a job.** Every command returns a job id at once and reports its outcome (applied, refused, cancelled, with the why) by stream and by read, so a slow answer still lands where a human can see it. A command the caller may not run is refused with the caller matrix's reason, not hidden.
-- **Reads cost nothing.** A health or sessions read makes no vendor call, no GitHub call, and no subprocess; it serves what the loop last wrote. A part the loop has not written is absent, and the client says so. It never draws ok for a missing part, and never 0 for unmeasured.
-- **Verbs come from the server.** Each seat row lists the verbs that fit it now. The client enables a verb only when every selected row lists it, and derives nothing from liveness or any other field.
-- **Identity is a verified bearer.** A human, an attached session, a seat, and a seat host each carry their own token; the route says which it needs; no header names a caller.
-- **Times on the wire are ISO 8601 with offset.** The client never parses human prose.
-
-**The client is a full rewrite.** Factory's dashboard is not evolved, imported, or copied from. The user stories in [the user stories, section 1, dashboard and UI](mike-user-stories.md#1-dashboard-and-ui-stories) and [section 3, what the spec requires](mike-user-stories.md#3-stories-mikemd-requires-that-neither-source-had) are its requirements. What it must be that factory's page is not:
-
-- **Responsive and phone-first.** Every tab lays out at 375 px with no horizontal page scroll; every single-seat verb has a touch path; a human on a phone can read the board, steer a seat, and request a merge.
-- **A review surface**: ready pull requests by urgency and age, which reviewer holds each, each verdict, and send-backs with their owner seat.
-- **The board** Arthur reads, shown to humans as Arthur sees it, with target versus actual share per lane and each row's note.
-- **Gauges per runtime** with the mint threshold drawn against them, and unmeasured shown as unmeasured.
-- **Attached sessions** on their own list with last call and token age, and a Revoke verb.
-- **Edits survive a frame.** What a human is typing is never overwritten by a live update; the page diffs, it does not repaint.
-- **Every command's outcome is visible** on the row it changed, however long it took.
-
-### 7.1 The Seats tab and the seat card
-
-The tab factory calls Sessions is the **Seats** tab in Mike. It shows every seat as one **seat card**, a single shared component, rendered the same way wherever a seat appears. The mockup Tig approved on 2026-10-06 is [`mockups/seat-card.html`, the seat card at desktop and phone widths](mockups/seat-card.html) ([screenshot](mockups/seat-card.png)).
-
-- **Card groups.** Cards sit in groups by role: orchestrators, lane-PEs, workers, reviewers. A group lays its cards out responsively: side by side at desktop widths, stacked at phone widths. The card's own inside is responsive too, by its container width, not the viewport's.
-- **Info on top.** Name and role; liveness as a rectangular LED (green responding, red not-responding, gray unmeasured with the reason on hover, hollow not-minted) always beside its word, never color alone; the driver as runtime, vendor, access method and model; last mint; the assignment with the time it was assigned; the last steer, clipped, with the time it was delivered or that it is queued; context pressure as a bar gauge whose fill turns warning and then critical as the window fills; tokens since mint. An unmeasured value draws the word unmeasured and its reason, never 0 and never an empty bar.
-- **Controls on the bottom.** A slider switch for start and stop, then Restart, Steer, Mint, Archive. A verb the row's `verbs` list does not carry is drawn disabled with the server's `verb_why` as its hover text; the client derives nothing.
-- **Multi-select.** Each card has a checkbox; a selected card is outlined; a selection bar at the top of the tab names the selected seats and offers a verb only when every selected row lists it.
-- **Phone.** Everything below the card's header collapses behind a Details expander; the four verbs collapse behind a hamburger menu; the start-stop switch stays visible. The selection bar's verbs sit behind a hamburger too. No horizontal page scroll at 375 px.
-- **Live.** A card updates from the seats frame without a repaint of the tab, and an open expander, an open menu, or a half-typed steer survives the frame.
+The dashboard is how humans see and control Mike. It has its own spec, [`mike-dashboard.md`, the dashboard](mike-dashboard.md): what the client is, what each tab shows, and the approved mockup for each tab, inline. Its API is Mike's own contract, [`mike-dashboard-api.md`, the dashboard API](mike-dashboard-api.md); factory's dashboard API was a starting point, not law. The client is a full rewrite; factory's dashboard is not evolved, imported, or copied from.
 
 ## 8. Lexicon
 
@@ -251,7 +220,7 @@ The carry-over table, one row per factory term, is [the lexicon carry-over table
 | severity; Urgent, High, Medium, Low; the GitHub Priority field | **urgency**: `critical`, `high`, `normal`, `no`, as labels `urgency:<level>` | Tig, 2026-10-05 review: a label can be set from the GitHub mobile app, the Priority field cannot. Factory maps Urgent, High, Medium, Low onto the four levels. |
 | harness (a seat's run kind), vendor | **runtime** (a driver under the Mike Runtime API), **vendor** (who bills), **access method** (`cloud` or `tmux`) | [Section 4](#4-runtimes). |
 | budget (mint token or turn budget) | retired | Came from [factory#1755, the lane-PE remint token burn](https://github.com/excaliwire/factory/issues/1755)'s done-when, written by Infra Fable, not from Tig. The control on mint cost is wait-only mints and the gauges. |
-| Sessions tab | **Seats tab** | The tab shows seats, each as a seat card ([section 7.1](#71-the-seats-tab-and-the-seat-card)). |
+| Sessions tab | **Seats tab** | The tab shows seats, each as a seat card ([the dashboard spec, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card)). |
 | `Name:` (address) | **`To: Name`** addresses a seat, as in an email header; **`[Name]`** at the start of a comment is the writer's prefix, unchanged | Tig, 2026-10-06. `Name:` means the speaker in a transcript and the addressee on IRC, so it was ambiguous; `[Name]:` differed from the writer prefix by one character. |
 | runtime kind names (`cursor-cloud`, `grok-tmux`, `claude-cloud`) | kept | Each is a runtime. |
 | droplet | **control-plane host** | Mike runs on any host. |
@@ -376,7 +345,7 @@ Factory's harness could be tested only whole: a verb needed the repository check
 The client is tested at the same tiers, with a headless browser as the runner where layout matters. It is not a sixth tier.
 
 - **Unit.** The page's pure rules (verb enablement from a row's `verbs`, age and time formatting from ISO 8601, share and gauge arithmetic) as functions with fixtures.
-- **Component.** Each UI component rendered alone from fixture payloads, the seat card first ([section 7.1](#71-the-seats-tab-and-the-seat-card)): at 1180 px and at 375 px, no horizontal overflow, the LED word present beside the color, a disabled verb carrying `verb_why`, an unmeasured field drawn as the word and no bar. A screenshot per component and width is kept as a visual baseline, and a change to it is a reviewed diff, not a surprise.
+- **Component.** Each UI component rendered alone from fixture payloads, the seat card first ([the dashboard spec, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card)): at 1180 px and at 375 px, no horizontal overflow, the LED word present beside the color, a disabled verb carrying `verb_why`, an unmeasured field drawn as the word and no bar. A screenshot per component and width is kept as a visual baseline, and a change to it is a reviewed diff, not a surprise.
 - **Contract.** The client fed the dashboard API's fixture frames draws without error, and the command bodies it builds equal the API's command examples byte for byte ([the dashboard API, where this is tested](mike-dashboard-api.md#9-where-this-is-tested)).
 - **Integration.** The page in a headless browser against the in-process API server with the fake runtime and a fixture store: a pushed frame updates one card without a repaint, a half-typed steer and an open expander survive the frame, a command shows its job outcome on the row, the stream reopens after a cut, a major-version mismatch stops the page with "must update". No network beyond loopback.
 - **End-to-end.** The live run in tier 5 is driven through the page once, on a phone-width viewport and a desktop one.
