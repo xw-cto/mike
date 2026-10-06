@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mike · Seats tab · seat card mockup</title>
+<style>
+:root{
+  --surface:#fcfcfb; --surface-2:#f3f2ef; --line:#e3e1dc; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#8a8880;
+  --accent:#2a78d6; --accent-track:#d7e6f8; --good:#0ca30c; --warning:#fab219; --critical:#d03b3b; --gray:#b5b3ab;
+  --r:10px; --pad:12px; --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#e9e8e4;font:14px/1.4 var(--font);color:var(--ink)}
+h1{font-size:18px;margin:16px 20px 4px}
+.note{margin:0 20px 16px;color:var(--ink-2);max-width:980px}
+.stage{display:flex;gap:28px;align-items:flex-start;padding:0 20px 40px;flex-wrap:wrap}
+.frame{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.08);overflow:hidden}
+.frame .chrome{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);color:var(--ink-2);font-size:12px}
+.frame.desktop{width:1180px}
+.frame.phone{width:375px;border-radius:28px;border-width:6px;border-color:#2b2b2a}
+.frame.phone .chrome{justify-content:center}
+.tab{container-type:inline-size;padding:var(--pad)}
+
+/* tab header + selection bar */
+.tabbar{display:flex;gap:16px;border-bottom:1px solid var(--line);margin:0 0 10px;padding:0 2px}
+.tabbar span{padding:8px 0;color:var(--ink-2)}
+.tabbar .on{color:var(--ink);border-bottom:2px solid var(--accent);font-weight:600}
+.selbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;margin-bottom:12px}
+.selbar b{font-weight:600}
+.selbar .spacer{flex:1}
+
+/* groups */
+.group{container-type:inline-size;margin-bottom:16px}
+.group>h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);margin:0 0 8px}
+.cards{display:grid;gap:10px;grid-template-columns:1fr}
+@container (min-width: 620px){ .cards{grid-template-columns:repeat(2,1fr)} }
+@container (min-width: 940px){ .cards{grid-template-columns:repeat(3,1fr)} }
+@container (min-width:1240px){ .cards{grid-template-columns:repeat(4,1fr)} }
+
+/* card */
+.card{container-type:inline-size;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden}
+.card.selected{outline:2px solid var(--accent);outline-offset:-1px}
+.card .head{display:flex;align-items:center;gap:8px;padding:10px var(--pad) 6px}
+.card .head input[type=checkbox]{width:16px;height:16px;margin:0}
+.card .name{font-weight:600;font-size:15px}
+.card .role{color:var(--ink-2);font-size:12px}
+.card .head .grow{flex:1;min-width:0}
+.led{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);white-space:nowrap}
+.led i{display:inline-block;width:14px;height:9px;border-radius:2px;background:var(--gray);border:1px solid rgba(0,0,0,.15)}
+.led.responding i{background:var(--good)} .led.not-responding i{background:var(--critical)}
+.led.unmeasured i{background:var(--gray)} .led.not-minted i{background:transparent;border:1px dashed var(--ink-3)}
+
+.info{display:grid;grid-template-columns:1fr;gap:6px 14px;padding:4px var(--pad) 10px;font-size:13px}
+@container (min-width: 380px){ .info{grid-template-columns:1fr 1fr} }
+.kv{min-width:0}
+.kv .k{color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+.kv .v{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kv .t{color:var(--ink-2);font-size:12px}
+.kv.wide{grid-column:1 / -1}
+.meter{display:flex;align-items:center;gap:8px}
+.meter .track{flex:1;height:6px;border-radius:3px;background:var(--accent-track);overflow:hidden}
+.meter .fill{height:100%;border-radius:3px;background:var(--accent)}
+.meter.warn .fill{background:var(--warning)} .meter.warn .track{background:#fbeecb}
+.meter.crit .fill{background:var(--critical)} .meter.crit .track{background:#f4d3d3}
+.meter .pct{font-variant-numeric:tabular-nums;min-width:38px;text-align:right}
+.unm{color:var(--ink-3);font-style:italic}
+
+.controls{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;border-top:1px solid var(--line);background:var(--surface-2);padding:8px var(--pad)}
+.controls .grow{flex:1}
+.btn{font:inherit;font-size:12px;padding:4px 8px;border:1px solid var(--line);background:var(--surface);border-radius:7px;color:var(--ink);cursor:pointer}
+.btn:disabled{color:var(--ink-3);background:transparent;border-style:dashed;cursor:not-allowed}
+.btn.primary{border-color:var(--accent);color:var(--accent)}
+.sw{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-2);white-space:nowrap}
+.sw .pill{width:34px;height:20px;border-radius:10px;background:var(--gray);position:relative;transition:.15s}
+.sw .pill::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:.15s}
+.sw input{display:none}
+.sw input:checked + .pill{background:var(--good)}
+.sw input:checked + .pill::after{left:16px}
+.sw input:disabled + .pill{opacity:.4}
+
+/* compact (phone) variant: expander for info, hamburger for buttons */
+.card details.more{border-top:1px dashed var(--line)}
+.card details.more summary{list-style:none;cursor:pointer;padding:6px var(--pad);font-size:12px;color:var(--accent)}
+.card details.more summary::-webkit-details-marker{display:none}
+.card details.more summary::after{content:" ▾"} .card details.more[open] summary::after{content:" ▴"}
+.menu{position:relative}
+.menu summary{list-style:none;cursor:pointer;width:34px;height:30px;display:grid;place-items:center;border:1px solid var(--line);border-radius:7px;background:var(--surface)}
+.menu summary::-webkit-details-marker{display:none}
+.menu .sheet{position:absolute;right:0;bottom:36px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 8px 24px rgba(0,0,0,.14);padding:6px;display:grid;gap:4px;min-width:150px;z-index:2}
+.menu .sheet .btn{text-align:left;border:0}
+.compact .info{display:none}
+.compact .info.always{display:grid}
+.compact .controls > .btn{display:none}
+.full details.more, .full .menu{display:none}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:0 20px 14px;color:var(--ink-2);font-size:12px}
+.legend .led{color:var(--ink-2)}
+</style>
+</head>
+<body>
+<h1>Mike · Seats tab · one seat-card component, two viewports</h1>
+<p class="note">Same card markup and CSS in both frames; container queries do the layout. Info on top, controls on the bottom. Desktop: cards of a group sit side by side; the card's info is a two-column grid. Phone: cards stack; info beyond the header collapses behind an expander; the four verbs collapse behind a hamburger; the start/stop switch stays visible. Liveness is an LED rectangle plus the word, never color alone. Unmeasured draws as unmeasured, not 0.</p>
+<div class="legend">
+  <span class="led responding"><i></i>responding</span>
+  <span class="led not-responding"><i></i>not-responding</span>
+  <span class="led unmeasured"><i></i>unmeasured (reason on hover)</span>
+  <span class="led not-minted"><i></i>not-minted</span>
+  <span>· greyed dashed button = verb not in this row's <code>verbs</code> list</span>
+</div>
+
+<div class="stage">
+
+<!-- ===================== DESKTOP ===================== -->
+<div class="frame desktop">
+  <div class="chrome">● ● ●&nbsp;&nbsp; mike.example.com/dashboard/seats &nbsp;·&nbsp; 1180 px</div>
+  <div class="tab full">
+    <div class="tabbar"><span>Health</span><span class="on">Seats</span><span>Board</span><span>Review</span><span>Priorities</span><span>Gauges</span><span>Settings</span><span>Logs</span></div>
+    <div class="selbar"><b>2 seats selected</b> <span class="role">Avalon, Brigid</span><span class="spacer"></span>
+      <button class="btn primary">Steer…</button><button class="btn">Restart</button><button class="btn" disabled title="Mint is not listed for Avalon (responding)">Mint</button><button class="btn">Archive</button><button class="btn">Clear</button></div>
+
+    <section class="group"><h2>Orchestrators</h2><div class="cards">
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">Arthur</div><div class="role">arbiter · minted 3 h ago</div></div><span class="led responding"><i></i>responding</span></div>
+        <div class="info">
+          <div class="kv"><div class="k">Driver</div><div class="v">grok-tmux · xAI · tmux · grok-4.7</div></div>
+          <div class="kv"><div class="k">Tokens since mint</div><div class="v">1.84M</div></div>
+          <div class="kv wide"><div class="k">Assignment</div><div class="v">board · idle seats 2, send-backs 1</div><div class="t">assigned 12 min ago</div></div>
+          <div class="kv wide"><div class="k">Last steer</div><div class="v">Board changed: #1762 ready, Weland idle. Decide…</div><div class="t">delivered 12 min ago</div></div>
+          <div class="kv wide"><div class="k">Context pressure</div><div class="meter"><div class="track"><div class="fill" style="width:41%"></div></div><span class="pct">41%</span></div></div>
+        </div>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <button class="btn">Restart</button><button class="btn primary">Steer…</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div>
+      </article>
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">K</div><div class="role">tpm · minted 3 h ago</div></div><span class="led responding"><i></i>responding</span></div>
+        <div class="info">
+          <div class="kv"><div class="k">Driver</div><div class="v">grok-tmux · xAI · tmux · grok-4.7</div></div>
+          <div class="kv"><div class="k">Tokens since mint</div><div class="v">0.92M</div></div>
+          <div class="kv wide"><div class="k">Assignment</div><div class="v">idle</div><div class="t">since 48 min ago</div></div>
+          <div class="kv wide"><div class="k">Last steer</div><div class="v">Audit the Presentation lane's open issues for…</div><div class="t">delivered 1 h ago</div></div>
+          <div class="kv wide"><div class="k">Context pressure</div><div class="meter"><div class="track"><div class="fill" style="width:23%"></div></div><span class="pct">23%</span></div></div>
+        </div>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <button class="btn">Restart</button><button class="btn primary">Steer…</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div>
+      </article>
+    </div></section>
+
+    <section class="group"><h2>Lane PEs</h2><div class="cards">
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">Infrastructure PE</div><div class="role">lane-pe · Infrastructure · minted 9 h ago</div></div><span class="led responding"><i></i>responding</span></div>
+        <div class="info">
+          <div class="kv"><div class="k">Driver</div><div class="v">cursor-cloud · Cursor · cloud · opus</div></div>
+          <div class="kv"><div class="k">Tokens since mint</div><div class="v">4.17M</div></div>
+          <div class="kv wide"><div class="k">Assignment</div><div class="v">idle</div><div class="t">since 9 h ago</div></div>
+          <div class="kv wide"><div class="k">Last steer</div><div class="v">Wait for the first steer.</div><div class="t">delivered 9 h ago</div></div>
+          <div class="kv wide"><div class="k">Context pressure</div><div class="meter crit"><div class="track"><div class="fill" style="width:88%"></div></div><span class="pct">88%</span></div></div>
+        </div>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <button class="btn">Restart</button><button class="btn primary">Steer…</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div>
+      </article>
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">Factory PE</div><div class="role">lane-pe · Factory</div></div><span class="led not-minted"><i></i>not-minted</span></div>
+        <div class="info">
+          <div class="kv"><div class="k">Driver</div><div class="v">cursor-cloud · Cursor · cloud · opus</div></div>
+          <div class="kv"><div class="k">Tokens since mint</div><div class="v unm">unmeasured · no session</div></div>
+          <div class="kv wide"><div class="k">Assignment</div><div class="v">idle</div><div class="t">—</div></div>
+          <div class="kv wide"><div class="k">Last steer</div><div class="v unm">none</div></div>
+          <div class="kv wide"><div class="k">Context pressure</div><div class="v unm">unmeasured · no session</div></div>
+        </div>
+        <div class="controls"><label class="sw"><input type="checkbox" disabled><span class="pill"></span>Stopped</label><span class="grow"></span>
+          <button class="btn" disabled>Restart</button><button class="btn" disabled>Steer…</button><button class="btn primary">Mint</button><button class="btn" disabled>Archive</button></div>
+      </article>
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">Presentation PE</div><div class="role">lane-pe · Presentation · minted 2 d ago</div></div><span class="led unmeasured" title="vendor listing timed out 3×"><i></i>unmeasured</span></div>
+        <div class="info">
+          <div class="kv"><div class="k">Driver</div><div class="v">claude-cloud · Anthropic · cloud · opus</div></div>
+          <div class="kv"><div class="k">Tokens since mint</div><div class="v unm">unmeasured · vendor api has no usage</div></div>
+          <div class="kv wide"><div class="k">Assignment</div><div class="v">#1652 Viewer: instrument cluster gauges</div><div class="t">assigned 2 d ago</div></div>
+          <div class="kv wide"><div class="k">Last steer</div><div class="v">To: Presentation PE. Reply to the send-back on #1723…</div><div class="t">queued, not delivered · 25 min</div></div>
+          <div class="kv wide"><div class="k">Context pressure</div><div class="v unm">unmeasured · vendor api has no context usage</div></div>
+        </div>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <button class="btn">Restart</button><button class="btn primary">Steer…</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div>
+      </article>
+    </div></section>
+
+    <section class="group"><h2>Workers</h2><div class="cards">
+      <article class="card selected">
+        <div class="head"><input type="checkbox" checked><div class="grow"><div class="name">Avalon</div><div class="role">worker · minted 5 h ago</div></div><span class="led responding"><i></i>responding</span></div>
+        <div class="info">
+          <div class="kv"><div class="k">Driver</div><div class="v">grok-tmux · xAI · tmux · grok-4.7</div></div>
+          <div class="kv"><div class="k">Tokens since mint</div><div class="v">612K</div></div>
+          <div class="kv wide"><div class="k">Assignment</div><div class="v">#1707 Steer-time gates refuse Low</div><div class="t">assigned 5 h ago · PR #1770 ready, in review</div></div>
+          <div class="kv wide"><div class="k">Last steer</div><div class="v">To: Avalon. Post Self-Review: Done on head b7b94e58…</div><div class="t">delivered 40 min ago</div></div>
+          <div class="kv wide"><div class="k">Context pressure</div><div class="meter warn"><div class="track"><div class="fill" style="width:67%"></div></div><span class="pct">67%</span></div></div>
+        </div>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <button class="btn">Restart</button><button class="btn primary">Steer…</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div>
+      </article>
+      <article class="card selected">
+        <div class="head"><input type="checkbox" checked><div class="grow"><div class="name">Brigid</div><div class="role">worker · minted 5 h ago</div></div><span class="led not-responding" title="no pane output for 22 min"><i></i>not-responding</span></div>
+        <div class="info">
+          <div class="kv"><div class="k">Driver</div><div class="v">grok-tmux · xAI · tmux · grok-4.7</div></div>
+          <div class="kv"><div class="k">Tokens since mint</div><div class="v">1.02M</div></div>
+          <div class="kv wide"><div class="k">Assignment</div><div class="v">#1723 Settings tab: remint timing</div><div class="t">assigned 4 h ago · send-back 1 h ago</div></div>
+          <div class="kv wide"><div class="k">Last steer</div><div class="v">To: Brigid. Answer the send-back on #1723: file:line…</div><div class="t">delivered 1 h ago</div></div>
+          <div class="kv wide"><div class="k">Context pressure</div><div class="meter"><div class="track"><div class="fill" style="width:35%"></div></div><span class="pct">35%</span></div></div>
+        </div>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <button class="btn primary">Restart</button><button class="btn">Steer…</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div>
+      </article>
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">Weland</div><div class="role">worker · minted 6 h ago</div></div><span class="led responding"><i></i>responding</span></div>
+        <div class="info">
+          <div class="kv"><div class="k">Driver</div><div class="v">grok-tmux · xAI · tmux · grok-4.7</div></div>
+          <div class="kv"><div class="k">Tokens since mint</div><div class="v">2.31M</div></div>
+          <div class="kv wide"><div class="k">Assignment</div><div class="v">idle</div><div class="t">since 6 min ago · last completed #1761</div></div>
+          <div class="kv wide"><div class="k">Last steer</div><div class="v">To: Weland. #1761 merged. Stop and wait for the next steer.</div><div class="t">delivered 6 min ago</div></div>
+          <div class="kv wide"><div class="k">Context pressure</div><div class="meter"><div class="track"><div class="fill" style="width:52%"></div></div><span class="pct">52%</span></div></div>
+        </div>
+        <div class="controls"><label class="sw"><input type="checkbox"><span class="pill"></span>Stopped</label><span class="grow"></span>
+          <button class="btn">Restart</button><button class="btn primary">Steer…</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div>
+      </article>
+    </div></section>
+
+    <section class="group"><h2>Reviewers</h2><div class="cards">
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">Lynette</div><div class="role">reviewer · minted 5 h ago</div></div><span class="led responding"><i></i>responding</span></div>
+        <div class="info">
+          <div class="kv"><div class="k">Driver</div><div class="v">grok-tmux · xAI · tmux · grok-4.7</div></div>
+          <div class="kv"><div class="k">Tokens since mint</div><div class="v">388K</div></div>
+          <div class="kv wide"><div class="k">Assignment</div><div class="v">PR #1770 One reviewer per ready pull request</div><div class="t">assigned 18 min ago</div></div>
+          <div class="kv wide"><div class="k">Last steer</div><div class="v">To: Lynette. Review #1770 head 2c1e…; post the verdict.</div><div class="t">delivered 18 min ago</div></div>
+          <div class="kv wide"><div class="k">Context pressure</div><div class="meter"><div class="track"><div class="fill" style="width:19%"></div></div><span class="pct">19%</span></div></div>
+        </div>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <button class="btn">Restart</button><button class="btn primary">Steer…</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div>
+      </article>
+    </div></section>
+  </div>
+</div>
+
+<!-- ===================== PHONE ===================== -->
+<div class="frame phone">
+  <div class="chrome">375 px · Seats</div>
+  <div class="tab compact">
+    <div class="tabbar" style="overflow:auto;white-space:nowrap"><span>Health</span><span class="on">Seats</span><span>Board</span><span>Review</span><span>Priorities</span></div>
+    <div class="selbar"><b>2 selected</b><span class="spacer"></span>
+      <details class="menu"><summary title="Actions on selected">☰</summary><div class="sheet"><button class="btn">Steer…</button><button class="btn">Restart</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button><button class="btn">Clear selection</button></div></details></div>
+
+    <section class="group"><h2>Orchestrators</h2><div class="cards">
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">Arthur</div><div class="role">arbiter · board · 12 min</div></div><span class="led responding"><i></i>responding</span></div>
+        <details class="more"><summary>Details</summary>
+          <div class="info always">
+            <div class="kv"><div class="k">Driver</div><div class="v">grok-tmux · xAI · tmux · grok-4.7</div></div>
+            <div class="kv"><div class="k">Last mint</div><div class="v">3 h ago</div></div>
+            <div class="kv wide"><div class="k">Assignment</div><div class="v">board · idle seats 2, send-backs 1</div><div class="t">assigned 12 min ago</div></div>
+            <div class="kv wide"><div class="k">Last steer</div><div class="v">Board changed: #1762 ready, Weland idle…</div><div class="t">delivered 12 min ago</div></div>
+            <div class="kv wide"><div class="k">Context pressure</div><div class="meter"><div class="track"><div class="fill" style="width:41%"></div></div><span class="pct">41%</span></div></div>
+            <div class="kv"><div class="k">Tokens since mint</div><div class="v">1.84M</div></div>
+          </div>
+        </details>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <details class="menu"><summary>☰</summary><div class="sheet"><button class="btn">Steer…</button><button class="btn">Restart</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div></details></div>
+      </article>
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">K</div><div class="role">tpm · idle · 48 min</div></div><span class="led responding"><i></i>responding</span></div>
+        <details class="more"><summary>Details</summary>
+          <div class="info always">
+            <div class="kv"><div class="k">Driver</div><div class="v">grok-tmux · xAI · tmux · grok-4.7</div></div>
+            <div class="kv"><div class="k">Last mint</div><div class="v">3 h ago</div></div>
+            <div class="kv wide"><div class="k">Last steer</div><div class="v">Audit the Presentation lane's open issues…</div><div class="t">delivered 1 h ago</div></div>
+            <div class="kv wide"><div class="k">Context pressure</div><div class="meter"><div class="track"><div class="fill" style="width:23%"></div></div><span class="pct">23%</span></div></div>
+            <div class="kv"><div class="k">Tokens since mint</div><div class="v">0.92M</div></div>
+          </div>
+        </details>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <details class="menu"><summary>☰</summary><div class="sheet"><button class="btn">Steer…</button><button class="btn">Restart</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div></details></div>
+      </article>
+    </div></section>
+
+    <section class="group"><h2>Workers</h2><div class="cards">
+      <article class="card selected">
+        <div class="head"><input type="checkbox" checked><div class="grow"><div class="name">Avalon</div><div class="role">worker · #1707 · 5 h</div></div><span class="led responding"><i></i>responding</span></div>
+        <details class="more" open><summary>Details</summary>
+          <div class="info always">
+            <div class="kv"><div class="k">Driver</div><div class="v">grok-tmux · xAI · tmux · grok-4.7</div></div>
+            <div class="kv"><div class="k">Last mint</div><div class="v">5 h ago</div></div>
+            <div class="kv wide"><div class="k">Assignment</div><div class="v">#1707 Steer-time gates refuse Low</div><div class="t">assigned 5 h ago · PR #1770 in review</div></div>
+            <div class="kv wide"><div class="k">Last steer</div><div class="v">To: Avalon. Post Self-Review: Done on head b7b9…</div><div class="t">delivered 40 min ago</div></div>
+            <div class="kv wide"><div class="k">Context pressure</div><div class="meter warn"><div class="track"><div class="fill" style="width:67%"></div></div><span class="pct">67%</span></div></div>
+            <div class="kv"><div class="k">Tokens since mint</div><div class="v">612K</div></div>
+          </div>
+        </details>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <details class="menu" open><summary>☰</summary><div class="sheet"><button class="btn">Steer…</button><button class="btn">Restart</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div></details></div>
+      </article>
+      <article class="card selected">
+        <div class="head"><input type="checkbox" checked><div class="grow"><div class="name">Brigid</div><div class="role">worker · #1723 · send-back</div></div><span class="led not-responding"><i></i>not-responding</span></div>
+        <details class="more"><summary>Details</summary><div class="info always"><div class="kv wide"><div class="k">Last steer</div><div class="v">To: Brigid. Answer the send-back on #1723…</div><div class="t">delivered 1 h ago</div></div></div></details>
+        <div class="controls"><label class="sw"><input type="checkbox" checked><span class="pill"></span>Running</label><span class="grow"></span>
+          <details class="menu"><summary>☰</summary><div class="sheet"><button class="btn">Restart</button><button class="btn">Steer…</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div></details></div>
+      </article>
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">Weland</div><div class="role">worker · idle · 6 min</div></div><span class="led responding"><i></i>responding</span></div>
+        <details class="more"><summary>Details</summary><div class="info always"><div class="kv wide"><div class="k">Last steer</div><div class="v">#1761 merged. Stop and wait for the next steer.</div><div class="t">delivered 6 min ago</div></div></div></details>
+        <div class="controls"><label class="sw"><input type="checkbox"><span class="pill"></span>Stopped</label><span class="grow"></span>
+          <details class="menu"><summary>☰</summary><div class="sheet"><button class="btn">Steer…</button><button class="btn">Restart</button><button class="btn" disabled>Mint</button><button class="btn">Archive</button></div></details></div>
+      </article>
+    </div></section>
+
+    <section class="group"><h2>Lane PEs</h2><div class="cards">
+      <article class="card">
+        <div class="head"><input type="checkbox"><div class="grow"><div class="name">Factory PE</div><div class="role">lane-pe · Factory</div></div><span class="led not-minted"><i></i>not-minted</span></div>
+        <details class="more"><summary>Details</summary><div class="info always"><div class="kv wide"><div class="k">Tokens · context</div><div class="v unm">unmeasured · no session</div></div></div></details>
+        <div class="controls"><label class="sw"><input type="checkbox" disabled><span class="pill"></span>Stopped</label><span class="grow"></span>
+          <details class="menu"><summary>☰</summary><div class="sheet"><button class="btn primary">Mint</button><button class="btn" disabled>Steer…</button><button class="btn" disabled>Restart</button><button class="btn" disabled>Archive</button></div></details></div>
+      </article>
+    </div></section>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
