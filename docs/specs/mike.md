@@ -8,29 +8,33 @@
 
 ## 1. What Mike is
 
-Mike is an operating system for a swarm of AI agents that work on GitHub repositories. One Mike instance runs the swarm for several repositories at once. It mints seats on vendors, steers them onto issues and pull requests, records every decision before it acts, holds the merge gate, and shows the operator one dashboard. Mike never merges. A human merges.
+Mike is an operating system for a swarm of AI agents that work on GitHub repositories. One Mike instance runs the swarm for several repositories at once. It mints seats on any AI vendor's hanress, either through APIs or by controling a terminal session via tmux. Mike steers those seats onto issues and pull requests, records every decision before it acts, ensures the criteria for making PR ready to mege is met, and provides a rich dashboard for monitoring and controlling the operating system. To ensure the human is "on the loop", Mike never merges pull requests; instead it assigns a pull request that has been deemed ready to merge to a human.
 
-Mike is a clean-sheet rewrite of the factory agent harness. It keeps the harness's hard-won rules (section 9) and does not re-create its accidental complexity (section 10). The seat model is factory#1336, not the model on factory `main` today.
+Mike is a clean-sheet rewrite of the Excaliwire factory agent harness. It keeps the harness's hard-won rules (section 9) and does not re-create its accidental complexity (section 10). The seat model is factory#1336, not the model on factory `main` today.
 
 ### 1.1 Three homes for a statement
+
+> TIG NOTE: I have no idea what the below means. It is AI slop and needs to be re-written in plain english. 
 
 Mechanism is code and tests. Behavior a seat must choose is the brief. Shape and intent are this spec. A rule that only one chat remembers is not a rule.
 
 ### 1.2 Multi-repository, one instance
 
-An **instance** is one running Mike: one control plane, one loop, one store, one dashboard, one priorities list. A **project** is one repository the instance manages. An instance manages a set of projects; factory calls that set the program (`program.repositories`). Every verb that touches GitHub names the project. A repository not on the instance's list is refused before any call runs. There is no Mike deploy per repository (#2).
+An **instance** is one running Mike: one control plane, one loop, one store, one dashboard, one priorities list. A **project** is one repository the instance manages. An instance manages a set of projects; the set of projects is called the program (`program.repositories`). Every verb that touches GitHub names the project. 
 
-First-wave projects (#2): `excaliwire/web`, `excaliwire/app`, `tig/mike`, `tig/silico`, `kindel/kindelwww` and the Kindel apps. factory#1501 names `tig/goalie` as the first external target. The reference pattern is factory plus `Holy-Grail-Labs/squire` on one harness today.
+> TIG NOTE: I have no idea what the sentence below means. It is AI slop and needs to be re-written in plain english. 
+
+There is no Mike deploy per repository (#2).
 
 ## 2. Roles
 
-A seat has a name and a role. What it does comes from the role. Mike ships no display names: a role's name is its role key (`arbiter`, `tpm`, `lane-pe`, `worker`, `reviewer`) unless the instance config overrides it, and an override touches no runtime code (factory#1164 proved that). The Arthurian names below are factory's instance config, not Mike's (decision 9).
+A seat has a name and a role. What it does comes from the role. Mike ships no display `names:` a role's name is its role key (`arbiter`, `tpm`, `lane-pe`, `worker`, `reviewer`) unless the instance config overrides it, and an override touches no runtime code. The Arthurian names below are factory's instance config, not Mike's.
 
 | Role key | Factory's name | What it does | Mints how |
 |---|---|---|---|
 | `arbiter` | Arthur | Judgment. Reads the board, decides which seat takes which issue, sets severity, orders send-backs, decides when to remint. Acts only through Mike's verbs. | By a human or the loop; one per instance. |
 | `tpm` | K (Kay today) | Keeps briefs and the roster current, turns a human's direction into issues with a severity, audits technical direction across lanes. Writes no development pull request. | By a human or the loop; one per instance. |
-| `lane-pe` | Factory PE, Presentation PE, Infrastructure PE | Technical judgment for one lane. Files issues with a severity and steers workers. Writes no development pull request. Minted wait-only (factory#1755). | By a human, or by the loop when the role's fill-missing setting is on; that setting asks a human before it turns on. |
+| `lane-pe` | Factory PE, Presentation PE, Infrastructure PE | Technical judgment for one lane. Files issues with a severity and steers workers. Writes no development pull request. Minted wait-only. | By a human, or by the loop when the role's fill-missing setting is on; that setting asks a human before it turns on. |
 | `worker` | Artificer | Takes one assignment to a ready pull request, then waits. Owns nothing beyond its assignment. | By the loop, from the pool. |
 | `reviewer` | Warden | Independent review of one ready pull request it did not write. Never pushes. | By the loop, from the pool. |
 
@@ -41,7 +45,7 @@ Mike serves humans, plural. Several humans create issues, comment on issues and 
 What a listed human's GitHub activity means to Mike, each routed by the control plane as a change (section 5, rule 22):
 
 - An issue a listed human creates or edits is on the board once it carries a lane and is assigned to `gh_user`. Assigning it is the handoff: before that it is theirs, after that it is Mike's. The severity they set is the severity; none set is Low.
-- A comment addressed `Name:` on an issue or pull request is a steer to that seat, carrying the comment. A comment with no address is context on the board, not a steer.
+- A comment addressed `[Name]:` on an issue or pull request is a steer to that seat, carrying the comment. A comment with no address is context on the board, not a steer.
 - A review verdict or a review comment from a listed human on a ready pull request is a send-back to the author seat when it asks for a change, and counts as the independent review when it says Merge (config: `human_review_counts`).
 - `waive: <gate> [sha]` and `reviewer: <Name>` from a listed human bind the gates. From anyone else they are text.
 - Any listed human may merge, issue a session token, and edit the priorities list and the config store. The record names which human acted.
@@ -50,7 +54,7 @@ A GitHub user not on the list is a contributor. Their issues and comments are sh
 
 ### 2.2 Attached sessions: non-seats that act through Mike
 
-A session a human drives (Infra Fable and Factory Fable today, the director's portal session, Excaliwire PgM) is not a seat. Mike does not mint it, steer it, assign it, or count it against the cap. It may still be **attached** to Mike, and then every repository and Mike interaction it makes goes through Mike's verbs, the same door a seat uses:
+A session a human drives (e.g Infra Fable and Factory Fable today, the director's portal session, Excaliwire PgM) is not a seat. Mike does not mint sessions, steer them, assign them, or count them against the cap. They may still be **attached** to Mike, and then every repository and Mike interaction it makes goes through Mike's verbs, the same door a seat uses:
 
 - A human issues it a named, revocable **session token** from the dashboard or CLI. The token names the session (its `[Name]` prefix) and the verbs it may run. It is not a seat token and not a human's token. There is no shared secret to derive it from.
 - With the token it runs the same CLI as a seat: issue and pull verbs (create, label, severity, comment, request merge), read the board, sessions, health and priorities, and, when its config row allows, steer a seat. Every call records first with the session as `actor`, writes through Mike's GitHub choke point under Mike's account with the `[Name]` prefix, and is bound by every gate in 3.3. It never writes as a human, never merges, never mints.
@@ -65,21 +69,40 @@ Authority: humans > director > TPM > lane-PE > worker or reviewer. An attached s
 
 ## 3. The seat model (factory#1336)
 
+> TIG NOTE: Lanes needs to be defined here. There can 1 or more lanes. Factory uses 3 (Infrastructure, Factory, and Presentation). Lanes are large arhiectural bodies of work within the program (collection or projects/repos in the Mike instance).
+
 ### 3.1 Pool, assignment, share
 
 - Seats are a **pool**. A worker or reviewer seat owns nothing beyond its current **assignment**: one issue or one pull request, or idle. The durable form of an assignment is the `seat:<name>` label on the issue or pull request. Mike's store caches it; the label is the truth.
-- The **priorities list** has at most 3 rows, ordered. Each row names a lane and may carry a **note**: a human's intent for that row in a sentence. Mike puts the note on the board Arthur reads and in every steer to that lane's lane-PE, as context. The note binds nothing; the lane does. The config store holds a **share** per rank: top 60, second 30, third 10 percent of workers. A human adjusts the shares. A row with no open non-Low work gives its share to the next row.
-- **Severity** orders work inside a lane: SEV1 (Urgent), High, Medium, then oldest first inside a severity. The GitHub field that carries severity is instance config (`Priority` on factory).
-- **Nothing runs on Low.** An issue with no severity is Low.
+- The **priorities list** has has n rows, ordered. Where n is the number of lanes defined for program. Each row names a lane and may carry a **note**: a human's intent for that row in a sentence. Mike puts the note on the board Arthur reads and in every steer to that lane's lane-PE, as context. The note binds nothing; the lane does. 
+
+> TIG NOTE: Share, below, needs to be refactored to use corret math when the number of lanes is not precisely 3. E.g. if there is one lane, it obviuosly alwayss geths 100%. With 2, the first gets 75% and 2nd gets 25%, etc...
+
+The config store holds a **share** per rank: top 60, second 30, third 10 percent of workers. A human adjusts the shares. A row with no open non-Low work gives its share to the next row.
+
+> TIG NOTE: I'm renaming Severity to Urgency for Mike. The levels are Critical, High, Normal, No. I also want to move away fro overloading GH's Priority field and instead use labels, e.g.: `urgency:citical`. This is because setting GH priroity is not availabe in the GH app, only web.
+
+- **Urgency** orders work inside a lane: Critical, High, Normal, and then oldest first inside a urgency. The GitHub field that carries severity is instance config (`Priority` on factory).
+- **Nothing runs on No.** An issue with no urgency is Low.
 - The **board** is what Arthur reads: idle seats, each seat's assignment, send-backs with the author seat, ready pull requests per seat, and target versus actual share per row. Mike builds it; today's orchestrator follow-up carries no board (factory `idle_steer.py:1279-1293`), so this is new.
 - Arthur decides who does what. Mike enforces the gates in 3.3 for every caller, Arthur included, and shows target versus actual share on Health so a bad judgment is visible.
 
 ### 3.2 Mint, remint, steer
 
-- A **mint** is wait-only and cheap: the seat reads its brief and stops at "Wait for the first steer". Work reaches a seat only through a **steer**. This holds for every role, lane-PEs included (factory#1755 measured 4.2M and 5.0M tokens in 30 minutes from a lane-PE mint that was not wait-only).
+- **Mint** means to cause an agent session to be created. A mint is wait-only and cheap: the seat reads its brief and stops at "Wait for the first steer". Work reaches a seat only through a **steer**. This holds for every role.
+
+> TIG NOTE: On remint, below: I am not convinced " A seat is never steered across open work" is correct long term. It is possible that it is more token-efficient for seat that has completed an issue to be repurposed for related issue where the context is useful and relevant. I'm ok with this rule short term, but the architecture must enable re-using seats.
+
 - A **remint** carries the assignment. The first steer after a remint is the same work. A seat is never steered across open work; it is reminted onto the same work. Reset Defaults clears every assignment and every `seat:` label in one recorded write.
+
+> TIG NOTE: Where did the concept of budget come from? I do not recall factory using this, and I'm pretty sure I never specified it. I can't imaging how a human (or agent) would be able to thoughtfully set such budgets.
+
 - A mint run has a token and turn budget. A run over budget is cancelled with a record.
+
 - Mint, archive, restart, and kill each write a decision record. Today the actuator writes only log lines for these (factory `seat_actuator.py:1499-1549`); Health cannot then show "no seat is minted twice for one issue".
+
+> TIG NOTE: What does the below actually mean? Clarify in plain english.
+
 - Mike mints no seat over one whose liveness is responding or unmeasured.
 
 ### 3.3 Gates Mike enforces for every caller
@@ -89,29 +112,48 @@ These are mechanism. They refuse with a recorded reason and the caller sees the 
 1. **Owner gate.** Only an issue or pull request assigned to Mike's GitHub user (`gh_user`; harness-gh-user today) may be steered. An empty or unmeasured setting refuses every steer.
 2. **Project gate.** The repository is on the instance's project list. Today `cmd_steer` does not check this (factory `__main__.py:121, 1425`); Mike does.
 3. **Lane gate.** A worker steer onto a lane that is not on the priorities list is refused.
-4. **Severity floor.** A worker steer onto Low, or onto an issue with no severity, is refused.
+4. **Urgency floor.** A worker steer onto `No`, or onto an issue with no urgency, is refused.
 5. **One pending steer.** No second steer to a seat while one is pending inside the loop window, for every caller and for every runtime, queued included. Today it holds only for the loop caller and only for `applied` rows (factory `__main__.py:1054-1080`).
 6. **Record before act.** Every side effect has a decision record before it happens. `apply` refuses an unrecorded decision. A refusal is a record with its why.
 7. **No mint over a seat whose liveness is responding or unmeasured.**
 8. **Human switches.** Loop Paused and seat Stop are the two human switches. The loop acts on neither until a human changes them. Arthur may undo a Stop; nothing else may.
-9. **Reviewer independence.** A reviewer never reviews its own pull request, and never pushes.
+9. **Reviewer independence.** A reviewer does not review its own pull request, and never pushes.
 10. **No merge verb.** There is none. A test fails if one is added.
 
 Everything else that factory's tick evaluates today, 45 holds and gates counted in factory#1336 section 2, is not re-created (section 10).
 
 ### 3.4 Review and send-back
 
+- Every pull request created by a seat, or created elswhere and assigned to a set must:
+
+  - Have at least one self-code review; that is a CR performed by the seat the PR is assigned to. Seats must use their harness's code-review tool to do the review. 
+  - Have a least one indendent-code review; that is a CR perfomred by a seat, sessions, or human that is not the seat that is assigned the PR.
+
+> TIG NOTE: The below rule needs to move to a section on how reviewers operate; it is confusing here.
+
 - One reviewer per ready pull request. All reviewers review in parallel. A reviewer with a pull request does not take a second until it posts a verdict.
-- A **send-back** goes to the author's seat as its next assignment. Nothing else is held. A ready pull request does not hold its author.
-- Pull requests needing review are ordered by the time they went ready, oldest first.
+
+- A **send-back** is a signal from an independent reviewer (which does not have to be a seat) that the PR needs to be sent back to the PR owner to address CR feedback. 
+
+> TIG NOTE: The below is not clear.
+
+ goes to the author's seat as its next assignment. Nothing else is held. A ready pull request does not hold its author.
+
+- Pull requests needing review are ordered by their urgency first and by the time they went ready, oldest first, second.
 
 ### 3.5 What is judgment
 
-Which seat takes which issue. The share actually given to each row this tick. When to remint. The order of send-backs. Recovery after a reboot. Whether a cross-lane theme maps onto a severity. These are Arthur's, with the board as input and Mike's verbs as the only output.
+Which seat takes which issue. The share actually given to each priority this tick. When to remint. The order of send-backs. Recovery after a reboot. Whether a cross-lane theme maps onto a urgency. These are Arthur's, with the board as input and Mike's verbs as the only output.
 
-## 4. Runtimes and vendors
+## 4. Runtimes
 
-A seat runs on a **runtime** (factory calls this the seat's `harness`: `cursor-cloud`, `grok-tmux`, `claude-tmux`, `codex-tmux`, `claude-cloud`). A **vendor** is who bills it. Mike treats every runtime the same at its core:
+A seat runs on a **runtime** (factory calls this the seat's `harness`: `cursor-cloud`, `grok-tmux`, `claude-tmux`, `codex-tmux`, `claude-cloud`).
+
+Mike has an abstraction layer that enables access to agent sessions from mulitple **vendors** (e.g. Claude, Grok, or Cursor) using differnt **access methods** (e.g `cloud` and `tmux`). This abstraction layer is a driver-like API and is called the Mike Runtime API. Each runtime is a driver, and the API allows for new drivers to be developed over time and enabled/installed via config.
+
+Cloud access is via vendor's APIs and `tmux` uses send-keys and screen reading to emulate API access. Both access methods sit architecturally under the Mike Runtime API. (Factory's session API was Cursor-shaped because when Factory was written the Cursor API was the most mature).
+
+The Runtime API provides Mike with consistent access to the following capabilites, in a vendor neutral manner:
 
 | Capability | Every runtime must provide |
 |---|---|
@@ -120,16 +162,19 @@ A seat runs on a **runtime** (factory calls this the seat's `harness`: `cursor-c
 | stop, restart, archive | each with a record |
 | liveness | one of `not-minted`, `responding`, `not-responding`, `unmeasured` with a reason. No fifth word. Busy and idle are not liveness. |
 | usage | tokens since mint, context pressure, and the vendor's included-pool percent, each `unmeasured` with a reason when not read |
+| session log | A stream of inputs and responses from the session. This includes being able to identify the last input (last steer) and most recent response. |
 
-Today the actuator is Cursor-shaped: mint steps are Cursor creates, grok-tmux has no archive, claude-cloud liveness is always unmeasured, and Health clears a row only on the Cursor record shape (factory#1336 comments, learnings 6, 9, 11; factory#1418). Mike has one actuator interface and one record shape, and each runtime fills it or reports unmeasured.
+Factory's runtime API is Cursor-shaped: mint steps are Cursor creates, grok-tmux has no archive, claude-cloud liveness is always unmeasured, and Health clears a row only on the Cursor record shape (factory#1336 comments, learnings 6, 9, 11; factory#1418). Mike has one actuator interface and one record shape, and each runtime fills it or reports unmeasured.
 
-**Budgets.** Each vendor declares its pools, windows (such as Claude's 5-hour limit), a probe, and a mint threshold. Mint picks the next vendor when one crosses its threshold (factory#1501: at 75 percent of Claude's 5-hour limit, stop minting Claude seats and shift new seats to xAI Grok; decision 10). An unmeasured gauge stays unmeasured, never 0, and a mint that depends on an unmeasured gauge is refused. The gauge list is config, not a tuple in code (factory `meters.GAUGES`).
+**Guages.** Each runtime declares its pools, windows (such as Claude's 5-hour limit), a probe, and a mint threshold. Mint picks the next vendor when one crosses its threshold (factory#1501: at 75 percent of Claude's 5-hour limit, stop minting Claude seats and shift new seats to xAI Grok; decision 10). These are called guages because they are used to not only enable autonomous redirection of seats to runtimes that have available usage, but also to display usage metrics to humans in the dahsboard.
 
 **Seat hosts pull.** A machine that runs tmux seats checks in and claims actuations from the store. The control plane holds no inbound path and no SSH key to a seat host. Every steer goes through the control plane store, from any caller on any machine. There is no second, machine-local queue.
 
 **Identity.** A seat token names one seat and acts only as that seat. A session token names one attached session (2.2) and acts only as that session, with the verbs its config row lists. A host token names one host and pulls only its own actuations. There is no shared master secret on a seat host (factory#1413, host.md:258). A human is a verified bearer, not a header any local process can set.
 
 ## 5. The control plane
+
+The **Control Plane** is the mechanism that detects changes in the board (GitHub) and maps those to actions that lead to steering seats.
 
 - **The control plane is the only watcher.** It takes GitHub events by signed webhook and diffs its own store each tick: an issue assigned, a pull request from draft to ready, a review verdict, a send-back, a conflict, unresolved Copilot threads, a seat gone idle. Each change is routed to the seat it concerns as a recorded steer bound by the gates: Arthur gets the board when the board changed or a seat went idle; the author seat gets its send-back, conflict or Copilot findings; a reviewer gets a ready pull request. No seat polls GitHub. No vendor scheduler or routine-fire watches anything for Mike. Nothing fires on a timer except the tick itself.
 - **Control loop.** One tick: read desired state, read live state, decide, act. One loop per instance, from a checkout the instance owns. A tick does not overlap the previous one. Loop cadence, Running/Paused, and live/dry-run are config-store settings.
