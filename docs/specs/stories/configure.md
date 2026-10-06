@@ -22,11 +22,11 @@ Evidence: [factory harness settings.py line 409, the cadence setting](https://gi
 Acceptance: 0 and 61 are refused by the server; a non-integer is refused on the page.
 Verdict: KEEP.
 
-#### MS-038 Settings show source and actor
-As a human (Tig today), I want every setting shown with its value, where it came from, and who changed it last and when, so that I can trust and audit settings.
+#### MS-038 Settings show unit, actor and version
+As a human (Tig today), I want every setting shown with its value in its unit, who changed it last and when, and the store version that wrote it, so that I can trust and audit settings without a column that says nothing.
 Evidence: [factory dashboard app.js line 1141, the settings table](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1141); [Mike dashboard API §7, payload shapes](../mike-dashboard-api.md#7-payload-shapes).
-Acceptance: 4 columns: Setting, Value, From (`default`, `instance`, `store` or `unmeasured`), Changed by (login and ISO 8601 time).
-Verdict: CHANGE: `settingRow` carries `source`, `changed_by` as a login (not an email header) and `changed_at` ([Mike dashboard API §7, payload shapes](../mike-dashboard-api.md#7-payload-shapes)).
+Acceptance: each setting shows its label, its control with the unit as part of it (5 min, 24 h, 75 %), one line of help, and "changed by <login>, <ago> · v<version>"; there is no From or source column; a secret shows its name and set or not set.
+Verdict: CHANGE: factory's From column is dropped, every setting lives in the config store; `settingRow` carries `type`, `unit`, `range`, `help`, `changed_by` as a login and `changed_at` ([Mike dashboard API §7, payload shapes](../mike-dashboard-api.md#7-payload-shapes)).
 
 #### MS-039 Schema check before save
 As a human (Tig today), I want a value checked against the store's schema before it saves, so that a typo fails on the page and not in the loop.
@@ -35,9 +35,9 @@ Acceptance: invalid input shows "<label> must be <type>" and writes no version; 
 Verdict: KEEP.
 
 #### MS-040 Copyable View Settings dump
-As a human (Tig today), I want a View Settings dump of every effective value with its source that I can copy, so that I can paste the config into an issue.
+As a human (Tig today), I want a View all as JSON dump of every effective value with its type, unit and version that I can copy, so that I can paste the config into an issue.
 Evidence: [factory dashboard app.js line 892, View Settings](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L892); [Mike dashboard API §5, reads](../mike-dashboard-api.md#5-reads).
-Acceptance: JSON with `{value, source}` per key; a secret appears by name only; Copy says "Copied."
+Acceptance: pretty-printed JSON with `{value, type, unit, version}` per key; a secret appears by name only; Copy says "Copied."
 Verdict: KEEP.
 
 #### MS-041 Typing survives live frames
@@ -63,6 +63,12 @@ As a lane-PE, I want a seat host's runtime files rendered from instance config w
 Evidence: [factory agent-harness README.md line 179, the host render](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/README.md#L179).
 Acceptance: report-only by default; apply writes nothing outside the configured root; a launch script without the generated-by marker is refused without `--force`.
 Verdict: CHANGE: rendered from instance config, not `seats.yaml`; no ladder step check.
+
+#### MS-193 JSON settings open in a real editor
+As a human (Tig today), I want any setting whose value is JSON to open in a real editor, pretty-printed, with line numbers, syntax coloring, a Format button and validation that names the line and column, so that I never edit a one-line blob in a text box.
+Evidence: [the dashboard spec, the Settings tab](../mike-dashboard.md); factory's Settings tab took JSON in a plain input ([factory dashboard app.js line 1141, the settings table](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1141)).
+Acceptance: a `json` setting opens the editor beside the list on desktop and full-screen on a phone; Format pretty-prints; an invalid document shows the error with line and column and Save is disabled until it validates against the setting's schema; a valid save posts one settings command based on the shown store version.
+Verdict: NEW.
 
 ## Config store apply-on-change
 

@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mike · Settings tab mockup</title>
+<style>
+:root{
+  --surface:#fcfcfb; --surface-2:#f3f2ef; --line:#e3e1dc; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#8a8880;
+  --accent:#2a78d6; --accent-soft:#e7f0fb; --accent-track:#d7e6f8; --good:#0ca30c; --warning:#fab219; --critical:#d03b3b; --gray:#b5b3ab;
+  --r:10px; --pad:12px; --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#e9e8e4;font:14px/1.4 var(--font);color:var(--ink)}
+h1{font-size:18px;margin:16px 20px 4px}
+.note{margin:0 20px 16px;color:var(--ink-2);max-width:980px}
+.stage{display:flex;gap:28px;align-items:flex-start;padding:0 20px 40px;flex-wrap:wrap}
+.frame{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.08);overflow:hidden}
+.frame .chrome{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);color:var(--ink-2);font-size:12px}
+.frame.desktop{width:1180px}
+.frame.phone{width:375px;border-radius:28px;border-width:6px;border-color:#2b2b2a}
+.frame.phone .chrome{justify-content:center}
+.tab{container-type:inline-size;padding:var(--pad)}
+.tabbar{display:flex;gap:16px;border-bottom:1px solid var(--line);margin:0 0 10px;padding:0 2px;overflow:auto;white-space:nowrap}
+.tabbar span{padding:8px 0;color:var(--ink-2)}
+.tabbar .on{color:var(--ink);border-bottom:2px solid var(--accent);font-weight:600}
+.topline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--ink-2);font-size:12px;margin:0 2px 10px}
+.topline b{color:var(--ink);font-size:15px}
+.topline .spacer{flex:1}
+a{color:var(--accent);text-decoration:none}
+code,.mono{font-family:var(--mono);font-size:11.5px}
+.mini{font-size:12px;color:var(--ink-2)}
+.unm{color:var(--ink-3);font-style:italic}
+
+.led{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);white-space:nowrap}
+.led i{display:inline-block;width:14px;height:9px;border-radius:2px;background:var(--gray);border:1px solid rgba(0,0,0,.15)}
+.led.ok i{background:var(--good)} .led.bad i{background:var(--critical)} .led.warn i{background:var(--warning)} .led.unm i{background:var(--gray)}
+.led.pend i{background:var(--accent)}
+
+.btn{font:inherit;font-size:12px;padding:4px 9px;border:1px solid var(--line);background:var(--surface);border-radius:7px;color:var(--ink);cursor:pointer;white-space:nowrap}
+.btn.primary{border-color:var(--accent);color:var(--accent)}
+.btn.solid{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{color:var(--ink-3);background:transparent;border-style:dashed;cursor:not-allowed}
+.btn.danger{border-color:var(--ink-2);color:var(--ink)}
+.sw{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);white-space:nowrap}
+.sw .pill{width:34px;height:20px;border-radius:10px;background:var(--gray);position:relative;flex:none}
+.sw .pill::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.sw input{display:none}.sw input:checked + .pill{background:var(--good)}.sw input:checked + .pill::after{left:16px}
+.sw b{color:var(--ink)}
+
+/* top controls */
+.ctl{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;margin-bottom:10px}
+.ctl .spacer{flex:1}
+.ctl .sep{width:1px;height:20px;background:var(--line)}
+.search{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:4px 8px;font-size:13px;color:var(--ink-3);min-width:170px}
+.search b{color:var(--ink);font-weight:400}
+
+/* layout */
+.layout{display:grid;gap:10px;grid-template-columns:1fr}
+@container (min-width: 900px){ .layout{grid-template-columns:165px minmax(0,1fr) 380px} }
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav .g{display:flex;align-items:baseline;gap:6px;padding:6px 8px;border-radius:7px;color:var(--ink-2);font-size:13px}
+.nav .g span{flex:1}
+.nav .g small{color:var(--ink-3);font-size:11px;font-variant-numeric:tabular-nums}
+.nav .g.on{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.nav .navfoot{border-top:1px solid var(--line);margin-top:6px;padding:8px 8px 0;font-size:12px;color:var(--ink-2)}
+
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px var(--pad)}
+.sec>summary::-webkit-details-marker{display:none}
+.sec>summary .title{font-weight:600;font-size:15px}
+.sec>summary .line{flex:1;color:var(--ink-2);font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sec>summary .chev{color:var(--ink-3);font-size:12px}
+.sec[open]>summary .chev::after{content:"▴"} .sec:not([open])>summary .chev::after{content:"▾"}
+.sec .body{border-top:1px solid var(--line)}
+.stack{display:flex;flex-direction:column;gap:8px}
+
+/* setting row */
+.srow{display:grid;grid-template-columns:1fr;gap:6px;padding:9px var(--pad);border-bottom:1px solid var(--line)}
+.srow:last-child{border-bottom:0}
+@container (min-width: 900px){ .srow{grid-template-columns:minmax(0,1fr) auto;gap:3px 14px} .srow .sc{grid-row:1 / span 2;grid-column:2;align-self:start;justify-content:flex-end} }
+.srow.sel{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.sl .lab{font-weight:600;font-size:13.5px;white-space:nowrap}
+.sl .lab code{font-weight:400;color:var(--ink-3);margin-left:6px}
+.sl .help{color:var(--ink-2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{color:var(--ink-3);font-size:11.5px}
+.meta a{font-size:11.5px}
+.sc{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.field{display:inline-flex;align-items:stretch;border:1px solid var(--line);background:var(--surface);border-radius:7px;overflow:hidden;font-size:13px}
+.field .v{padding:4px 8px;min-width:46px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.field .v.txt{text-align:left;min-width:150px}
+.field .unit{padding:4px 8px;background:var(--surface-2);border-left:1px solid var(--line);color:var(--ink-2);font-size:12px;display:flex;align-items:center}
+.field.edit{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-track)}
+.field.bad{border-color:var(--critical);box-shadow:0 0 0 2px #f4d3d3}
+.field .caret{padding:4px 8px 4px 0;color:var(--ink-3)}
+.sc .of{color:var(--ink-3);font-size:12px}
+.msg{display:flex;align-items:flex-start;gap:6px;font-size:12px;color:var(--ink);grid-column:1 / -1}
+.msg .led{margin-top:2px}
+.msg .act{margin-left:auto;display:flex;gap:6px}
+.secret{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+.secret .nm{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.jsonsum{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:4px 8px;max-width:270px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* JSON editor */
+.ed{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden;display:flex;flex-direction:column}
+.ed .eh{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.ed .eh b{font-size:14px}
+.ed .eh .spacer{flex:1}
+.ed .tools{display:flex;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink-2)}
+.ed .tools .spacer{flex:1}
+.code{font-family:var(--mono);font-size:12px;line-height:19px;background:#fbfaf7;overflow:hidden}
+.code .ln{display:flex}
+.code .ln .n{width:34px;flex:none;text-align:right;padding-right:8px;color:var(--ink-3);background:var(--surface-2);border-right:1px solid var(--line);user-select:none}
+.code .ln .t{padding-left:10px;white-space:pre}
+.code .ln.err{background:#fbecec}
+.code .ln.err .n{color:var(--ink);background:#f4d3d3;font-weight:600}
+.code .squig{text-decoration:underline wavy var(--critical);text-underline-offset:3px}
+.k{color:#7a3e9d}.s{color:#1f7a4d}.p{color:var(--ink-3)}.nu{color:#b4570b}.bo{color:#2a5db0}
+.ed .everr{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-top:1px solid var(--line);font-size:12px}
+.ed .ef{display:flex;gap:6px;align-items:center;padding:8px 10px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-2);flex-wrap:wrap}
+.ed .ef .spacer{flex:1}
+
+/* shapes strip */
+.shapes{display:grid;gap:10px;align-items:start;grid-template-columns:1fr;margin-top:12px}
+@container (min-width: 900px){ .shapes{grid-template-columns:1.15fr 1fr 1fr} }
+.shapes-h{grid-column:1 / -1;color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.03em;margin:4px 2px -4px}
+.dlg{border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:0 10px 30px rgba(0,0,0,.12);overflow:hidden}
+.dlg .dh{padding:10px 12px 4px;font-weight:600;font-size:14px}
+.dlg .db{padding:4px 12px 10px;font-size:13px;color:var(--ink)}
+.dlg .db p{margin:0 0 6px}
+.dlg .df{display:flex;gap:6px;justify-content:flex-end;padding:8px 12px;border-top:1px solid var(--line);background:var(--surface-2)}
+.dlg .from{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink-2);margin:4px 0 6px}
+.dlg .from .field .v{min-width:0}
+.cq{font-size:12px;color:var(--ink-2);border-top:1px dashed var(--line);padding:6px 12px}
+.cq div{margin:3px 0}.cq b{color:var(--ink)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+td,th{text-align:left;padding:4px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--ink-3);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums}
+pre.dump{margin:0;font-family:var(--mono);font-size:11.5px;line-height:17px;background:#fbfaf7;padding:8px 12px;white-space:pre;overflow:hidden}
+
+/* pending bar */
+.pendbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--accent);background:var(--accent-soft);border-radius:var(--r);padding:7px 10px;font-size:12px;color:var(--ink)}
+.pendbar .spacer{flex:1}
+
+/* phone */
+.screen-h{margin:14px -12px 8px;padding:6px 12px;background:#2b2b2a;color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.phone .ctl{gap:8px 12px}
+.phone .search{min-width:0;flex:1 1 100%}
+.phone .sec>summary .title{font-size:14px}
+.phone .card{border:1px solid var(--line);border-radius:9px;margin:8px;padding:8px 10px;background:var(--surface)}
+.phone .card + .card{margin-top:0}
+.phone .card .sc{margin-top:6px}
+.phone .card .meta{margin-top:5px}
+.phone .card .msg{margin-top:6px}
+.phone .card .sl .help{white-space:normal}
+.phone .ed{border-radius:0;border-left:0;border-right:0;margin:0 -12px}
+.phone .code{font-size:11.5px;line-height:18px}
+.phone .code .ln .n{width:28px}
+.sheet{margin:0 -12px -12px;border-radius:14px 14px 0 0;border:1px solid var(--line);box-shadow:0 -6px 20px rgba(0,0,0,.12);background:var(--surface)}
+.sheet .grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:7px auto 2px}
+.dim{background:rgba(11,11,11,.35);margin:0 -12px;padding:12px 12px 0;border-radius:0}
+</style>
+</head>
+<body>
+<h1>Mike · Settings tab · groups, typed controls with units, JSON editor</h1>
+<p class="note">Every setting lives in the config store, so there is no "From" column. Each row: label and key, one line of help, a control whose unit is part of the field, then who changed it, when, and the version. Secrets show their name and "set" or "not set", never the value. JSON settings open in an editor beside the list on desktop and full screen on the phone. A save names the version it is based on; a stale save is refused with the version that won (409). Dangerous changes confirm with the exact consequence. Running/Paused and live/dry-run sit at the top.</p>
+<div class="stage">
+
+<!-- DESKTOP -->
+<div class="frame desktop">
+  <div class="chrome">● ● ●&nbsp;&nbsp; mike.example.com/dashboard/settings &nbsp;·&nbsp; 1180 px</div>
+  <div class="tab">
+    <div class="tabbar"><span>Health</span><span>Seats</span><span>Board</span><span>Review</span><span>Priorities</span><span>Gauges</span><span class="on">Settings</span><span>Logs</span></div>
+    <div class="topline"><b>Settings</b><span>config store v412 · 38 settings in 8 groups · last change by tig 6 h ago</span><span class="spacer"></span><span>snapshot 4 s ago</span></div>
+
+    <div class="ctl">
+      <label class="sw"><input type="checkbox" checked><span class="pill"></span><b>Running</b></label>
+      <span class="mini">tick in 2 m 10 s</span>
+      <span class="sep"></span>
+      <label class="sw"><input type="checkbox" checked><span class="pill"></span><b>live</b></label>
+      <span class="mini">off is dry-run: records, sends nothing</span>
+      <span class="spacer"></span>
+      <span class="search">⌕ <b>seat</b>&nbsp;· 9 matches</span>
+      <button class="btn">View all as JSON</button>
+      <button class="btn danger">Reset defaults…</button>
+    </div>
+
+    <div class="layout">
+      <!-- group list -->
+      <div class="nav">
+        <div class="g"><span>Loop</span><small>5</small></div>
+        <div class="g on"><span>Seats and roles</span><small>7</small></div>
+        <div class="g"><span>Runtimes and vendor accounts</span><small>5</small></div>
+        <div class="g"><span>Gauges and mint thresholds</span><small>4</small></div>
+        <div class="g"><span>Priorities and shares</span><small>2</small></div>
+        <div class="g"><span>GitHub and projects</span><small>4</small></div>
+        <div class="g"><span>Identity and tokens</span><small>6</small></div>
+        <div class="g"><span>Logs and scenarios</span><small>5</small></div>
+        <div class="navfoot">
+          <div class="led pend"><i></i>1 save pending</div>
+          <div style="margin-top:4px">based on v412</div>
+          <div style="margin-top:8px"><a href="#">Versions drawer</a> · all keys</div>
+        </div>
+      </div>
+
+      <!-- open group -->
+      <div class="sec" style="align-self:start">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px var(--pad)"><span style="font-weight:600;font-size:15px">Seats and roles</span><span class="mini" style="flex:1">who is minted, on what, and how many · instance config owns the roster</span></div>
+        <div class="body">
+          <div class="srow sel">
+            <div class="sl"><div class="lab">Seat types per role<code>seat_types</code></div><div class="help">Runtime and model per role.</div></div>
+            <div class="sc"><span class="jsonsum">{"arbiter":{"runtime":"claude-cloud",…</span><button class="btn primary">Editing ›</button></div>
+            <div class="meta">changed by tig 6 h ago · v412 · <a href="#">History</a></div>
+          </div>
+          <div class="srow">
+            <div class="sl"><div class="lab">Worker cap<code>worker_cap</code></div><div class="help">Most worker seats at once, all lanes.</div></div>
+            <div class="sc"><span class="field bad"><span class="v">8.5</span><span class="unit">seats</span></span><button class="btn" disabled>Save</button></div>
+            <div class="meta">changed by lena-w 2 d ago · v398 · <a href="#">History</a></div>
+            <div class="msg"><span class="led bad"><i></i>invalid</span><span>worker cap must be a whole number between 1 and 40. Nothing saved.</span></div>
+          </div>
+          <div class="srow">
+            <div class="sl"><div class="lab">Reviewer cap<code>reviewer_cap</code></div><div class="help">Most reviewer seats at once.</div></div>
+            <div class="sc"><span class="field edit"><span class="v">4</span><span class="unit">seats</span></span><button class="btn" disabled>Saving…</button></div>
+            <div class="meta">was 3 · changed by tig 5 d ago · v371 · <a href="#">History</a></div>
+            <div class="msg"><span class="led pend"><i></i>pending</span><span>Saving 3 → 4, based on v412. Applies by reload; remints 0 seats.</span></div>
+          </div>
+          <div class="srow">
+            <div class="sl"><div class="lab">Fill-missing cap<code>fill_missing</code></div><div class="help">Loop's own mints per window.</div></div>
+            <div class="sc"><span class="field"><span class="v">4</span><span class="unit">mints</span></span><span class="of">per</span><span class="field edit"><span class="v">90</span><span class="unit">minutes</span></span><button class="btn primary">Save</button></div>
+            <div class="meta">changed by tig 3 d ago · v380 · <a href="#">History</a></div>
+            <div class="msg"><span class="led bad"><i></i>not saved</span><span>lena-w saved v413 40 s ago (window 60 → 120 minutes). Your edit was based on v412 and is kept here.</span><span class="act"><button class="btn">Compare</button><button class="btn">Use v413</button></span></div>
+          </div>
+          <div class="srow">
+            <div class="sl"><div class="lab">Fill-missing for lane-PEs<code>fill_missing_lane_pes</code></div><div class="help">Mint a missing lane-PE without a human. Confirms first.</div></div>
+            <div class="sc"><label class="sw"><input type="checkbox"><span class="pill"></span>off</label></div>
+            <div class="meta">shipped default · never changed · v1 · <a href="#">History</a></div>
+          </div>
+          <div class="srow">
+            <div class="sl"><div class="lab">Remint timing<code>remint_timing</code></div><div class="help">When a seat type change remints a working seat.</div></div>
+            <div class="sc"><span class="field"><span class="v txt">when the seat goes idle</span><span class="caret">▾</span></span></div>
+            <div class="meta">changed by tig 9 d ago · v344 · <a href="#">History</a></div>
+          </div>
+          <div class="srow">
+            <div class="sl"><div class="lab">Human review counts<code>human_review_counts</code></div><div class="help">A listed human's Merge counts as the independent review.</div></div>
+            <div class="sc"><label class="sw"><input type="checkbox" checked><span class="pill"></span>on</label></div>
+            <div class="meta">changed by tig 12 d ago · v301 · <a href="#">History</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JSON editor beside the list -->
+      <div class="ed" style="align-self:start">
+        <div class="eh"><b>seat_types</b><span class="mini">JSON · Seats and roles</span><span class="spacer"></span><button class="btn">Close</button></div>
+        <div class="tools"><button class="btn">Format</button><button class="btn">Revert</button><span class="spacer"></span><span>based on v412 · 2 lines changed</span></div>
+        <div class="code">
+<div class="ln"><span class="n">1</span><span class="t"><span class="p">{</span></span></div>
+<div class="ln"><span class="n">2</span><span class="t">  <span class="k">"arbiter"</span><span class="p">: {</span></span></div>
+<div class="ln"><span class="n">3</span><span class="t">    <span class="k">"runtime"</span><span class="p">:</span> <span class="s">"claude-cloud"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">4</span><span class="t">    <span class="k">"model"</span><span class="p">:</span> <span class="s">"claude-opus-5-5"</span></span></div>
+<div class="ln"><span class="n">5</span><span class="t">  <span class="p">},</span></span></div>
+<div class="ln"><span class="n">6</span><span class="t">  <span class="k">"tpm"</span><span class="p">: {</span> <span class="k">"runtime"</span><span class="p">:</span> <span class="s">"claude-tmux"</span> <span class="p">},</span></span></div>
+<div class="ln"><span class="n">7</span><span class="t">  <span class="k">"lane-pe"</span><span class="p">: {</span></span></div>
+<div class="ln"><span class="n">8</span><span class="t">    <span class="k">"runtime"</span><span class="p">:</span> <span class="s">"claude-tmux"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">9</span><span class="t">    <span class="k">"model"</span><span class="p">:</span> <span class="s">"claude-sonnet-5"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">10</span><span class="t">    <span class="k">"wait_only"</span><span class="p">:</span> <span class="bo">true</span></span></div>
+<div class="ln"><span class="n">11</span><span class="t">  <span class="p">},</span></span></div>
+<div class="ln"><span class="n">12</span><span class="t">  <span class="k">"worker"</span><span class="p">: {</span></span></div>
+<div class="ln"><span class="n">13</span><span class="t">    <span class="k">"runtime"</span><span class="p">:</span> <span class="s">"grok-tmux"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">14</span><span class="t">    <span class="k">"model"</span><span class="p">:</span> <span class="s">"grok-code-2"</span></span></div>
+<div class="ln err"><span class="n">15</span><span class="t">    <span class="squig"><span class="k">"fallback"</span></span><span class="p">:</span> <span class="s">"claude-tmux"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">16</span><span class="t">    <span class="k">"max_context_pct"</span><span class="p">:</span> <span class="nu">80</span></span></div>
+<div class="ln"><span class="n">17</span><span class="t">  <span class="p">},</span></span></div>
+<div class="ln"><span class="n">18</span><span class="t">  <span class="k">"reviewer"</span><span class="p">: {</span></span></div>
+<div class="ln"><span class="n">19</span><span class="t">    <span class="k">"runtime"</span><span class="p">:</span> <span class="s">"cursor-cloud"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">20</span><span class="t">    <span class="k">"model"</span><span class="p">:</span> <span class="s">"gpt-5-codex"</span></span></div>
+<div class="ln"><span class="n">21</span><span class="t">  <span class="p">}</span></span></div>
+<div class="ln"><span class="n">22</span><span class="t"><span class="p">}</span></span></div>
+        </div>
+        <div class="everr"><span class="led bad"><i></i>invalid</span><span>Line 15, column 5: expected "," or "}" after the value on line 14. Save stays off until the JSON parses and matches the schema.</span></div>
+        <div class="ef"><span>remints 5 workers, when idle</span><span class="spacer"></span><button class="btn">Cancel</button><button class="btn" disabled>Save v413</button></div>
+      </div>
+    </div>
+
+    <!-- shapes -->
+    <div class="shapes">
+      <div class="shapes-h">Shapes on demand: confirm, versions drawer, View all as JSON</div>
+      <div class="dlg">
+        <div class="dh">Turn on fill-missing for lane-PEs?</div>
+        <div class="db">
+          <p>The loop will mint a missing lane-PE without asking a human. Today 1 lane-PE is missing (Presentation PE), so the next tick mints it, wait-only, on claude-tmux. Mints count against the fill-missing cap: 4 mints per 60 minutes.</p>
+          <div class="mini">Writes v413 as tig. Undo by turning it off; a minted seat stays until archived.</div>
+        </div>
+        <div class="df"><button class="btn">Cancel</button><button class="btn solid">Turn on</button></div>
+        <div class="cq">
+          <div><b>Switch the loop to live?</b> From the next tick (in 2 m 10 s) Mike sends steers, mints and GitHub writes for real across 3 projects and 13 seats. Dry-run recorded them and sent nothing.</div>
+          <div><b>Change gh_user from excaliwire-mike to xw-mike-bot?</b> Mike writes to GitHub as xw-mike-bot from the next tick. 41 open issues assigned to excaliwire-mike leave the board until reassigned.</div>
+          <div><b>Reset defaults?</b> Every setting returns to its shipped default in one write (v413), and all 9 assignments and 9 <code>seat:</code> labels are cleared.</div>
+        </div>
+      </div>
+      <div class="dlg">
+        <div class="dh" style="display:flex;align-items:center">Versions · worker_cap<span style="flex:1"></span><button class="btn">Close</button></div>
+        <table style="margin:4px 0 0">
+          <tr><th style="padding-left:12px">Version</th><th>From → to</th><th>By</th><th>When</th><th></th></tr>
+          <tr><td style="padding-left:12px" class="num">v398</td><td class="num">6 → 8 seats</td><td>lena-w</td><td>2 d ago</td><td><a href="#">use</a></td></tr>
+          <tr><td style="padding-left:12px" class="num">v371</td><td class="num">4 → 6 seats</td><td>tig</td><td>5 d ago</td><td><a href="#">use</a></td></tr>
+          <tr><td style="padding-left:12px" class="num">v290</td><td class="num">5 → 4 seats</td><td>tig</td><td>13 d ago</td><td><a href="#">use</a></td></tr>
+          <tr><td style="padding-left:12px" class="num">v1</td><td class="num">default 5 seats</td><td>install</td><td>41 d ago</td><td><a href="#">use</a></td></tr>
+        </table>
+        <div class="cq">Store head is v413. "use" fills the field; it saves only with Save, based on v413. <a href="#">All keys</a></div>
+      </div>
+      <div class="dlg">
+        <div class="dh" style="display:flex;align-items:center">All settings · v413<span style="flex:1"></span><button class="btn">Copy</button><button class="btn" style="margin-left:6px">Close</button></div>
+<pre class="dump"><span class="p">{</span>
+  <span class="k">"store_version"</span><span class="p">:</span> <span class="nu">413</span><span class="p">,</span>
+  <span class="k">"loop"</span><span class="p">:</span> <span class="s">"running"</span><span class="p">,</span>
+  <span class="k">"loop_mode"</span><span class="p">:</span> <span class="s">"live"</span><span class="p">,</span>
+  <span class="k">"loop_cadence_minutes"</span><span class="p">:</span> <span class="nu">5</span><span class="p">,</span>
+  <span class="k">"worker_cap"</span><span class="p">:</span> <span class="nu">8</span><span class="p">,</span>
+  <span class="k">"gh_token"</span><span class="p">:</span> <span class="s">"MIKE_GH_TOKEN (set)"</span><span class="p">,</span>
+  <span class="k">"cursor_api_key"</span><span class="p">:</span> <span class="s">"CURSOR_KEY (not set)"</span><span class="p">,</span>
+  <span class="p">…</span> <span class="p">35 more</span>
+<span class="p">}</span></pre>
+        <div class="cq">Secrets appear by name and set or not set, never a value. Copy says "Copied."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHONE -->
+<div class="frame phone">
+  <div class="chrome">375 px · Settings</div>
+  <div class="tab">
+    <div class="tabbar"><span>Review</span><span>Priorities</span><span>Gauges</span><span class="on">Settings</span><span>Logs</span></div>
+    <div class="topline"><b>Settings</b><span>v412 · tig 6 h ago</span><span class="spacer"></span><span>4 s ago</span></div>
+    <div class="ctl">
+      <label class="sw"><input type="checkbox" checked><span class="pill"></span><b>Running</b></label>
+      <label class="sw"><input type="checkbox" checked><span class="pill"></span><b>live</b></label>
+      <span class="spacer"></span>
+      <button class="btn">JSON</button>
+      <span class="search">⌕ Search 38 settings</span>
+    </div>
+    <div class="stack">
+      <details class="sec" open><summary><span class="title">Loop</span><span class="line">every 5 min · reserve 15%</span><span class="chev"></span></summary>
+        <div class="body">
+          <div class="card">
+            <div class="sl"><div class="lab">Loop cadence</div><div class="help">Minutes between ticks; a tick never overlaps the last.</div></div>
+            <div class="sc"><span class="field bad"><span class="v">90</span><span class="unit">min</span></span><button class="btn" disabled>Save</button></div>
+            <div class="msg"><span class="led bad"><i></i>invalid</span><span>loop cadence must be a whole number between 1 and 60.</span></div>
+            <div class="meta">changed by tig 2 d ago · v402 · <a href="#">History</a></div>
+          </div>
+          <div class="card">
+            <div class="sl"><div class="lab">GitHub read reserve</div><div class="help">Below this share of the rate limit the tick holds GitHub reads.</div></div>
+            <div class="sc"><span class="field"><span class="v">15</span><span class="unit">percent</span></span></div>
+            <div class="meta">changed by tig 8 d ago · v350 · <a href="#">History</a></div>
+          </div>
+          <div class="card">
+            <div class="sl"><div class="lab">Arbiter cooldown</div><div class="help">Least time between two board steers to Arthur.</div></div>
+            <div class="sc"><span class="field"><span class="v">10</span><span class="unit">min</span></span></div>
+            <div class="meta">shipped default · v1 · <a href="#">History</a></div>
+          </div>
+        </div>
+      </details>
+      <details class="sec" open><summary><span class="title">Seats and roles</span><span class="line">7 settings</span><span class="chev"></span></summary>
+        <div class="body">
+          <div class="card">
+            <div class="sl"><div class="lab">Seat types per role</div><div class="help">Runtime and model each role mints on.</div></div>
+            <div class="sc"><span class="jsonsum" style="flex:1;max-width:none">5 roles · worker grok-tmux</span><button class="btn primary">Edit JSON ›</button></div>
+            <div class="meta">changed by tig 6 h ago · v412 · <a href="#">History</a></div>
+          </div>
+          <div class="card">
+            <div class="sl"><div class="lab">Fill-missing cap</div><div class="help">Seats the loop may mint on its own, per window.</div></div>
+            <div class="sc"><span class="field"><span class="v">4</span><span class="unit">mints</span></span><span class="of">per</span><span class="field"><span class="v">60</span><span class="unit">min</span></span></div>
+            <div class="meta">changed by tig 3 d ago · v380 · <a href="#">History</a></div>
+          </div>
+          <div class="card">
+            <div class="sl"><div class="lab">Fill-missing for lane-PEs</div><div class="help">Mint a missing lane-PE without a human. Confirms first.</div></div>
+            <div class="sc"><label class="sw"><input type="checkbox"><span class="pill"></span>off</label></div>
+            <div class="meta">shipped default · v1 · <a href="#">History</a></div>
+          </div>
+          <div style="padding:0 10px 8px" class="mini"><a href="#">4 more in Seats and roles</a></div>
+        </div>
+      </details>
+      <details class="sec"><summary><span class="title">Runtimes and accounts</span><span class="line">cursor-cloud account not set</span><span class="chev"></span></summary></details>
+      <details class="sec"><summary><span class="title">Gauges and thresholds</span><span class="line">Claude 5 h 75% · xAI 80%</span><span class="chev"></span></summary></details>
+      <details class="sec"><summary><span class="title">Priorities and shares</span><span class="line">60 · 30 · 10 percent</span><span class="chev"></span></summary></details>
+      <details class="sec"><summary><span class="title">GitHub and projects</span><span class="line">gh_user excaliwire-mike</span><span class="chev"></span></summary></details>
+      <details class="sec" open><summary><span class="title">Identity and tokens</span><span class="line">5 set · 1 not set</span><span class="chev"></span></summary>
+        <div class="body">
+          <div class="card">
+            <div class="sl"><div class="lab">GitHub token</div><div class="help">Secret name Mike's GitHub choke point reads.</div></div>
+            <div class="sc secret"><span class="nm">MIKE_GH_TOKEN</span><span class="led ok"><i></i>set</span><button class="btn" style="margin-left:auto">Change name</button></div>
+            <div class="meta">changed by tig 20 d ago · v212 · <a href="#">History</a></div>
+          </div>
+          <div class="card">
+            <div class="sl"><div class="lab">Cursor API key</div><div class="help">Needed for cursor-cloud seats and Cursor gauges.</div></div>
+            <div class="sc secret"><span class="nm">CURSOR_KEY</span><span class="led unm"><i></i>not set</span><button class="btn" style="margin-left:auto">Change name</button></div>
+            <div class="meta">changed by lena-w 6 d ago · v360 · <a href="#">History</a></div>
+          </div>
+          <div class="card">
+            <div class="sl"><div class="lab">Session token lifetime</div><div class="help">Age at which an attached session's token stops working.</div></div>
+            <div class="sc"><span class="field"><span class="v">14</span><span class="unit">days</span></span></div>
+            <div class="meta">shipped default · v1 · <a href="#">History</a></div>
+          </div>
+        </div>
+      </details>
+      <details class="sec"><summary><span class="title">Logs and scenarios</span><span class="line">rotate 50 MB · keep 14 d</span><span class="chev"></span></summary></details>
+      <div class="pendbar"><span class="led pend"><i></i>pending</span><span>reviewer cap 3 → 4 · on v412</span><span class="spacer"></span><a href="#">Undo</a></div>
+    </div>
+
+    <div class="screen-h">Tap Edit JSON: the editor takes the screen</div>
+    <div class="ed">
+      <div class="eh"><button class="btn">‹ Done</button><b>seat_types</b><span class="spacer"></span><button class="btn">Format</button></div>
+      <div class="code">
+<div class="ln"><span class="n">1</span><span class="t"><span class="p">{</span></span></div>
+<div class="ln"><span class="n">2</span><span class="t">  <span class="k">"arbiter"</span><span class="p">: {</span></span></div>
+<div class="ln"><span class="n">3</span><span class="t">    <span class="k">"runtime"</span><span class="p">:</span> <span class="s">"claude-cloud"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">4</span><span class="t">    <span class="k">"model"</span><span class="p">:</span> <span class="s">"claude-opus-5-5"</span></span></div>
+<div class="ln"><span class="n">5</span><span class="t">  <span class="p">},</span></span></div>
+<div class="ln"><span class="n">6</span><span class="t">  <span class="k">"worker"</span><span class="p">: {</span></span></div>
+<div class="ln"><span class="n">7</span><span class="t">    <span class="k">"runtime"</span><span class="p">:</span> <span class="s">"grok-tmux"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">8</span><span class="t">    <span class="k">"model"</span><span class="p">:</span> <span class="s">"grok-code-2"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">9</span><span class="t">    <span class="k">"fallback"</span><span class="p">:</span> <span class="s">"claude-tmux"</span><span class="p">,</span></span></div>
+<div class="ln"><span class="n">10</span><span class="t">    <span class="k">"max_context_pct"</span><span class="p">:</span> <span class="nu">80</span></span></div>
+<div class="ln"><span class="n">11</span><span class="t">  <span class="p">},</span></span></div>
+<div class="ln"><span class="n">12</span><span class="t">  <span class="p">… 3 roles folded</span></span></div>
+<div class="ln"><span class="n">22</span><span class="t"><span class="p">}</span></span></div>
+      </div>
+      <div class="everr"><span class="led ok"><i></i>valid</span><span>parses and matches the schema · based on v412</span></div>
+      <div class="ef"><span>remints 5 worker seats, when idle</span><span class="spacer"></span><button class="btn solid">Save v413</button></div>
+    </div>
+
+    <div class="screen-h">Changing gh_user: confirm sheet</div>
+    <div class="dim">
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="dlg" style="border:0;box-shadow:none;border-radius:0">
+          <div class="dh">Change gh_user?</div>
+          <div class="db">
+            <div class="from"><span class="field"><span class="v txt" style="min-width:0">excaliwire-mike</span></span>→<span class="field edit"><span class="v txt" style="min-width:0">xw-mike-bot</span></span></div>
+            <p>Mike writes to GitHub as xw-mike-bot from the next tick. 41 open issues assigned to excaliwire-mike leave the board until reassigned; <code>seat:</code> labels stay.</p>
+            <div class="mini">Writes v413 as tig, based on v412.</div>
+          </div>
+          <div class="df"><button class="btn">Cancel</button><button class="btn solid">Change gh_user</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+const f=new URLSearchParams(location.search).get('frame');
+if(f){document.querySelectorAll('h1,.note').forEach(e=>e.remove());
+  document.querySelectorAll('.frame').forEach(e=>{if(!e.classList.contains(f))e.remove();});
+  document.body.style.background='transparent';document.querySelector('.stage').style.padding='0';}
+</script>
+</body>
+</html>

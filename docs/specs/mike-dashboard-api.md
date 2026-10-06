@@ -218,13 +218,16 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 | `mint_threshold` | number | percent at which mint picks the next vendor |
 | `read_at` | time or null | when the gauge source was read |
 
-**settingRow** ([MS-038, settings show source and actor](stories/configure.md#ms-038-settings-show-source-and-actor))
+**settingRow** ([MS-038, settings show unit, actor and version](stories/configure.md#ms-038-settings-show-unit-actor-and-version), [MS-193, JSON settings open in a real editor](stories/configure.md#ms-193-json-settings-open-in-a-real-editor))
 
 | Field | Type | Meaning |
 |---|---|---|
 | `key` | string | store key |
-| `value` | any | value Mike reads now; a secret holds its name |
-| `source` | string | `default`, `instance`, `store`, or `unmeasured` |
+| `value` | any | value Mike reads now; a `secret` holds only `set` or `not set` beside its name |
+| `type` | string | `integer`, `number`, `boolean`, `string`, `choice`, `secret`, or `json`; a client draws the control from it, and `json` opens the editor |
+| `unit` | string or null | the unit the value is in, shown with the control: `min`, `h`, `s`, `%`, `MB`, `tokens`; null for a non-numeric type |
+| `range` | object or null | `{min, max}` for a number, `{options}` for a choice, `{schema}` name for json; the client validates before it posts and the server validates again |
+| `help` | string | one line, what the setting does |
 | `changed_by` | string or null | actor of the last change |
 | `changed_at` | time or null | when |
 | `version` | integer | store version that wrote it |
@@ -284,6 +287,7 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 | `droplet` joined not-ok string | dropped; `attention` groups | one reader, one source |
 | `harness`, `surface`, `state`, `watch` on a row | `runtime`, `vendor`, `access`, `liveness_source` | [runtimes](mike.md#4-runtimes) |
 | `verbs` list plus hover text the client derived | `verbs` list plus server `verb_why` | the server explains; the client derives nothing |
+| `settingRow.source` (`default`, `instance`, `store`) and a From column | dropped; `type`, `unit`, `range`, `help` added | every setting is in the config store, so source said nothing; a client needs the type and unit to draw a control (Tig, 2026-10-06) |
 | `sessions` part, `sessionRow`, `/sessions` routes | `seats` part, `seatRow`, `/seats` routes | the row is a seat; a session is what the runtime holds for it ([the Seats tab](mike-dashboard.md#3-the-seats-tab-and-the-seat-card)) |
 | none | `board`, `review`, `gauges` per runtime, `attached-sessions`, `jobs`, session log | parts [the dashboard spec](mike-dashboard.md) requires |
 | terminal ticket and WebSocket messages | **deferred** | see below |

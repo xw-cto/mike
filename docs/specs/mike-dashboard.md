@@ -85,6 +85,30 @@ The sections, top to bottom:
 
 <img src="mockups/logs-phone.png" width="375" alt="The Logs tab at 375 px: a scenario select, a Filters expander summarizing what is set, and log lines as cards with tick separators">
 
-## 6. Tabs still to mock up
+## 6. The Settings tab
 
-Board, Review, Priorities, Gauges, Settings, Attached sessions. Each lands here with a desktop and a phone image before its stories are built ([the user stories index](stories/README.md)).
+**Proposed 2026-10-06, awaiting Tig's word.** The config store, editable. Source: [`mockups/settings.html`, the Settings tab at desktop and phone widths](mockups/settings.html). What factory's tab got wrong and this one fixes, from Tig's review: numbers had no units, the page was not responsive, a From column said nothing once every setting lived in the store, and JSON was edited in a one-line box.
+
+- **Top line.** Config store version, setting and group counts, last change and by whom, snapshot age. Then the two switches that are human switches in the spec, **Running / Paused** and **live / dry-run**, each with one clause of consequence beside it; a search box over keys, labels and help; **View all as JSON**; **Reset defaults…**.
+- **Groups**: Loop; Seats and roles; Runtimes and vendor accounts; Gauges and mint thresholds; Priorities and shares; GitHub and projects; Identity and tokens; Logs and scenarios. On desktop a group list on the left with counts and one group open in the middle; on a phone each group is an expander with a one-line summary.
+- **A setting row**: label and key, one line of help, the control with its **unit as part of the control** (5 min, 24 h, 75 %, 4 mints per 90 minutes), and a small line "changed by <login>, <ago> · v<version> · History". There is **no From column**. A secret shows its name and set or not set, never its value. A `choice` is a select; a boolean is a switch.
+- **Validation before save**, inline under the row: "worker cap must be a whole number between 1 and 40. Nothing saved." Save stays disabled until the value passes the setting's `range`.
+- **Saves are versioned.** A row shows "pending · based on v412" while it saves; a save that collides with another human's newer version is refused and the row says "not saved: <login> saved v413 <ago> (<old> → <new>)" with **Compare** and **Use v413**; the human's edit is kept in the field.
+- **JSON settings open in a real editor**: monospace, line numbers, syntax coloring, pretty-printed, **Format** and **Revert**, the error named by line and column, Save disabled until the document parses and matches the setting's schema, and one line of consequence beside Save ("remints 5 workers, when idle"). Beside the list on desktop; full screen with Done on a phone.
+- **Confirms for dangerous changes**, each stating the exact consequence in Mike's numbers: switching the loop to live; changing `gh_user`; turning on fill-missing for lane-PEs; Reset defaults. The dialog names what it writes and how to undo it.
+- **Versions drawer** per setting: version, from → to, by, when, and **use**, which fills the field and saves only through Save.
+- **View all as JSON**: a pretty-printed, copyable dump of every effective value with its version; secrets by name only.
+
+The setting keys in the mockup are illustrative where Mike's spec does not yet name one (`remint_timing`, `worker_cap`, `reviewer_cap`, the arbiter cooldown, the session token lifetime); the config store schema is the law for keys.
+
+### 6.1 Desktop, 1180 px
+
+![The Settings tab at 1180 px: switches and search on top, a group list, the Seats and roles group open with units in each control and a versioned change line under each, the JSON editor open on seat_types with a line-and-column error, and below them the confirm, versions drawer and View all as JSON shapes](mockups/settings-desktop.png)
+
+### 6.2 Phone, 375 px
+
+<img src="mockups/settings-phone.png" width="375" alt="The Settings tab at 375 px: switches and search, groups as expanders with card rows, an inline validation error, secrets as set or not set, a pending-save bar, the full-screen JSON editor with Done, and a confirm sheet">
+
+## 7. Tabs still to mock up
+
+Board, Review, Priorities, Gauges, Attached sessions. Each lands here with a desktop and a phone image before its stories are built ([the user stories index](stories/README.md)).

@@ -16,10 +16,10 @@ Stories are grouped by job. Ids are stable: a story keeps its MS id when it move
 - [steer.md, the steer stories](steer.md): 26 stories; steer and assign, the control plane watches, humans on GitHub.
 - [review.md, the review stories](review.md): 23 stories; review and merge, the review surface.
 - [seats.md, the seats stories](seats.md): 27 stories; manage seats, the Mike Runtime API, gauges and mint threshold.
-- [configure.md, the configure stories](configure.md): 18 stories; configure, config store apply-on-change, multi-project single instance.
+- [configure.md, the configure stories](configure.md): 19 stories; configure, config store apply-on-change, multi-project single instance.
 - [diagnose.md, the diagnose stories](diagnose.md): 28 stories; diagnose and health, audit records, job ids for commands, the dashboard API contract.
 - [operate.md, the operate stories](operate.md): 36 stories; install and recover, identity and secrets, seat and host scoped tokens, attached sessions, cost.
 - [testing.md, the testing stories](testing.md): 7 stories; testing seams, including the dashboard tested at every tier.
 - [retired.md, the retired stories](retired.md): 1 story; one line per retired factory behavior (not built), and the story retired after review.
 
-Total: 192 stories.
+Total: 193 stories.
