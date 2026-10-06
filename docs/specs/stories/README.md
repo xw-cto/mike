@@ -23,6 +23,6 @@ Stories are grouped by job. Ids are stable: a story keeps its MS id when it move
 - [operate.md, the operate stories](operate.md): 36 stories (high 13, normal 22, no 1); install and recover, identity and secrets, seat and host scoped tokens, attached sessions, cost.
 - [testing.md, the testing stories](testing.md): 7 stories (high 6, normal 1, no 0); testing seams, including the dashboard tested at every tier.
 - [retired.md, the retired stories](retired.md): 1 story (high 0, normal 0, no 1); one line per retired factory behavior (not built), and the story retired after review.
-- [mlp.md, the MLP build order](mlp.md): no stories of its own; the 103 `high` stories in build order, in five phases.
+- [mlp.md, the MLP build order](mlp.md): no stories of its own; the 103 `high` stories in build order, in three parallel tracks and one milestone.
 
 Total: 193 stories: critical 0, high 103, normal 87, no 3.

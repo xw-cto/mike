@@ -2,7 +2,18 @@
 
 The MLP is the cheapest Mike that Tig will love and that teaches us something: one instance, one project, one worker and one reviewer on one cloud runtime, Tig steering by hand, and four dashboard tabs on his phone ([mike.md §13.1, the MLP](../mike.md#131-the-mlp)). These are the stories with `Urgency: high`, in the order to build them; each phase proves something the next one stands on. The words and the other releases: [mike.md §13, the cut](../mike.md#13-the-cut-mlp-v1-backlog); rules and verdicts: [the user stories index](README.md).
 
-## Phase 1: package, config, store, records, log, fake runtime
+**Tracks, not phases.** The MLP is built as three tracks that run in parallel, meeting at one milestone. Each track depends only on a written contract, never on another track's code:
+
+| Track | Builds | Depends on | Proves |
+|---|---|---|---|
+| **A, the core** | package, config, store, records, log, the fake runtime, the tick, the gates, routing, the two seats | nothing outside this spec | the loop works against the fake runtime |
+| **B, the driver** | the cloud driver and its conformance suite | the [Mike Runtime API](../mike.md#4-runtimes) interface, pinned first | one real driver mints, steers with confirmed delivery, and reports alone |
+| **C, the app** | the API server and the four tabs, phone-first | the [dashboard API contract](../mike-dashboard-api.md) and its fixture frames | Tig sees and steers from his phone, against fixtures before against the core |
+| **Milestone, end to end** | the integration tick and the one live run | A, B and C | the seams agree, and the numbers to record |
+
+The first commit of the MLP pins the two contracts B and C depend on, so the three tracks start the same day. Inside a track the stories are in build order.
+
+## Track A, the core: package, config, store, records, log, fake runtime
 
 Proves Mike installs as one package, keeps one store and one log, records before it acts, and runs its unit and component suites with no vendor.
 
@@ -25,9 +36,9 @@ Proves Mike installs as one package, keeps one store and one log, records before
 17. [MS-186, Mike ships a fake runtime](testing.md#ms-186-mike-ships-a-fake-runtime) · the fake runtime runs the control plane with no vendor
 18. [MS-188, Worker and reviewer tested alone](testing.md#ms-188-worker-and-reviewer-tested-alone) · the worker and reviewer component suites pass from a synthetic steer
 
-## Phase 2: the cloud driver and its conformance suite
+## Track B, the driver: the cloud driver and its conformance suite
 
-Proves one real driver mints, steers with confirmed delivery, and reports its session log and usage, alone, before the control plane uses it.
+Runs in parallel with Track A against the pinned Runtime API interface. Proves one real driver mints, steers with confirmed delivery, and reports its session log and usage, alone, before the control plane uses it.
 
 19. [MS-185, A driver passes conformance alone](testing.md#ms-185-a-driver-passes-conformance-alone) · the cloud driver passes conformance with no control plane
 20. [MS-149, Every steer confirmed or not](seats.md#ms-149-every-steer-confirmed-or-not) · every steer is confirmed by an event id or reported not confirmed
@@ -36,9 +47,9 @@ Proves one real driver mints, steers with confirmed delivery, and reports its se
 23. [MS-068, Tokens per seat and fleet](operate.md#ms-068-tokens-per-seat-and-fleet) · tokens since mint, unmeasured never zero
 24. [MS-069, Context fullness per seat](operate.md#ms-069-context-fullness-per-seat) · context fullness per seat
 
-## Phase 3: webhooks, the tick, the gates, two seats, routing
+## Track A, continued: webhooks, the tick, the gates, two seats, routing
 
-Proves the loop: an assigned issue reaches the worker, a ready pull request the reviewer, a send-back the worker, a Merge verdict Tig, every step gated and recorded.
+Against the fake runtime until Track B lands. Proves the loop: an assigned issue reaches the worker, a ready pull request the reviewer, a send-back the worker, a Merge verdict Tig, every step gated and recorded.
 
 25. [MS-165, Control plane detects every change](steer.md#ms-165-control-plane-detects-every-change) · signed webhooks and the store diff detect each change
 26. [MS-107, Skip reads below budget reserve](diagnose.md#ms-107-skip-reads-below-budget-reserve) · reads are skipped below the reserve
@@ -79,9 +90,9 @@ Proves the loop: an assigned issue reaches the worker, a ready pull request the 
 61. [MS-062, Hard Reboot the fleet](operate.md#ms-062-hard-reboot-the-fleet) · Hard reboot and Reset defaults start the pair clean
 62. [MS-065, Fleet commands never collide](operate.md#ms-065-fleet-commands-never-collide) · a seat verb during a fleet command is refused
 
-## Phase 4: the API and the four tabs, phone-first
+## Track C, the app: the API and the four tabs, phone-first
 
-Proves Tig sees and steers both seats from his phone over the version, health, seats, settings, logs and jobs parts.
+Runs in parallel with Tracks A and B against the dashboard API contract and its fixture frames; it meets the core only at the milestone. Proves Tig sees and steers both seats from his phone over the version, health, seats, settings, logs and jobs parts.
 
 63. [MS-154, Humans are verified bearers](operate.md#ms-154-humans-are-verified-bearers) · Tig is a verified bearer
 64. [MS-137, Job ids for every command](diagnose.md#ms-137-job-ids-for-every-command) · every command returns a job id at once
@@ -123,7 +134,7 @@ Proves Tig sees and steers both seats from his phone over the version, health, s
 100. [MS-139, Every tab fits a phone](observe.md#ms-139-every-tab-fits-a-phone) · the four tabs fit a phone
 101. [MS-191, Dashboard tested at every tier](testing.md#ms-191-dashboard-tested-at-every-tier) · the dashboard tested at the component and integration tiers
 
-## Phase 5: the end-to-end run and the numbers
+## Milestone: the end-to-end run and the numbers
 
 Proves the seams agree on a real repository with a real model, and records what the MLP set out to learn.
 
