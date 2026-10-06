@@ -79,7 +79,7 @@ a{color:var(--accent);text-decoration:none}
 </head>
 <body>
 <h1>Mike · Health tab · summary with expanders</h1>
-<p class="note">Health is the one-screen answer to "is Mike well, and what is it doing". Five sections, each one line when closed and an expander for detail: Instance, Control plane, Loop, Problems, and rollups (Seats, Gauges, Review, Lanes). It duplicates no other tab: every expander links to the tab that owns the detail, and the log lives on the Logs tab. Problems are one line each with a link, never log text. On the phone the sections stack; the same expanders work.</p>
+<p class="note">Health is the one-screen answer to "is Mike well, and what is it doing". Sections, each one line when closed and an expander for detail: Instance, Control plane, Loop, the rollups (Seats, Gauges, Review, Lanes), and Problems last. Problems folds to one line at zero and is never a log. It duplicates no other tab: every expander links to the tab that owns the detail, and the log lives on the Logs tab. Problems are one line each with a link, never log text. On the phone the sections stack; the same expanders work.</p>
 <div class="stage">
 
 <!-- DESKTOP -->
@@ -152,16 +152,6 @@ a{color:var(--accent);text-decoration:none}
         </div>
       </details>
 
-      <details class="sec wide" open>
-        <summary><span class="title">Problems</span><span class="led bad"><i></i>2 need attention</span><span class="led unm"><i></i>3 unmeasured</span><span class="line">Brigid not responding 22 min · Infrastructure PE context 88% · 3 gauges unmeasured</span><span class="chev"></span></summary>
-        <div class="body">
-          <div class="problem"><span class="led bad"><i></i></span><div class="t"><a href="#">Brigid</a> not responding for 22 min while holding #1723.<small>restart from its card, or steer; last pane output 22 min ago</small></div><a href="#">Seats</a></div>
-          <div class="problem"><span class="led warn"><i></i></span><div class="t"><a href="#">Infrastructure PE</a> context window 88% full; it will summarize soon.<small>remint keeps its assignment</small></div><a href="#">Seats</a></div>
-          <div class="problem"><span class="led unm"><i></i></span><div class="t">Cursor pools unmeasured: no Cursor session on the control-plane host.<small>set the account in Settings</small></div><a href="#">Gauges</a></div>
-          <div class="problem"><span class="led unm"><i></i></span><div class="t">Presentation PE liveness unmeasured: vendor listing timed out 3 times.<small>runtime claude-cloud</small></div><a href="#">Seats</a></div>
-          <div class="problem"><span class="led unm"><i></i></span><div class="t">Context pressure unmeasured for 1 seat: vendor API has no context usage.<small>Presentation PE</small></div><a href="#">Seats</a></div>
-        </div>
-      </details>
 
       <details class="sec">
         <summary><span class="title">Seats</span><span class="line"><span class="chips"><span class="chip"><b>9</b> responding</span><span class="chip"><b>1</b> not-responding</span><span class="chip"><b>2</b> unmeasured</span><span class="chip"><b>1</b> not-minted</span></span></span><span class="chev"></span></summary>
@@ -189,12 +179,17 @@ a{color:var(--accent);text-decoration:none}
       </details>
 
       <details class="sec">
-        <summary><span class="title">Lanes</span><span class="line">Infrastructure 60 → 56 · Factory 30 → 33 · Presentation 10 → 11</span><span class="chev"></span></summary>
+        <summary><span class="title">Lanes</span><span class="line"><span class="chips"><span class="chip">1 Infrastructure <b>60%</b></span><span class="chip">2 Factory <b>30%</b></span><span class="chip">3 Presentation <b>10%</b></span></span></span><span class="chev"></span></summary>
+        <div class="body mini">The priorities list as set: rank, lane, share of workers. A reminder, not a measurement · <a href="#">Priorities</a></div>
+      </details>
+      <details class="sec wide" open>
+        <summary><span class="title">Problems</span><span class="led bad"><i></i>2 need attention</span><span class="led unm"><i></i>3 unmeasured</span><span class="line">Brigid not responding 22 min · Infrastructure PE context 88% · 3 gauges unmeasured</span><span class="chev"></span></summary>
         <div class="body">
-          <div class="meter"><span class="lab">Infrastructure</span><span class="track"><span class="fill" style="width:56%"></span><span class="thr" style="left:60%"></span></span><span class="pct">56%</span></div>
-          <div class="meter" style="margin-top:6px"><span class="lab">Factory</span><span class="track"><span class="fill" style="width:33%"></span><span class="thr" style="left:30%"></span></span><span class="pct">33%</span></div>
-          <div class="meter" style="margin-top:6px"><span class="lab">Presentation</span><span class="track"><span class="fill" style="width:11%"></span><span class="thr" style="left:10%"></span></span><span class="pct">11%</span></div>
-          <div class="mini" style="margin-top:6px">bar = actual share of workers · tick = target share · <a href="#">Priorities</a></div>
+          <div class="problem"><span class="led bad"><i></i></span><div class="t"><a href="#">Brigid</a> not responding for 22 min while holding #1723.<small>restart from its card, or steer; last pane output 22 min ago</small></div><a href="#">Seats</a></div>
+          <div class="problem"><span class="led warn"><i></i></span><div class="t"><a href="#">Infrastructure PE</a> context window 88% full; it will summarize soon.<small>remint keeps its assignment</small></div><a href="#">Seats</a></div>
+          <div class="problem"><span class="led unm"><i></i></span><div class="t">Cursor pools unmeasured: no Cursor session on the control-plane host.<small>set the account in Settings</small></div><a href="#">Gauges</a></div>
+          <div class="problem"><span class="led unm"><i></i></span><div class="t">Presentation PE liveness unmeasured: vendor listing timed out 3 times.<small>runtime claude-cloud</small></div><a href="#">Seats</a></div>
+          <div class="problem"><span class="led unm"><i></i></span><div class="t">Context pressure unmeasured for 1 seat: vendor API has no context usage.<small>Presentation PE</small></div><a href="#">Seats</a></div>
         </div>
       </details>
     </div>
@@ -219,6 +214,12 @@ a{color:var(--accent);text-decoration:none}
           <div class="mini" style="margin-top:6px">NEXT</div>
           <table><tr><td><a href="#">#1762</a></td><td class="mini">Blaise → review</td></tr><tr><td><a href="#">#1761</a></td><td class="mini">send-back → Weland</td></tr></table>
         </div></details>
+      <details class="sec"><summary><span class="title">Seats</span><span class="line">9 ok · 1 down · 2 unm · 1 off</span><span class="chev"></span></summary>
+        <div class="body"><div class="stack"><i style="width:75%;background:var(--accent)"></i><i style="width:17%;background:var(--warning)"></i><i style="width:8%;background:var(--critical)"></i></div><div class="mini" style="margin-top:4px">context: 9 low · 2 mid · 1 high</div></div></details>
+      <details class="sec"><summary><span class="title">Gauges</span><span class="line">xAI 42% · Claude 71% · Cursor unm</span><span class="chev"></span></summary>
+        <div class="body"><div class="meter"><span class="lab">xAI 5 h</span><span class="track"><span class="fill" style="width:42%"></span><span class="thr" style="left:75%"></span></span><span class="pct">42%</span></div><div class="meter warn" style="margin-top:6px"><span class="lab">Claude 5 h</span><span class="track"><span class="fill" style="width:71%"></span><span class="thr" style="left:75%"></span></span><span class="pct">71%</span></div></div></details>
+      <details class="sec"><summary><span class="title">Review</span><span class="line">3 ready · 2 in review · 1 to merge</span><span class="chev"></span></summary><div class="body mini">oldest unreviewed <a href="#">#1762</a> 14 min</div></details>
+      <details class="sec"><summary><span class="title">Lanes</span><span class="line">Infra 60% · Factory 30% · Pres 10%</span><span class="chev"></span></summary><div class="body mini">rank, lane, share as set · <a href="#">Priorities</a></div></details>
       <details class="sec" open><summary><span class="title">Problems</span><span class="led bad"><i></i>2</span><span class="led unm"><i></i>3</span><span class="chev"></span></summary>
         <div class="body">
           <div class="problem"><span class="led bad"><i></i></span><div class="t"><a href="#">Brigid</a> not responding 22 min, holds #1723.</div></div>
@@ -227,12 +228,6 @@ a{color:var(--accent);text-decoration:none}
           <div class="problem"><span class="led unm"><i></i></span><div class="t">Presentation PE liveness unmeasured.</div></div>
           <div class="problem"><span class="led unm"><i></i></span><div class="t">1 seat's context unmeasured.</div></div>
         </div></details>
-      <details class="sec"><summary><span class="title">Seats</span><span class="line">9 ok · 1 down · 2 unm · 1 off</span><span class="chev"></span></summary>
-        <div class="body"><div class="stack"><i style="width:75%;background:var(--accent)"></i><i style="width:17%;background:var(--warning)"></i><i style="width:8%;background:var(--critical)"></i></div><div class="mini" style="margin-top:4px">context: 9 low · 2 mid · 1 high</div></div></details>
-      <details class="sec"><summary><span class="title">Gauges</span><span class="line">xAI 42% · Claude 71% · Cursor unm</span><span class="chev"></span></summary>
-        <div class="body"><div class="meter"><span class="lab">xAI 5 h</span><span class="track"><span class="fill" style="width:42%"></span><span class="thr" style="left:75%"></span></span><span class="pct">42%</span></div><div class="meter warn" style="margin-top:6px"><span class="lab">Claude 5 h</span><span class="track"><span class="fill" style="width:71%"></span><span class="thr" style="left:75%"></span></span><span class="pct">71%</span></div></div></details>
-      <details class="sec"><summary><span class="title">Review</span><span class="line">3 ready · 2 in review · 1 to merge</span><span class="chev"></span></summary><div class="body mini">oldest unreviewed <a href="#">#1762</a> 14 min</div></details>
-      <details class="sec"><summary><span class="title">Lanes</span><span class="line">Infra 56 · Factory 33 · Pres 11</span><span class="chev"></span></summary><div class="body mini">bar = actual, tick = target · <a href="#">Priorities</a></div></details>
     </div>
   </div>
 </div>

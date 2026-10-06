@@ -49,7 +49,7 @@ The tab factory calls Sessions is the **Seats** tab in Mike. It shows every seat
 
 ## 4. The Health tab
 
-**Proposed 2026-10-06, awaiting Tig's word.** Health is the one-screen answer to "is Mike well, and what is it doing". It duplicates no other tab and holds no log; the log is the Logs tab. It is a summary with expanders: each section is one line when closed and opens for detail, and every expander links to the tab that owns the detail. Source: [`mockups/health.html`, the Health tab at desktop and phone widths](mockups/health.html).
+**Proposed 2026-10-06; revised the same day on Tig's riff (Problems last and folding at zero, Lanes as set percents).** Health is the one-screen answer to "is Mike well, and what is it doing". It duplicates no other tab and holds no log; the log is the Logs tab. It is a summary with expanders: each section is one line when closed and opens for detail, and every expander links to the tab that owns the detail. Source: [`mockups/health.html`, the Health tab at desktop and phone widths](mockups/health.html).
 
 The sections, top to bottom:
 
@@ -57,16 +57,16 @@ The sections, top to bottom:
 - **Instance.** One line: instance name, Mike version, project count, seat count, config version. Open: the projects, the serving commit and start time, the config store version with who changed it, humans listed and signed in, attached sessions, API version and open streams.
 - **Control plane.** One line: last webhook age, seat hosts checked in, GitHub reads left. Open: the last webhook event, the store state, the GitHub read reserve as a meter, jobs pending, applied and refused, and a seat-host table (checked in, seats, queue, status).
 - **Loop.** One line: the Running/Paused switch, live or dry-run, cadence, last tick age and duration, counts of seats working and waiting, and what the next tick will do. Open, three columns: **Working on** (seat, assignment, state, the first few with a link to the Board for the rest), **Next** (what the next tick will do: a ready pull request to a named idle reviewer, a send-back to its owner, a follow-up due to Arthur), **Waiting** (pull requests awaiting merge or CI, idle seats with their idle time).
-- **Problems.** One line: the counts and the first problems in words. Open: one line per problem with the LED, the subject linked to its card, a one-clause consequence, a small line of what to do, and a link to the owning tab. Never log text, never a wall.
-- **Rollups**, closed by default, each a one-line summary with chips: **Seats** (liveness counts; open: a stacked bar of context pressure under 60, 60 to 80, over 80 percent, and fleet tokens since mint), **Gauges** (per runtime percent with its mint threshold as a tick mark; unmeasured shown as the word), **Review** (ready, in review, awaiting merge, send-backs; oldest unreviewed), **Lanes** (actual versus target share per lane as a bar with a tick).
+- **Rollups**, closed by default, each a one-line summary with chips: **Seats** (liveness counts; open: a stacked bar of context pressure under 60, 60 to 80, over 80 percent, and fleet tokens since mint), **Gauges** (per runtime percent with its mint threshold as a tick mark; unmeasured shown as the word), **Review** (ready, in review, awaiting merge, send-backs; oldest unreviewed), **Lanes** (the priorities list as set: rank, lane, share percent; a reminder of how priorities are set, not a measurement, so no actual versus target here; that lives on the Priorities tab).
+- **Problems**, last. One line with the counts; at zero it is that one line, "nothing needs attention", and nothing more. Open: one line per problem with the LED, the subject linked to its card, a one-clause consequence, a small line of what to do, and a link to the owning tab. It is a list of things a human must act on now, with a fixed shape per line; it never carries log text and never grows into a log.
 
 ### 4.1 Desktop, 1180 px
 
-![The Health tab at 1180 px: Instance and Control plane side by side, Loop with working, next and waiting columns, Problems one line each, then Seats, Gauges, Review and Lanes rollups closed](mockups/health-desktop.png)
+![The Health tab at 1180 px: Instance and Control plane side by side, Loop with working, next and waiting columns, Seats, Gauges, Review and Lanes rollups closed, Problems last with one line each](mockups/health-desktop.png)
 
 ### 4.2 Phone, 375 px
 
-<img src="mockups/health-phone.png" width="375" alt="The Health tab at 375 px: sections stacked, Loop and Problems open, rollups closed with one-line summaries">
+<img src="mockups/health-phone.png" width="375" alt="The Health tab at 375 px: sections stacked, Loop open, rollups closed with one-line summaries, Problems last and open">
 
 ## 5. Tabs still to mock up
 
