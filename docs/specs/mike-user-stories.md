@@ -8,6 +8,8 @@
 
 ## 1. Dashboard and UI stories
 
+These are the requirements of the rewritten client ([mike.md §7, the dashboard](mike.md#7-the-dashboard)). The contract they read and write is [Mike's dashboard API](mike-dashboard-api.md); factory evidence below is provenance only.
+
 ### 1.1 Observe the fleet
 
 #### MS-001 One table of every seat
@@ -18,19 +20,19 @@ Verdict: CHANGE: rows come from role config and the pool ([mike.md §3.1, pool, 
 
 #### MS-002 Liveness in four words
 As a human (Tig today), I want each seat's liveness as one of four words with the reason on hover, identical for every runtime, so that "no session" and "session not responding" never look alike.
-Evidence: [factory dashboard rules.mjs line 878, the liveness cell](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L878).
+Evidence: [factory dashboard rules.mjs line 878, the liveness cell](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L878); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: for cursor-cloud, claude-cloud and grok-tmux seats the word is one of `not-minted`, `responding`, `not-responding`, `unmeasured`; every non-responding word has a non-empty reason; one function computes it (test).
 Verdict: KEEP.
 
 #### MS-003 Liveness opens the vendor session
 As a human (Tig today), I want the liveness cell to open the vendor session when a seat is minted, so that I can watch it in one click.
-Evidence: [factory dashboard rules.mjs line 898, the liveness link](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L898).
+Evidence: [factory dashboard rules.mjs line 898, the liveness link](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L898); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: a link exists if and only if the word is `responding` or `not-responding` and the URL is http(s).
 Verdict: KEEP.
 
 #### MS-004 Assignment shown per seat
 As a human (Tig today), I want each seat's assignment as a linked `owner/repo#N` with its title, or idle, so that I see what each seat is on and in which project.
-Evidence: [factory dashboard rules.mjs line 840, the assignment cell](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L840).
+Evidence: [factory dashboard rules.mjs line 840, the assignment cell](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L840); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: the cell matches the `seat:<name>` label on GitHub for 100% of rows in a 20-row sample; a pull request links to `/pull/N`.
 Verdict: CHANGE: the label is the truth and the store a cache ([mike.md §3.1, pool, assignment and share](mike.md#31-pool-assignment-share)); the project is named on the cell.
 
@@ -42,25 +44,25 @@ Verdict: KEEP.
 
 #### MS-006 Page updates by itself
 As a human (Tig today), I want an open page to update by itself when state changes, so that I never reload.
-Evidence: [factory dashboard app.js line 2685, the live update stream](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2685).
+Evidence: [factory dashboard app.js line 2685, the live update stream](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2685); [Mike dashboard API §4, the stream](mike-dashboard-api.md#4-the-stream).
 Acceptance: a store change reaches an open page in under 2 s plus network time.
 Verdict: KEEP.
 
 #### MS-007 Seat page for diagnosis
 As a human (Tig today), I want a seat page with liveness, last mint, last steer, pending steer, and the stored session log, so that I can diagnose one seat.
-Evidence: [factory dashboard app.js line 2502, the seat page](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2502).
+Evidence: [factory dashboard app.js line 2502, the seat page](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2502); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
 Acceptance: `/sessions/<seat>` shows all 5 blocks; a missing log reads `unmeasured`.
 Verdict: KEEP.
 
 #### MS-008 Arthur reads the same API
 As Arthur (arbiter), I want the seat list, verbs, assignments and Health over the same API with my seat token, so that my decisions use a human's view.
-Evidence: [factory dashboard rules.mjs line 7, the shared row rules](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L7).
+Evidence: [factory dashboard rules.mjs line 7, the shared row rules](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L7); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
 Acceptance: the sessions read with a seat token returns rows byte-identical to the rows the page draws.
 Verdict: KEEP.
 
 #### MS-009 Runtime and host per row
 As a human (Tig today), I want each row to name the seat's runtime and host, so that I know where a seat runs without expecting it to carry a control-plane key.
-Evidence: [factory harness api.py line 2210, the runtime and host fields](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L2210).
+Evidence: [factory harness api.py line 2210, the runtime and host fields](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L2210); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: every row shows a runtime from the config list and a host or `cloud`; 0 rows carry the per-seat "acts through the control plane" text.
 Verdict: CHANGE: every seat acts through the control plane ([mike.md §4, runtimes](mike.md#4-runtimes)), so the special-case marker goes.
 
@@ -68,25 +70,25 @@ Verdict: CHANGE: every seat acts through the control plane ([mike.md §4, runtim
 
 #### MS-010 Steer one seat from its page
 As a human (Tig today), I want to type a steer on a seat's page and send it, so that I can redirect one seat fast.
-Evidence: [factory dashboard app.js line 2513, the seat page steer box](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2513).
-Acceptance: one POST `{verb:steer, seats:[name], prompt}`; the button is disabled unless the row's `verbs` lists steer; the answer names confirmed or not confirmed.
-Verdict: KEEP.
+Evidence: [factory dashboard app.js line 2513, the seat page steer box](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2513); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
+Acceptance: one POST `{verb:steer, seats:[name], prompt}` answered 202 with a job id; the button is disabled unless the row's `verbs` lists steer; the job's outcome names confirmed or not confirmed.
+Verdict: CHANGE: 202 with a job id; the outcome arrives on the `jobs` part, not in a synchronous answer ([Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands)).
 
 #### MS-011 Steer several seats at once
 As a human (Tig today), I want to steer several checked seats at once with one prompt and an optional assignment, so that I can redirect a group.
-Evidence: [factory dashboard app.js line 1377, the multi-seat steer](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1377).
+Evidence: [factory dashboard app.js line 1377, the multi-seat steer](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1377); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: one POST with `seats` equal to every checked name; refused before sending when prompt and assignment are both empty.
 Verdict: KEEP.
 
 #### MS-012 Set or clear an assignment
 As a human (Tig today), I want to set a seat's assignment (`owner/repo#N`) while minting, steering or restarting, and clear it with `idle`, so that I own the durable assignment.
-Evidence: [factory dashboard verbs.mjs line 106, the assignment input](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L106).
+Evidence: [factory dashboard verbs.mjs line 106, the assignment input](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L106); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: after a save the `seat:<name>` label is on that issue within one tick; empty input changes nothing; `idle` removes the label.
 Verdict: CHANGE: the write is the label in the named project, recorded first.
 
 #### MS-013 Pending steer shown apart
 As a human (Tig today), I want a pending steer shown apart from the last confirmed one, with its age and why it waits, so that I know why a steer has not landed.
-Evidence: [factory dashboard rules.mjs line 914, the pending steer cell](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L914).
+Evidence: [factory dashboard rules.mjs line 914, the pending steer cell](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L914); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: with the loop Paused and a steer pending, the cell reads "pending, not delivered: Paused, <age>" and a second steer to that seat is refused.
 Verdict: CHANGE: at most one pending steer per seat ([gate 5, one pending steer](mike.md#33-gates-mike-enforces-for-every-caller)) with a reason, replacing the separate "Assignments untouched" finding.
 
@@ -98,13 +100,13 @@ Verdict: CHANGE: factory clears Stop on any human steer; Mike lets a human or Ar
 
 #### MS-015 Edit the priorities list
 As a human (Tig today), I want a priorities list with one row per lane that I can reorder by tap or drag and give a note per row, so that I set what the fleet works on from phone or desk.
-Evidence: [factory dashboard app.js line 2143, the priorities editor](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2143).
+Evidence: [factory dashboard app.js line 2143, the priorities editor](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2143); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: each reorder or note edit is one POST and one config-store version; the list always has exactly one row per configured lane; adding or deleting a row is refused and names the lanes config; up and down work without drag.
-Verdict: CHANGE: priorities list, not direction; one row per lane, so every lane is ranked; rows change only when the lanes in config change ([mike.md §3, the seat model, lanes](mike.md#3-the-seat-model), [mike.md §3.1, pool, assignment and share](mike.md#31-pool-assignment-share)); the API's `direction` command is renamed at the next major ([decision 8, priorities replace direction](mike.md#11-decisions)).
+Verdict: CHANGE: priorities list, not direction; one row per lane, so every lane is ranked; rows change only when the lanes in config change ([mike.md §3, the seat model, lanes](mike.md#3-the-seat-model), [mike.md §3.1, pool, assignment and share](mike.md#31-pool-assignment-share)); Mike's API has `POST priorities` (reorder or note) and no `direction` command ([Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands), [decision 8, priorities replace direction](mike.md#11-decisions)).
 
 #### MS-016 Rows follow configured lanes
 As a human (Tig today), I want the priorities rows built from the configured lanes, not typed, so that the list cannot contain a typo or miss a lane.
-Evidence: [factory dashboard rules.mjs line 1227, the lane picker](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1227).
+Evidence: [factory dashboard rules.mjs line 1227, the lane picker](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1227); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: adding a lane in config adds one row at the bottom and removing one removes its row, each one config-store version; there is no lane picker and no free-text lane.
 Verdict: CHANGE: factory's picker guards typed rows; Mike has no typed rows ([mike.md §3, the seat model, lanes](mike.md#3-the-seat-model)).
 
@@ -116,9 +118,9 @@ Verdict: CHANGE: no seed file view; shipped defaults and instance config are sep
 
 #### MS-018 Arthur steers with his token
 As Arthur (arbiter), I want to steer a seat with my seat token when the caller matrix allows it, and a denied attempt recorded with my name, so that I assign work without a click and a denial is evidence.
-Evidence: [factory harness api.py line 4686, the seat-token steer check](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L4686).
-Acceptance: an allowed call answers with `actor=<seat>`; a denied one answers 403 and writes a record with `caller=<seat>`, outcome refused.
-Verdict: CHANGE: every gate in [mike.md §3.3, gates for every caller](mike.md#33-gates-mike-enforces-for-every-caller) applies to Arthur's steers as to the loop's.
+Evidence: [factory harness api.py line 4686, the seat-token steer check](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L4686); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
+Acceptance: an allowed call answers 202 and its job reads `actor=<seat>`; a denied one answers 403 and writes a record with `caller=<seat>`, outcome refused.
+Verdict: CHANGE: every gate in [mike.md §3.3, gates for every caller](mike.md#33-gates-mike-enforces-for-every-caller) applies to Arthur's steers as to the loop's; the actor is on the job row ([Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands)).
 
 #### MS-019 Steer only owner-assigned work
 As the loop, I want to steer only issues and pull requests assigned to `gh_user`, and a human to confirm any change to it, so that a wrong login cannot start spending.
@@ -150,13 +152,13 @@ Verdict: CHANGE: reviewer independence and one-pull-request-per-reviewer are gat
 
 #### MS-023 Mint a seat with no session
 As a human (Tig today), I want to mint a seat that has no session, wait-only, optionally with an assignment its first steer carries, so that I bring it into being.
-Evidence: [factory dashboard verbs.mjs line 62, the mint verb](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L62).
+Evidence: [factory dashboard verbs.mjs line 62, the mint verb](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L62); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: enabled only when every selected row lists mint; one decision record per seat before the vendor call; the new session reads its brief and waits ([mike.md §3.2, mint, remint, steer](mike.md#32-mint-remint-steer)).
 Verdict: KEEP.
 
 #### MS-024 Restart a stuck seat
 As a human (Tig today), I want to restart a seat after one confirm, keeping its assignment, so that I replace a stuck session.
-Evidence: [factory dashboard verbs.mjs line 63, the restart verb](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L63).
+Evidence: [factory dashboard verbs.mjs line 63, the restart verb](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L63); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: body carries `confirm:"restart"`; the label is unchanged afterwards; one restart record exists.
 Verdict: KEEP.
 
@@ -168,27 +170,27 @@ Verdict: CHANGE: factory archives cursor-cloud and claude-tmux only; Mike archiv
 
 #### MS-026 One verb on checked rows
 As a human (Tig today), I want to check rows, or all rows, and run one verb on all of them, so that I act on a group.
-Evidence: [factory dashboard app.js line 1562, the row checkboxes](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1562).
+Evidence: [factory dashboard app.js line 1562, the row checkboxes](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1562); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: the bar reads "N seats selected"; a verb is enabled only if every checked row lists it.
 Verdict: KEEP.
 
 #### MS-027 Verb buttons explain themselves
 As a human (Tig today), I want each verb button to say what it does and why it is off, in the server's words, so that I do not guess and the page cannot drift.
-Evidence: [factory dashboard verbs.mjs line 71, the verb hover text](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L71).
+Evidence: [factory dashboard verbs.mjs line 71, the verb hover text](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L71); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: 0 why-off strings in the page source; each tooltip equals the server's field for that row and verb.
-Verdict: CHANGE: factory's `verbReason` re-derives the rule in prose and already disagrees with the server ([mike.md §10 item 21, dashboard patches](mike.md#10-what-mike-does-not-re-create)).
+Verdict: CHANGE: factory's `verbReason` re-derives the rule in prose and already disagrees with the server ([mike.md §10 item 21, dashboard patches](mike.md#10-what-mike-does-not-re-create)); Mike's server sends `verb_why` per verb on each `sessionRow` ([Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes)).
 
 #### MS-028 Verbs offered by the control plane
 As a human (Tig today), I want verbs offered only when the control plane lists them for the row, so that I cannot mint over a responding seat: one session per seat name.
-Evidence: [factory dashboard verbs.mjs line 35, the row verb list check](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L35).
+Evidence: [factory dashboard verbs.mjs line 35, the row verb list check](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/verbs.mjs#L35); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: no button is enabled for a verb a selected row's `verbs` lacks; the server refuses the verb anyway with a record; a responding or unmeasured row never lists mint ([gate 7, one session per seat name](mike.md#33-gates-mike-enforces-for-every-caller)).
 Verdict: KEEP.
 
 #### MS-029 Commands shown as notifications
 As a human (Tig today), I want each command I send shown as a notification that moves from sent to done, started or refused with the why, so that I know what happened without reading logs.
-Evidence: [factory dashboard rules.mjs line 1032, the command notifications](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1032).
+Evidence: [factory dashboard rules.mjs line 1032, the command notifications](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1032); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: a notification appears at click time carrying the job id ([MS-137, job ids for every command](#ms-137-job-ids-for-every-command)) and is updated by the answer; an identical pending command is not re-sent.
-Verdict: CHANGE: keyed by job id, not by a 30-second wait.
+Verdict: CHANGE: keyed by job id from the 202 and updated from the `jobs` part, not by a 30-second wait ([Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands)).
 
 #### MS-030 Change a role's vendor and model
 As a human (Tig today), I want to change a role's vendor, runtime and model and choose remint now, when idle, or at the next reboot, so that I control when the money is spent.
@@ -224,37 +226,37 @@ Verdict: KEEP.
 
 #### MS-035 One Running or Paused switch
 As a human (Tig today), I want one Running/Paused switch for the loop that acts on click, so that I can stop all automated action at once.
-Evidence: [factory dashboard app.js line 956, the Running/Paused switch](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L956).
-Acceptance: while Paused a tick records 0 seat actions; a repeat click answers "already Paused".
-Verdict: KEEP.
+Evidence: [factory dashboard app.js line 956, the Running/Paused switch](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L956); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
+Acceptance: while Paused a tick records 0 seat actions; a repeat click's job is applied with why `already Paused`.
+Verdict: CHANGE: Running or Paused is a setting key written by `POST settings`, its answer a job ([Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands)).
 
 #### MS-036 Live or dry-run loop mode
 As a human (Tig today), I want loop mode live or dry-run, with a confirm only when going live, so that dry-run is safe and live is deliberate.
-Evidence: [factory dashboard rules.mjs line 1543, the loop mode confirm](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1543).
+Evidence: [factory dashboard rules.mjs line 1543, the loop mode confirm](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1543); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: switching to live opens a confirm, to dry-run does not; in dry-run every verb writes a record and sends 0 bytes to any vendor or GitHub.
 Verdict: KEEP.
 
 #### MS-037 Loop cadence from 1 to 60 minutes
 As a human (Tig today), I want the loop cadence settable from 1 to 60 minutes, so that I trade responsiveness for cost.
-Evidence: [factory harness settings.py line 409, the cadence setting](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/settings.py#L409).
+Evidence: [factory harness settings.py line 409, the cadence setting](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/settings.py#L409); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: 0 and 61 are refused by the server; a non-integer is refused on the page.
 Verdict: KEEP.
 
 #### MS-038 Settings show source and actor
 As a human (Tig today), I want every setting shown with its value, where it came from, and who changed it last and when, so that I can trust and audit settings.
-Evidence: [factory dashboard app.js line 1141, the settings table](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1141).
-Acceptance: 4 columns: Setting, Value, From (shipped default or instance), Changed by "email, ISO time".
-Verdict: KEEP.
+Evidence: [factory dashboard app.js line 1141, the settings table](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1141); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
+Acceptance: 4 columns: Setting, Value, From (`default`, `instance`, `store` or `unmeasured`), Changed by (login and ISO 8601 time).
+Verdict: CHANGE: `settingRow` carries `source`, `changed_by` as a login (not an email header) and `changed_at` ([Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes)).
 
 #### MS-039 Schema check before save
 As a human (Tig today), I want a value checked against the store's schema before it saves, so that a typo fails on the page and not in the loop.
-Evidence: [factory dashboard rules.mjs line 1517, the schema check](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1517).
+Evidence: [factory dashboard rules.mjs line 1517, the schema check](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1517); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: invalid input shows "<label> must be <type>" and writes no version; the page and the server use one schema file.
 Verdict: KEEP.
 
 #### MS-040 Copyable View Settings dump
 As a human (Tig today), I want a View Settings dump of every effective value with its source that I can copy, so that I can paste the config into an issue.
-Evidence: [factory dashboard app.js line 892, View Settings](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L892).
+Evidence: [factory dashboard app.js line 892, View Settings](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L892); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
 Acceptance: JSON with `{value, source}` per key; a secret appears by name only; Copy says "Copied."
 Verdict: KEEP.
 
@@ -280,19 +282,19 @@ Verdict: CHANGE: the key set shrinks to Mike's (loop window, read reserve, fill-
 
 #### MS-044 Health first with snapshot age
 As a human (Tig today), I want Health as the first tab with the snapshot age ticking, so that I see at a glance whether the data is fresh.
-Evidence: [factory dashboard app.js line 606, the Health tab](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L606).
-Acceptance: "updated Ns ago" changes every second from an ISO `snapshot_ts`; with none it reads "update time not recorded".
-Verdict: KEEP.
+Evidence: [factory dashboard app.js line 606, the Health tab](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L606); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
+Acceptance: "updated Ns ago" changes every second from the ISO `snapshot_at`; with none it reads "update time not recorded".
+Verdict: CHANGE: the field is `snapshot_at` on the `health` part ([Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes)).
 
 #### MS-045 Needs attention groups faults
 As a human (Tig today), I want a Needs attention block that groups every fault by kind, worst first, with counts and links, so that I triage in one read.
-Evidence: [factory dashboard app.js line 640, the Needs attention block](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L640).
+Evidence: [factory dashboard app.js line 640, the Needs attention block](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L640); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: the summary reads "N not ok, M unmeasured" or "Nothing needs attention."; not-ok groups precede unmeasured.
 Verdict: KEEP.
 
 #### MS-046 Loop heartbeat and timer rows
 As a human (Tig today), I want loop rows for heartbeat, mode, Running/Paused and timer, with the heartbeat stamped only by the loop, so that a stopped loop never reads as a Paused or healthy one.
-Evidence: [factory dashboard rules.mjs line 635, the loop rows](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L635).
+Evidence: [factory dashboard rules.mjs line 635, the loop rows](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L635); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: a hand run of a verb leaves the heartbeat unchanged; timer not active is marked fault; Paused is marked paused.
 Verdict: CHANGE: no row for a poke heartbeat or a tick verb list; one loop, one heartbeat.
 
@@ -304,13 +306,13 @@ Verdict: KEEP.
 
 #### MS-048 Hosts table shows host health
 As a human (Tig today), I want a Hosts table with reachability, seat count, check-in age, checkout commit and pending actuations, so that I see which seat host is down.
-Evidence: [factory dashboard rules.mjs line 775, the Hosts table](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L775).
+Evidence: [factory dashboard rules.mjs line 775, the Hosts table](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L775); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: a host with a stale check-in is red with a note row; a host with 0 seats that never checked in is not in the payload.
 Verdict: CHANGE: the server omits never-used hosts; the page filters nothing ([mike.md §10 item 21, dashboard patches](mike.md#10-what-mike-does-not-re-create)).
 
 #### MS-049 Served commit and checkout lag
 As a human (Tig today), I want the commit this control plane serves and how far the loop checkout is behind `main`, linked, so that I know whether a merge is live.
-Evidence: [factory dashboard rules.mjs line 577, the served commit row](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L577).
+Evidence: [factory dashboard rules.mjs line 577, the served commit row](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L577); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: "serving <branch · sha8>, started <ISO time>"; the loop checkout item says "N behind".
 Verdict: KEEP.
 
@@ -340,51 +342,51 @@ Verdict: CHANGE: refusal streaks only; Mike has no holds ([mike.md §10 item 1, 
 
 #### MS-054 Four distinct connection failures
 As a human (Tig today), I want signed out, not allowed, unreachable and wrong version each said differently, so that a refusal never looks like a dead control plane.
-Evidence: [factory dashboard client.mjs line 108, the connection error states](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/client.mjs#L108).
+Evidence: [factory dashboard client.mjs line 108, the connection error states](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/client.mjs#L108); [Mike dashboard API §3, version](mike-dashboard-api.md#3-version), [Mike dashboard API §4, the stream](mike-dashboard-api.md#4-the-stream).
 Acceptance: four distinct texts; 401 and 403 do not retry; other failures retry every 3 s.
 Verdict: KEEP.
 
 #### MS-055 Live stream recovers itself
 As a human (Tig today), I want the live stream to recover by itself after sleep, a proxy drop or a control plane restart, so that an open tab stays true.
-Evidence: [factory dashboard client.mjs line 280, the stream reconnect](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/client.mjs#L280).
+Evidence: [factory dashboard client.mjs line 280, the stream reconnect](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/client.mjs#L280); [Mike dashboard API §4, the stream](mike-dashboard-api.md#4-the-stream).
 Acceptance: 45 s with no bytes, or a return to the tab, opens a new stream that resends every opening frame.
 Verdict: KEEP.
 
 #### MS-056 Health from the tick snapshot
 As a human (Tig today), I want Health built from a snapshot the tick wrote, and a stale snapshot said on open pages, so that polling the page costs nothing and silence never reads as healthy.
-Evidence: [factory harness api.py line 3995, the Health snapshot read](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L3995).
-Acceptance: a Health request makes 0 vendor and 0 GitHub calls (test); within one keep-alive after the loop window passes, one frame says "health snapshot stale" and parts read `unmeasured`.
-Verdict: KEEP.
+Evidence: [factory harness api.py line 3995, the Health snapshot read](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L3995); [Mike dashboard API §4, the stream](mike-dashboard-api.md#4-the-stream).
+Acceptance: a Health request makes 0 vendor and 0 GitHub calls (test); within one keep-alive after the loop window passes, one `health` frame has `stale` true and the item "health snapshot stale", even with a log frame in the same pass.
+Verdict: CHANGE: the stale signal is `stale` true on one `health` frame per stale period ([Mike dashboard API §4, the stream](mike-dashboard-api.md#4-the-stream)).
 
 #### MS-057 Watch and drive a tmux pane
 As a human (Tig today), I want to watch a tmux seat's pane in the browser and take control to type, one human at a time, so that I can unstick it without SSH.
 Evidence: [factory dashboard app.js line 2451, the browser terminal](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2451).
 Acceptance: view mode sends 0 keys; keys reach the pane only after Take control; the seat host defers steers and restarts while a human has control and runs each once after.
-Verdict: KEEP.
+Verdict: CHANGE: deferred from API 1.0.0; served by the seat host over a two-way channel and added later as a minor bump ([Mike dashboard API §8, what changed and the terminal deferral](mike-dashboard-api.md#8-what-changed-from-the-starting-point)).
 
 ### 1.7 Audit records
 
 #### MS-058 Filterable log in the URL
 As a human (Tig today), I want the log under Health, filterable by level and up, component, seat, command, project and text, with the filter in the URL, so that I can share or reload a filtered view.
-Evidence: [factory dashboard app.js line 1767, the log filters](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1767).
+Evidence: [factory dashboard app.js line 1767, the log filters](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L1767); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
 Acceptance: the URL carries `log_*` keys; Back and Forward restore the filter; Clear empties every field.
 Verdict: CHANGE: adds a project filter ([mike.md §1.2, multi-repository, one instance](mike.md#12-multi-repository-one-instance)).
 
 #### MS-059 Since view reads whole window
 As a human (Tig today), I want a "since" log view that reads the whole window up to 2000 rows, so that a count on Health matches the lines I see.
-Evidence: [factory dashboard rules.mjs line 1151, the since log view](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1151).
+Evidence: [factory dashboard rules.mjs line 1151, the since log view](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1151); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
 Acceptance: a since query sends `limit=2000`; rereads come at most every 30 s, one in flight.
 Verdict: KEEP.
 
 #### MS-060 Every command recorded with identity
 As a human (Tig today), I want every dashboard command recorded with my identity and its outcome, so that I can audit who did what.
-Evidence: [factory harness api.py line 4717, the command record](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L4717).
+Evidence: [factory harness api.py line 4717, the command record](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L4717); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: one record per command, pending then applied, refused or cancelled, with `actor` and the job id.
 Verdict: KEEP.
 
 #### MS-061 Settings history by version
 As a human (Tig today), I want every settings change stored as a new version with actor, and a history I can list, so that "who changed what" needs no pull request.
-Evidence: [factory harness api.py line 5131, the settings versions](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L5131).
+Evidence: [factory harness api.py line 5131, the settings versions](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L5131); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
 Acceptance: the answer says "saved as version N"; one log line names key, actor, from and to; `settings history` lists every version.
 Verdict: KEEP.
 
@@ -392,31 +394,31 @@ Verdict: KEEP.
 
 #### MS-062 Hard Reboot the fleet
 As a human (Tig today), I want Hard Reboot (archive and remint every seat, restart the control plane), optionally with Reset Defaults, so that I can start the fleet clean.
-Evidence: [factory dashboard rules.mjs line 1290, Hard Reboot](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1290).
-Acceptance: one confirm; the record names a human actor; with Reset Defaults every seat ends idle and 0 `seat:` labels remain, written as one record; a seat token is refused.
-Verdict: KEEP.
+Evidence: [factory dashboard rules.mjs line 1290, Hard Reboot](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1290); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
+Acceptance: one confirm (`confirm` equals the mode); the record names a human actor; after `reset-defaults` every seat ends idle and 0 `seat:` labels remain, written as one record; a seat token is refused.
+Verdict: CHANGE: Reset Defaults is its own fleet mode `reset-defaults`, run as a separate job beside `hard-reboot` ([Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands)).
 
 #### MS-063 Orchestrator Reboot starts fresh
 As Arthur (arbiter), I want an Orchestrator Reboot to archive and remint K and me with idle assignments, so that a confused orchestrator starts fresh.
-Evidence: [factory dashboard rules.mjs line 1291, Orchestrator Reboot](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1291).
+Evidence: [factory dashboard rules.mjs line 1291, Orchestrator Reboot](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1291); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: only the `arbiter` and `tpm` role seats are reminted; both read idle afterwards.
 Verdict: KEEP.
 
 #### MS-064 Fill-Missing closes gaps
 As a human (Tig today), I want Fill-Missing to adopt or mint every absent pool seat and leave live ones alone, capped per window, so that gaps close in one click.
-Evidence: [factory dashboard rules.mjs line 1293, Fill-Missing](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1293).
+Evidence: [factory dashboard rules.mjs line 1293, Fill-Missing](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1293); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: 0 responding or unmeasured seats are reminted ([gate 7, one session per seat name](mike.md#33-gates-mike-enforces-for-every-caller)); at most `max_creates` per seat per `window_minutes`; the confirm states the mint count and the vendor each bills.
 Verdict: CHANGE: adopt, not claim; never a lane-PE; the cost line comes from vendor config, not fixed text.
 
 #### MS-065 Fleet commands never collide
 As a human (Tig today), I want a running fleet command shown as progress, and the server to refuse any command that collides with it, so that two commands cannot collide.
-Evidence: [factory dashboard rules.mjs line 1005, the fleet command progress](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1005).
+Evidence: [factory dashboard rules.mjs line 1005, the fleet command progress](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1005); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: "<mode>: step N of M, started by <actor>" shows to every viewer; the server answers 409 to a colliding seat verb or fleet mode.
 Verdict: CHANGE: factory's seat verbs have no server busy check, only a client lock ([mike.md §10 item 21, dashboard patches](mike.md#10-what-mike-does-not-re-create)).
 
 #### MS-066 Restart the control plane
 As a human (Tig today), I want to restart the control plane process from the page, even while Paused, so that I recover a stuck API without SSH.
-Evidence: [factory dashboard rules.mjs line 1294, the control plane restart](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1294).
+Evidence: [factory dashboard rules.mjs line 1294, the control plane restart](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L1294); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: one confirm; the stream reconnects in under 10 s; 0 seats reminted.
 Verdict: KEEP.
 
@@ -424,7 +426,7 @@ Verdict: KEEP.
 
 #### MS-067 Microsoft sign-in renews silently
 As a human (Tig today), I want to sign in with Microsoft, renew silently, and be told when a renewal needs me, so that a long session does not just die.
-Evidence: [factory dashboard client.mjs line 158, the sign-in renewal](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/client.mjs#L158).
+Evidence: [factory dashboard client.mjs line 158, the sign-in renewal](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/client.mjs#L158); [Mike dashboard API §2, identity](mike-dashboard-api.md#2-identity).
 Acceptance: a silent renewal shows "Your sign-in renewed silently." for 10 s; an interactive need redirects with a notice.
 Verdict: CHANGE: identity provider, base path and origins are instance config ([mike.md §7, the dashboard](mike.md#7-the-dashboard), [tig/mike#1, the dashboard rewrite](https://github.com/tig/mike/issues/1)).
 
@@ -432,19 +434,19 @@ Verdict: CHANGE: identity provider, base path and origins are instance config ([
 
 #### MS-068 Tokens per seat and fleet
 As a human (Tig today), I want tokens per seat since its last mint and a fleet total that never counts unmeasured as zero, so that I see spend.
-Evidence: [factory dashboard app.js line 530, the token columns](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L530).
+Evidence: [factory dashboard app.js line 530, the token columns](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L530); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: the total reads "incomplete" with an unmeasured count when any seat is unmeasured; each bar is that seat's percent of the measured total.
 Verdict: KEEP.
 
 #### MS-069 Context fullness per seat
 As a human (Tig today), I want each seat's context fullness, fullest first, so that I can remint a seat before it summarizes.
-Evidence: [factory dashboard rules.mjs line 414, the context fullness column](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L414).
+Evidence: [factory dashboard rules.mjs line 414, the context fullness column](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L414); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: measured seats sorted by percent descending; "summarized" marked; unmeasured seats last with their reason.
 Verdict: KEEP.
 
 #### MS-070 Vendor included pools shown
 As a human (Tig today), I want each vendor's included pools with percent used, age and overage, so that I know when we start paying more.
-Evidence: [factory dashboard app.js line 363, the included pools gauges](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L363).
+Evidence: [factory dashboard app.js line 363, the included pools gauges](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L363); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: one row per configured pool reading "N% used, <age>" or "unmeasured, <reason>"; a pool with no gauge source is named as not shown.
 Verdict: CHANGE: pools come from vendor config, not two fixed Cursor names and a code tuple.
 
@@ -851,13 +853,13 @@ Verdict: CHANGE: per project across the instance; urgency is a label, so the Pri
 
 #### MS-128 Review surface lists ready pulls
 As a human (Tig today), I want a review surface listing every ready pull request, the reviewer assigned to each, and each verdict on the current head, so that I see review state without opening GitHub.
-Evidence: [factory dashboard rules.mjs line 57, the router has no review route](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L57); [mike.md §7, the dashboard](mike.md#7-the-dashboard).
+Evidence: [factory dashboard rules.mjs line 57, the router has no review route](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L57); [mike.md §7, the dashboard](mike.md#7-the-dashboard); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: the rows equal the open non-draft pull requests across all projects; each shows reviewer or `none`, and `Merge`, `Send back`, `Hold` or `pending` for the head sha.
 Verdict: NEW.
 
 #### MS-129 Review surface by urgency then age
 As a human (Tig today), I want the review surface ordered by urgency, then by the time each pull request went ready, oldest first, with send-backs and their author seats listed apart, so that the most urgent, oldest wait is on top.
-Evidence: [factory harness review.py line 123, the reviewer assignment](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/review.py#L123); [mike.md §3.4, review and send-back](mike.md#34-review-and-send-back).
+Evidence: [factory harness review.py line 123, the reviewer assignment](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/review.py#L123); [mike.md §3.4, review and send-back](mike.md#34-review-and-send-back); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: row order is `critical`, `high`, `normal`, `no`, then ascending ready time from GitHub events inside each; each send-back row names the author seat and its next-assignment state.
 Verdict: NEW.
 
@@ -883,7 +885,7 @@ Verdict: NEW.
 
 #### MS-132 Board Arthur read is shown
 As a human (Tig today), I want the board Arthur last read shown on the dashboard with its tick time, so that I can judge his choices against the same input.
-Evidence: [factory dashboard rules.mjs line 57, no board view](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L57); [mike.md §7, the dashboard](mike.md#7-the-dashboard).
+Evidence: [factory dashboard rules.mjs line 57, no board view](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L57); [mike.md §7, the dashboard](mike.md#7-the-dashboard); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
 Acceptance: the page payload's board equals, byte for byte, the board in Arthur's last follow-up record.
 Verdict: NEW.
 
@@ -907,7 +909,7 @@ Verdict: NEW.
 
 #### MS-175 Board shows last completed assignment
 As Arthur (arbiter), I want the board to show each idle seat's last completed assignment, so that I can pick a seat whose context fits the next issue.
-Evidence: [factory harness idle_steer.py line 1279, the follow-up carries no board](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/idle_steer.py#L1279); [mike.md §3.1, pool, assignment and share](mike.md#31-pool-assignment-share), [mike.md §3.2, mint, remint, steer](mike.md#32-mint-remint-steer).
+Evidence: [factory harness idle_steer.py line 1279, the follow-up carries no board](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/idle_steer.py#L1279); [mike.md §3.1, pool, assignment and share](mike.md#31-pool-assignment-share), [mike.md §3.2, mint, remint, steer](mike.md#32-mint-remint-steer); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: each idle seat's board row names `owner/repo#N` of the last item whose `seat:<name>` label it held when the item closed, or `none`; the dashboard's board view shows the same.
 Verdict: NEW.
 
@@ -921,7 +923,7 @@ Verdict: NEW.
 
 #### MS-136 Target versus actual share
 As a human (Tig today), I want Health to show target versus actual share per priority row, so that a bad judgment by Arthur is visible.
-Evidence: [factory#1336 section 4, the harness redesign](https://github.com/excaliwire/factory/issues/1336); [mike.md §9 rule 17, Health shows target versus actual share](mike.md#9-what-mike-keeps).
+Evidence: [factory#1336 section 4, the harness redesign](https://github.com/excaliwire/factory/issues/1336); [mike.md §9 rule 17, Health shows target versus actual share](mike.md#9-what-mike-keeps); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: each row shows target percent and actual percent of assigned workers from labels; a gap over 20 points for 3 ticks is one attention item.
 Verdict: NEW.
 
@@ -929,13 +931,13 @@ Verdict: NEW.
 
 #### MS-137 Job ids for every command
 As a human (Tig today), I want every command to return a job id at once, and its answer to land on a row I can see whenever it finishes, so that an answer after 30 s is not lost.
-Evidence: [factory harness api.py line 4726, synchronous `run_verb`](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L4726); [mike.md §7, the dashboard](mike.md#7-the-dashboard).
+Evidence: [factory harness api.py line 4726, synchronous `run_verb`](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L4726); [mike.md §7, the dashboard](mike.md#7-the-dashboard); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: every command POST answers in under 1 s with a job id; a verb that takes 120 s shows its outcome on that job's row.
 Verdict: NEW.
 
 #### MS-138 ISO 8601 times on the wire
 As a human (Tig today), I want every time on the wire in ISO 8601 with offset, so that the page never parses prose or guesses a year.
-Evidence: [factory harness api.py line 478, `format_for_human`](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L478); [mike.md §7, the dashboard](mike.md#7-the-dashboard).
+Evidence: [factory harness api.py line 478, `format_for_human`](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/api.py#L478); [mike.md §7, the dashboard](mike.md#7-the-dashboard); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: a schema test finds 0 time fields not matching ISO 8601 with offset; the page has 0 time-zone tables.
 Verdict: NEW.
 
@@ -957,8 +959,8 @@ Verdict: CHANGE: today the per-row menu needs a right-click.
 
 #### MS-141 One instance, several projects
 As a human (Tig today), I want one Mike instance to manage several projects with one loop, one store, one dashboard and one priorities list, so that I do not deploy Mike per repository.
-Evidence: [tig/mike#2, the master plan](https://github.com/tig/mike/issues/2); [mike.md §1.2, multi-repository, one instance](mike.md#12-multi-repository-one-instance), [decision 6, one list per instance](mike.md#11-decisions).
-Acceptance: an install with no factory checkout manages two projects from one instance and passes the ported contract tests.
+Evidence: [tig/mike#2, the master plan](https://github.com/tig/mike/issues/2); [mike.md §1.2, multi-repository, one instance](mike.md#12-multi-repository-one-instance), [decision 6, one list per instance](mike.md#11-decisions); [Mike dashboard API §9, where this is tested](mike-dashboard-api.md#9-where-this-is-tested).
+Acceptance: an install with no factory checkout manages two projects from one instance and passes the contract tests in [Mike dashboard API §9, where this is tested](mike-dashboard-api.md#9-where-this-is-tested).
 Verdict: NEW.
 
 #### MS-142 Unlisted repositories refused
@@ -1021,7 +1023,7 @@ Verdict: NEW.
 
 #### MS-172 Session log from every runtime
 As a human (Tig today), I want each runtime to provide a seat's session log, its inputs and responses, with the last steer and the latest response marked, so that I and Arthur see what a seat was told and what it said on any vendor.
-Evidence: [factory dashboard app.js line 2502, the seat page reads a stored log](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2502); [mike.md §4, runtimes](mike.md#4-runtimes).
+Evidence: [factory dashboard app.js line 2502, the seat page reads a stored log](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.js#L2502); [mike.md §4, runtimes](mike.md#4-runtimes); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
 Acceptance: for each configured runtime the log's last input equals the last confirmed steer record's prompt and one response is marked latest; a runtime that cannot read it answers `unmeasured` with a reason; the seat page ([MS-007, seat page for diagnosis](#ms-007-seat-page-for-diagnosis)) reads it.
 Verdict: NEW.
 
@@ -1035,7 +1037,7 @@ Verdict: NEW.
 
 #### MS-152 Seat tokens act only as self
 As a seat (any), I want my token to name me and act only as me, so that a leaked seat token cannot steer or mint another seat.
-Evidence: [factory agent-harness seats.yaml line 57, caller matrix](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/seats.yaml#L57); [mike.md §4, runtimes](mike.md#4-runtimes), [mike.md §9 rule 12, the caller matrix](mike.md#9-what-mike-keeps).
+Evidence: [factory agent-harness seats.yaml line 57, caller matrix](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/seats.yaml#L57); [mike.md §4, runtimes](mike.md#4-runtimes), [mike.md §9 rule 12, the caller matrix](mike.md#9-what-mike-keeps); [Mike dashboard API §2, identity](mike-dashboard-api.md#2-identity).
 Acceptance: a seat token used on any other seat's self-verb is refused with a record; Arthur's and lane-PE steers pass only the matrix rows for their role.
 Verdict: NEW.
 
@@ -1047,7 +1049,7 @@ Verdict: NEW.
 
 #### MS-154 Humans are verified bearers
 As a human (Tig today), I want to be a verified bearer, not a header any local process can set, so that a local script cannot act as me.
-Evidence: [factory dashboard serve.py line 418, adds `X-HGL-Email`](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/serve.py#L418); [mike.md §4, runtimes](mike.md#4-runtimes), [mike.md §10 item 8, a shared secret and a header gate](mike.md#10-what-mike-does-not-re-create).
+Evidence: [factory dashboard serve.py line 418, adds `X-HGL-Email`](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/serve.py#L418); [mike.md §4, runtimes](mike.md#4-runtimes), [mike.md §10 item 8, a shared secret and a header gate](mike.md#10-what-mike-does-not-re-create); [Mike dashboard API §2, identity](mike-dashboard-api.md#2-identity).
 Acceptance: a request with only an email header and no verified bearer is refused 401 on every human-only route.
 Verdict: NEW.
 
@@ -1081,7 +1083,7 @@ Verdict: NEW.
 
 #### MS-159 Revocable attached session tokens
 As a human (Tig today), I want to issue a named, revocable session token to a session I drive (Infra Fable, Factory Fable, my portal), so that it can act through Mike without a seat and without my own credentials.
-Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike) and [mike.md §4, runtimes](mike.md#4-runtimes) (Identity); factory has only a seat token minted from a shared secret, [factory hgl-auth agent_token.py line 54, the shared-secret seat token](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/host/hgl-auth/agent_token.py#L54).
+Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike) and [mike.md §4, runtimes](mike.md#4-runtimes) (Identity); factory has only a seat token minted from a shared secret, [factory hgl-auth agent_token.py line 54, the shared-secret seat token](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/host/hgl-auth/agent_token.py#L54); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: the token carries the session name and its verb list; a revoked token is refused on the next call with a record; no shared secret can mint one.
 Verdict: NEW.
 
@@ -1093,19 +1095,19 @@ Verdict: NEW.
 
 #### MS-161 Attached sessions read the board
 As an attached session, I want to read the board, sessions, health and priorities over the same API a seat reads, so that my judgment uses the operator's view.
-Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [mike.md §3.1, pool, assignment and share](mike.md#31-pool-assignment-share); seats read the same API in [MS-008, Arthur reads the same API](#ms-008-arthur-reads-the-same-api).
-Acceptance: `GET /dashboard/api/sessions` and the board route answer a session token with the same rows the page draws.
+Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [mike.md §3.1, pool, assignment and share](mike.md#31-pool-assignment-share); seats read the same API in [MS-008, Arthur reads the same API](#ms-008-arthur-reads-the-same-api); [Mike dashboard API §5, reads](mike-dashboard-api.md#5-reads).
+Acceptance: `GET {base}/api/sessions` and `GET {base}/api/board` answer a session token with the same rows the page draws.
 Verdict: NEW.
 
 #### MS-162 Attached sessions steer through gates
 As an attached session whose config row allows it, I want to steer a seat through Mike bound by every gate, so that I can direct work at night without a comment Arthur must notice.
-Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [mike.md §3.3, gates for every caller](mike.md#33-gates-mike-enforces-for-every-caller); [factory#1336 comment 2026-10-05 05:18 UTC, the harness redesign](https://github.com/excaliwire/factory/issues/1336) (steers delivered as `Arthur:` comments).
+Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [mike.md §3.3, gates for every caller](mike.md#33-gates-mike-enforces-for-every-caller); [factory#1336 comment 2026-10-05 05:18 UTC, the harness redesign](https://github.com/excaliwire/factory/issues/1336) (steers delivered as `Arthur:` comments); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands).
 Acceptance: a steer from the session passes [gates 1 to 6, owner gate through record before act](mike.md#33-gates-mike-enforces-for-every-caller) or is refused with a record naming the gate; a session whose row lacks `steer` gets 403 and a refused record.
 Verdict: NEW.
 
 #### MS-163 Attached sessions listed apart
 As a human (Tig today), I want attached sessions listed on the dashboard with last call and token age, apart from the Sessions tab, so that I can see who is acting through Mike and revoke one.
-Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [mike.md §7, the dashboard](mike.md#7-the-dashboard).
+Evidence: [mike.md §2.2, attached sessions](mike.md#22-attached-sessions-non-seats-that-act-through-mike), [mike.md §7, the dashboard](mike.md#7-the-dashboard); [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
 Acceptance: one row per token with name, verbs, last call time, issued-at; a Revoke verb with one confirm; the Sessions tab shows no attached session.
 Verdict: NEW.
 
@@ -1159,6 +1161,26 @@ Verdict: NEW.
 As a human, I want a GitHub user not on the instance's human list treated as a contributor, so that their issues and comments are seen but bind nothing.
 Evidence: [mike.md §2.1, humans](mike.md#21-humans).
 Acceptance: a contributor's issue shows on the board as unassigned contributor work; their `waive:`, `reviewer:` and `[Name]:` comments produce 0 records that act; a listed human's assignment of that issue puts it on the board.
+Verdict: NEW.
+
+### 3.14 Dashboard API contract
+
+#### MS-177 Command outcome on the changed row
+As a human (Tig today), I want a command's outcome shown on the row it changed, however long it took, so that I see the result where I acted.
+Evidence: [mike.md §7, the dashboard](mike.md#7-the-dashboard); [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands), [Mike dashboard API §7, payload shapes](mike-dashboard-api.md#7-payload-shapes).
+Acceptance: each seat's outcome from `jobRow.seats` shows on that seat's Sessions row; a steer that takes 120 s shows its outcome there with no reload; a stream reopen restores it from the opening `jobs` frame; `GET {base}/api/jobs?job=<id>` answers the same row.
+Verdict: NEW.
+
+#### MS-178 Stale settings write refused
+As a human (Tig today), I want a settings save based on an old version refused, so that I never overwrite a change someone made after my page loaded.
+Evidence: [Mike dashboard API §6, commands](mike-dashboard-api.md#6-commands); [MS-061, settings history by version](#ms-061-settings-history-by-version).
+Acceptance: a `POST settings` whose `expected_version` is not the current `store_version` answers 409 and writes no version; the page says the setting changed and shows the new value; the save with the current version is applied.
+Verdict: NEW.
+
+#### MS-179 Open streams capped per caller
+As a human (Tig today), I want each caller's open streams capped by config, so that a leaking client or a looping seat cannot exhaust the control plane.
+Evidence: [Mike dashboard API §4, the stream](mike-dashboard-api.md#4-the-stream).
+Acceptance: with the cap at N, the caller's open N+1 answers 429 and the first N stay open; the page says the stream cap is reached, not that the control plane is down.
 Verdict: NEW.
 
 ## 4. Retired stories

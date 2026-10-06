@@ -4,7 +4,9 @@
 
 **Sources read:** excaliwire/factory at [factory at commit bb2bf4c6, the tree this spec read](https://github.com/excaliwire/factory/tree/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8) (2026-10-05): `agent-harness/`, `docs/specs/agent-harness.md`, `docs/specs/dashboard-api.md`, `docs/lexicon.md`; [factory#1336, the harness redesign](https://github.com/excaliwire/factory/issues/1336) and its comments; [factory#1501, the extraction call of 2026-10-01](https://github.com/excaliwire/factory/issues/1501); [tig/mike#1, the dashboard rewrite](https://github.com/tig/mike/issues/1); [tig/mike#2, the master plan](https://github.com/tig/mike/issues/2). Tracking issue: [tig/mike#3, this spec](https://github.com/tig/mike/issues/3).
 
-**Companion files:** [`mike-user-stories.md`, what each role needs](mike-user-stories.md) with the factory evidence for each, and [`mike-lexicon.md`, every factory term kept, renamed, retired or challenged](mike-lexicon.md).
+**Companion files:** [`mike-user-stories.md`, what each role needs](mike-user-stories.md) with the factory evidence for each; [`mike-lexicon.md`, every factory term kept, renamed, retired or challenged](mike-lexicon.md); [`mike-dashboard-api.md`, the dashboard API contract](mike-dashboard-api.md).
+
+**Self-contained.** These files define Mike completely. A link to factory is provenance, where a rule or a story came from, never a definition a reader must go and fetch. Factory's specs are not Mike's contract.
 
 ## 1. What Mike is
 
@@ -192,18 +194,27 @@ Tests must fail on main and pass on the head. The reviewer's verb copies new tes
 
 ## 7. The dashboard
 
-The API contract moves unchanged from factory: [factory docs/specs/dashboard-api.md, the dashboard API contract](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/docs/specs/dashboard-api.md), the schema, `api_version` (6.6.1 at the read; the spec text there still describes 2.0.0 and omits the `settings` frame and route, which the code has), and the contract tests. A breaking change is a major bump. The page stops on a different major. Base path, origins and auth are config ([tig/mike#1, the dashboard rewrite](https://github.com/tig/mike/issues/1)).
+The dashboard is how humans see and control Mike: the fleet, the board, the priorities list, review state, gauges, settings, logs, and every verb a human may run. It is a client of the **Mike dashboard API**, and it is the only client Mike ships; an attached session or a second client speaks the same API.
 
-The dashboard is one client of that API. It is rebuilt from a clean slate against the contract ([tig/mike#1, the dashboard rewrite](https://github.com/tig/mike/issues/1)). The stories it must satisfy are in [the user stories, section 1, dashboard and UI](mike-user-stories.md#1-dashboard-and-ui-stories). What the rewrite adds beyond today's page:
+**The API is Mike's own contract**, written in [`mike-dashboard-api.md`, the dashboard API](mike-dashboard-api.md). Factory's dashboard API was the starting point for that file, nothing more: parts of it were never hardened, its spec text lagged its code, and it was shaped by one client. Nothing in Mike refers to factory's contract as law. What the Mike contract must hold:
 
-- A **review surface**: ready pull requests, which reviewer holds each, and each verdict. Today there is none.
-- **Target versus actual share** per priority row ([factory#1336, the harness redesign](https://github.com/excaliwire/factory/issues/1336), section 4).
-- The **board** Arthur reads, as a human sees it.
-- A **phone layout** for every tab. Today Sessions has 8 columns and no breakpoint, and single-seat verbs need a right-click.
-- A **job id** for every command, so an answer after the 30-second timeout still lands on a row a human can see.
-- Times on the wire are ISO 8601 with offset. The page never parses human prose.
+- **One version, one gate.** The API carries a semantic version. An added field is a minor bump; a removed or renamed field, a changed meaning or a changed event name is a major bump. A client reads the version first and stops, saying it must be updated, on a major it was not built for. It never draws a half-compatible page. A test fails on any schema edit that has no version bump.
+- **Live by push, complete by read.** One server-sent stream carries a frame per part (version, health, sessions, board, priorities, review, gauges, settings, attached sessions, logs) when that part changes, with a keep-alive so a dead stream is noticed. Every part is also a plain JSON read, so a client that cannot hold a stream still works. No message broker.
+- **A command is a job.** Every command returns a job id at once and reports its outcome (applied, refused, cancelled, with the why) by stream and by read, so a slow answer still lands where a human can see it. A command the caller may not run is refused with the caller matrix's reason, not hidden.
+- **Reads cost nothing.** A health or sessions read makes no vendor call, no GitHub call, and no subprocess; it serves what the loop last wrote. A part the loop has not written is absent, and the client says so. It never draws ok for a missing part, and never 0 for unmeasured.
+- **Verbs come from the server.** Each seat row lists the verbs that fit it now. The client enables a verb only when every selected row lists it, and derives nothing from liveness or any other field.
+- **Identity is a verified bearer.** A human, an attached session, a seat, and a seat host each carry their own token; the route says which it needs; no header names a caller.
+- **Times on the wire are ISO 8601 with offset.** The client never parses human prose.
 
-The page derives no verb from any field. The row's `verbs` list is the only source. It draws unmeasured, never 0 and never ok, for a part the loop has not written.
+**The client is a full rewrite.** Factory's dashboard is not evolved, imported, or copied from. The user stories in [the user stories, section 1, dashboard and UI](mike-user-stories.md#1-dashboard-and-ui-stories) and [section 3, what the spec requires](mike-user-stories.md#3-stories-mikemd-requires-that-neither-source-had) are its requirements. What it must be that factory's page is not:
+
+- **Responsive and phone-first.** Every tab lays out at 375 px with no horizontal page scroll; every single-seat verb has a touch path; a human on a phone can read the board, steer a seat, and request a merge.
+- **A review surface**: ready pull requests by urgency and age, which reviewer holds each, each verdict, and send-backs with their owner seat.
+- **The board** Arthur reads, shown to humans as Arthur sees it, with target versus actual share per lane and each row's note.
+- **Gauges per runtime** with the mint threshold drawn against them, and unmeasured shown as unmeasured.
+- **Attached sessions** on their own list with last call and token age, and a Revoke verb.
+- **Edits survive a frame.** What a human is typing is never overwritten by a live update; the page diffs, it does not repaint.
+- **Every command's outcome is visible** on the row it changed, however long it took.
 
 ## 8. Lexicon
 
@@ -262,7 +273,7 @@ Each is a rule factory paid for. Evidence is the factory file at [factory commit
 15. Address contract: `seat:<name>` owns, `[Name] ` at the start of a comment writes, `[Name]:` with a colon addresses. [factory poke.py lines 30 to 33, the address contract](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/poke.py#L30-L33) is the shape, with `Name:` as its address form.
 16. Names, roles, lanes, caps, repositories, hosts, vendors are config, not code. [factory policy.py lines 214 to 281, roles and names as config](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/policy.py#L214-L281).
 17. Health shows target versus actual share. [factory#1336, the harness redesign](https://github.com/excaliwire/factory/issues/1336), section 4.
-18. API contract versioned with a schema-digest test; the health read makes no vendor or GitHub call.
+18. The dashboard API is a versioned contract with a schema-digest test, and a health read makes no vendor or GitHub call ([section 7, the dashboard](#7-the-dashboard)). The contract is Mike's own.
 19. Secrets by name only: never in git, records, logs, or argv. [factory local.py line 559, secret redaction](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/local.py#L559).
 20. Comment limits: review 12 lines, pull request body 20, other 6, `Next:` last. [factory test_comment_limits_1741.py, the comment limits test](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/tests/test_comment_limits_1741.py).
 21. Talking to humans: measurement not adjective, bad news first, recommendation not menu, decisions then merges then next, cost unasked. [factory root AGENTS.md lines 84 to 96, talking to Tig](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/AGENTS.md?plain=1#L84-L96).
@@ -319,5 +330,5 @@ All 16 decided by Tig on 2026-10-05. Decisions 1 to 6 are [factory#1336, the har
 
 - The user stories in [the user stories file](mike-user-stories.md) each name a test or a measurement, and the LEGACY ones are not built.
 - [The lexicon carry-over table](mike-lexicon.md#2-carry-over-table) has a verdict on every factory term and a human has edited it.
-- moms passes the ported contract tests with an empty `PINNED` list, from an install with no factory checkout, managing two projects from one instance.
+- moms passes its own contract tests ([`mike-dashboard-api.md`, the dashboard API](mike-dashboard-api.md)) with an empty `PINNED` list, from an install with no factory checkout, managing two projects from one instance.
 - A tick with idle workers writes no planner row; Arthur's steers pass the [section 3.3, the gates](#33-gates-mike-enforces-for-every-caller); Health shows target versus actual share.
