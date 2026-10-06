@@ -335,7 +335,7 @@ Owner: [mike.md §12, how Mike is tested](mike.md#12-how-mike-is-tested). A fixt
 
 ### Seat card
 
-Owner: [the dashboard spec §3, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card). The one component that draws a seat: info on top (name, role, liveness LED with its word, driver, last mint, assignment and its time, last steer and its time, context pressure gauge, tokens since mint) and controls on the bottom (start-stop switch, Restart, Steer, Mint, Archive). Responsive by its container; on a phone the info sits behind an expander and the verbs behind a hamburger. Not a table row, and not a tab: the Seats tab is where cards are grouped by role. **Binds:** one component rendered on the Seats tab, the board and the review surface; test that a 375 px render has no horizontal scroll.
+Owner: [the dashboard spec §3, the Seats tab and the seat card](mike-dashboard.md#3-the-seats-tab-and-the-seat-card). The one component that draws a seat: info on top (name, role, liveness LED with its word, driver, last mint, assignment and its time, last steer and its time, context pressure gauge, tokens since mint) and controls on the bottom (start-stop switch, Restart, Steer, Mint, Archive). Responsive by its container; on a phone the info sits behind an expander and the verbs behind a hamburger. Not a table row, and not a tab: the Seats tab is where cards are grouped by role. **Binds:** one component rendered on the Seats tab and the board; test that a 375 px render has no horizontal scroll.
 
 ### Seat
 

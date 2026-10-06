@@ -31,3 +31,4 @@ As a human (Tig today), I wanted each mint run capped by a token and turn budget
 Evidence: [factory#1755, lane-PE mint burns tokens](https://github.com/excaliwire/factory/issues/1755), its done-when.
 Verdict: LEGACY: the budget came from that issue's done-when, not from a human; Mike has no budgets. A wait-only mint ([MS-099, mint wait-only](seats.md#ms-099-mint-wait-only)) and gauges with a mint threshold ([MS-145, switch vendor at mint threshold](seats.md#ms-145-switch-vendor-at-mint-threshold), [mike.md §4, runtimes](../mike.md#4-runtimes)) cover the cost.
 Urgency: no · retired
+- The Review tab ([MS-128, review surface lists ready pulls](review.md#ms-128-review-surface-lists-ready-pulls), [MS-129, review surface by urgency then age](review.md#ms-129-review-surface-by-urgency-then-age)): retired 2026-10-06, Tig reviews on GitHub; review state stays in the API's `review` part for the Health rollup and the Board.

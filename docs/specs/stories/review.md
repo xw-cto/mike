@@ -1,6 +1,6 @@
 # Mike user stories: review
 
-The stories for review and merge: self-review, verdicts, send-back, merge, and the review surface. Rules, verdicts and the other files: [the user stories index](README.md).
+The stories for review and merge: self-review, verdicts, send-back, merge, and the reviewer pool. Rules, verdicts and the other files: [the user stories index](README.md).
 
 ## Review and merge
 
@@ -8,8 +8,8 @@ The stories for review and merge: self-review, verdicts, send-back, merge, and t
 As a human (Tig today), I want ready pull requests in merge conflict listed with their author seat, so that each becomes a send-back.
 Evidence: [factory harness attention.py line 136, the merge-conflict finding](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/attention.py#L136).
 Acceptance: one row per conflicting ready pull request with `owner/repo#N` and the author seat, linked.
-Verdict: CHANGE: shown on the review surface ([MS-128, review surface lists ready pulls](#ms-128-review-surface-lists-ready-pulls)), routed as a send-back ([decision 5, conflicts are changes, not verbs](../mike.md#11-decisions)).
-Urgency: normal · the conflict change kind and the review surface are v1
+Verdict: CHANGE: shown on the Board and in the Health Problems list ([MS-128, review surface lists ready pulls, retired](#ms-128-review-surface-lists-ready-pulls)), routed as a send-back ([decision 5, conflicts are changes, not verbs](../mike.md#11-decisions)).
+Urgency: normal · the conflict change kind is v1
 
 #### MS-021 Reviewer links its pull request
 As a human (Tig today), I want a reviewer whose assignment is a pull request to link to that pull request, so that I open the review in one click.
@@ -159,21 +159,23 @@ reviewer: <Name>
 Verdict: CHANGE: honored from the configured merger account, not a hard-coded `tig`.
 Urgency: normal · `waive:` and `reviewer:` grants are v1
 
-## Review surface
+## Review state and the reviewer pool
+
+The Review tab was retired on 2026-10-06: Tig reviews pull requests on GitHub. Review state still reaches the Health rollup and the Board through the API's `review` part.
 
 #### MS-128 Review surface lists ready pulls
 As a human (Tig today), I want a review surface listing every ready pull request, the reviewer assigned to each, and each verdict on the current head, so that I see review state without opening GitHub.
 Evidence: [factory dashboard rules.mjs line 57, the router has no review route](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/rules.mjs#L57); [mike.md §7, the dashboard](../mike.md#7-the-dashboard); [Mike dashboard API §7, payload shapes](../mike-dashboard-api.md#7-payload-shapes).
 Acceptance: the rows equal the open non-draft pull requests across all projects; each shows reviewer or `none`, and `Merge`, `Send back`, `Hold` or `pending` for the head sha.
-Verdict: NEW.
-Urgency: normal · the Review tab is v1
+Verdict: RETIRED 2026-10-06: Tig reviews on GitHub; no Review tab. The ordering rule stays in [mike.md §3.4, review and send-back](../mike.md#34-review-and-send-back) and the counts in the Health rollup.
+Urgency: no · retired
 
 #### MS-129 Review surface by urgency then age
 As a human (Tig today), I want the review surface ordered by urgency, then by the time each pull request went ready, oldest first, with send-backs and their author seats listed apart, so that the most urgent, oldest wait is on top.
 Evidence: [factory harness review.py line 123, the reviewer assignment](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/agent_harness/review.py#L123); [mike.md §3.4, review and send-back](../mike.md#34-review-and-send-back); [Mike dashboard API §7, payload shapes](../mike-dashboard-api.md#7-payload-shapes).
 Acceptance: row order is `critical`, `high`, `normal`, `no`, then ascending ready time from GitHub events inside each; each send-back row names the author seat and its next-assignment state.
-Verdict: NEW.
-Urgency: normal · the Review tab and send-back ordering are v1
+Verdict: RETIRED 2026-10-06: Tig reviews on GitHub; no Review tab. The ordering rule stays in [mike.md §3.4, review and send-back](../mike.md#34-review-and-send-back) and the counts in the Health rollup.
+Urgency: no · retired
 
 #### MS-130 Reviewer pool sized to workers
 As the loop, I want the reviewer pool sized at `ceil(workers / 3)`, with one reviewer per ready pull request inside it, so that review keeps pace with work.

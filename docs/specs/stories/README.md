@@ -16,7 +16,7 @@ Stories are grouped by job. Ids are stable: a story keeps its MS id when it move
 
 - [observe.md, the observe stories](observe.md): 26 stories (high 13, normal 13, no 0); observe the fleet, the Seats tab and the seat card, phone layout, the board, target versus actual share.
 - [steer.md, the steer stories](steer.md): 26 stories (high 14, normal 12, no 0); steer and assign, the control plane watches, humans on GitHub.
-- [review.md, the review stories](review.md): 23 stories (high 11, normal 12, no 0); review and merge, the review surface.
+- [review.md, the review stories](review.md): 23 stories (high 11, normal 10, no 2); review and merge, the reviewer pool; the Review tab is retired.
 - [seats.md, the seats stories](seats.md): 27 stories (high 15, normal 12, no 0); manage seats, the Mike Runtime API, gauges and mint threshold.
 - [configure.md, the configure stories](configure.md): 19 stories (high 13, normal 6, no 0); configure, config store apply-on-change, multi-project single instance.
 - [diagnose.md, the diagnose stories](diagnose.md): 28 stories (high 18, normal 9, no 1); diagnose and health, audit records, job ids for commands, the dashboard API contract.
@@ -25,4 +25,4 @@ Stories are grouped by job. Ids are stable: a story keeps its MS id when it move
 - [retired.md, the retired stories](retired.md): 1 story (high 0, normal 0, no 1); one line per retired factory behavior (not built), and the story retired after review.
 - [mlp.md, the MLP build order](mlp.md): no stories of its own; the 103 `high` stories in build order, in three parallel tracks and one milestone.
 
-Total: 193 stories: critical 0, high 103, normal 87, no 3.
+Total: 193 stories: critical 0, high 103, normal 85, no 5.

@@ -403,7 +403,7 @@ The MLP is the cheapest Mike that Tig will love and that teaches us something: o
 
 ### 13.2 v1
 
-Everything the seat model adds once the loop is trusted: the live stream and its recovery, identity-provider sign-in, the JSON editor and the full Settings groups; Arthur and the board, K, lane-PEs, the pool with shares, lanes and the priorities list with notes, SEV ordering across seats, send-back ordering, seat reuse. More runtimes: tmux drivers, seat hosts, host tokens, per-runtime gauges and the mint threshold. Several humans, attached sessions, `waive:` and `reviewer:` grants, contributor triage, conflict and Copilot change kinds. Several projects per instance. The Board, Review, Priorities, Gauges and Attached sessions tabs; Logs scenarios; the full Settings groups. The seat-behavior suite for Arthur.
+Everything the seat model adds once the loop is trusted: the live stream and its recovery, identity-provider sign-in, the JSON editor and the full Settings groups; Arthur and the board, K, lane-PEs, the pool with shares, lanes and the priorities list with notes, SEV ordering across seats, send-back ordering, seat reuse. More runtimes: tmux drivers, seat hosts, host tokens, per-runtime gauges and the mint threshold. Several humans, attached sessions, `waive:` and `reviewer:` grants, contributor triage, conflict and Copilot change kinds. Several projects per instance. The Board, Priorities, Gauges and Attached sessions tabs; Logs scenarios; the full Settings groups. The seat-behavior suite for Arthur.
 
 ### 13.3 Backlog
 

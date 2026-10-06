@@ -76,7 +76,7 @@ Every read answers JSON, the payload named. The `Callers` column is the route's 
 | `GET {base}/api/seats/{seat}/log` | `sessionLog` | the runtime's session log: inputs and responses, last steer, latest response ([MS-172, session log from every runtime](stories/seats.md#ms-172-session-log-from-every-runtime)) | human, session, seat (`own` seat) |
 | `GET {base}/api/board` | `boardFrame` | the board Arthur read on his last follow-up ([MS-132, board Arthur read is shown](stories/observe.md#ms-132-board-arthur-read-is-shown)) | human, session, seat |
 | `GET {base}/api/priorities` | `prioritiesFrame` | the priorities list, one `priorityRow` per lane | human, session, seat |
-| `GET {base}/api/review` | `reviewFrame` | open ready pull requests across all projects ([MS-128, review surface lists ready pulls](stories/review.md#ms-128-review-surface-lists-ready-pulls)) | human, session, seat |
+| `GET {base}/api/review` | `reviewFrame` | open ready pull requests across all projects, for the Health rollup and the Board; there is no Review tab, Tig reviews on GitHub ([MS-128, review surface lists ready pulls, retired](stories/review.md#ms-128-review-surface-lists-ready-pulls)) | human, session, seat |
 | `GET {base}/api/gauges` | `gaugesFrame` | one `gaugeRow` per runtime pool and window | human, session, seat |
 | `GET {base}/api/settings` | `settingsFrame` | every setting, secrets by name only | human, session |
 | `GET {base}/api/settings/history` | `settingsHistory` | every version, key, from, to, actor ([MS-061, settings history by version](stories/diagnose.md#ms-061-settings-history-by-version)) | human |
@@ -192,7 +192,7 @@ Every time is ISO 8601 with offset, or `null` when not recorded. Durations are w
 
 `prioritiesFrame` is `{rows, lanes_source, store_version}`.
 
-**reviewRow**, ordered by urgency then `ready_since`, oldest first ([MS-129, review surface by urgency then age](stories/review.md#ms-129-review-surface-by-urgency-then-age)).
+**reviewRow**, ordered by urgency then `ready_since`, oldest first, the order reviewers are steered in ([MS-129, review surface by urgency then age, retired](stories/review.md#ms-129-review-surface-by-urgency-then-age)).
 
 | Field | Type | Meaning |
 |---|---|---|

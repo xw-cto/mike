@@ -86,7 +86,7 @@ Urgency: normal · seat check-ins and focus come with the seat model in v1
 #### MS-180 One seat card component everywhere
 As a human, I want every seat drawn as the same seat card wherever it appears, so that I learn one shape and read it the same on every tab.
 Evidence: [the dashboard spec §3, the Seats tab and the seat card](../mike-dashboard.md#3-the-seats-tab-and-the-seat-card); [the approved mockup](../mike-dashboard.md#3-the-seats-tab-and-the-seat-card).
-Acceptance: the Seats tab, the board, and the review surface render a seat through one component; a change to the card's markup appears on all three without a second edit.
+Acceptance: the Seats tab and the board render a seat through one component; a change to the card's markup appears on both without a second edit.
 Verdict: NEW.
 Urgency: high · the seat card is the Seats tab
 
@@ -124,7 +124,7 @@ Urgency: high · phone-first Seats tab: expander and hamburger keep every verb a
 As a human (Tig today), I want every tab readable on a phone, so that I run the fleet away from my desk.
 Evidence: [factory dashboard app.css line 125, no breakpoint for the 8-column Sessions table](https://github.com/excaliwire/factory/blob/bb2bf4c6ecabf1df53054519c899b77ea9ef65e8/agent-harness/dashboard/app.css#L125).
 Acceptance: at 375 px width, 0 tabs need horizontal page scroll.
-Verdict: CHANGE: today factory's Sessions tab fails; Mike lays out every tab, review surface and board included.
+Verdict: CHANGE: today factory's Sessions tab fails; Mike lays out every tab, board included.
 Urgency: high · MLP part: the four MLP tabs fit a phone; the other tabs wait for v1
 
 #### MS-140 Every seat verb by tap

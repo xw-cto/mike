@@ -21,7 +21,6 @@ The dashboard is how humans see and control Mike: the fleet, the board, the prio
 **The app is a full rewrite.** Factory's dashboard is not evolved, imported, or copied from. The dashboard and UI stories and the stories the spec requires, [indexed by job in the user stories](stories/README.md), are its requirements. What it must be that factory's page is not:
 
 - **Responsive and phone-first.** Every tab lays out at 375 px with no horizontal page scroll; every single-seat verb has a touch path; a human on a phone can read the board, steer a seat, and request a merge.
-- **A review surface**: ready pull requests by urgency and age, which reviewer holds each, each verdict, and send-backs with their owner seat.
 - **The board** Arthur reads, shown to humans as Arthur sees it, with target versus actual share per lane and each row's note.
 - **Gauges per runtime** with the mint threshold drawn against them, and unmeasured shown as unmeasured.
 - **Attached sessions** on their own list with last call and token age, and a Revoke verb.
@@ -57,7 +56,7 @@ The sections, top to bottom:
 - **Instance.** One line: instance name, Mike version, project count, seat count, config version. Open: the projects, the serving commit and start time, the config store version with who changed it, humans listed and signed in, attached sessions, API version and open streams.
 - **Control plane.** One line: last webhook age, seat hosts checked in, GitHub reads left. Open: the last webhook event, the store state, the GitHub read reserve as a meter, jobs pending, applied and refused, and a seat-host table (checked in, seats, queue, status).
 - **Loop.** One line: the Running/Paused switch, live or dry-run, cadence, last tick age and duration, counts of seats working and waiting, and what the next tick will do. Open, three columns: **Working on** (seat, assignment, state, the first few with a link to the Board for the rest), **Next** (what the next tick will do: a ready pull request to a named idle reviewer, a send-back to its owner, a follow-up due to Arthur), **Waiting** (pull requests awaiting merge or CI, idle seats with their idle time).
-- **Rollups**, closed by default, each a one-line summary with chips: **Seats** (liveness counts; open: a stacked bar of context pressure under 60, 60 to 80, over 80 percent, and fleet tokens since mint), **Gauges** (per runtime percent with its mint threshold as a tick mark; unmeasured shown as the word), **Review** (ready, in review, awaiting merge, send-backs; oldest unreviewed), **Lanes** (the priorities list as set: rank, lane, share percent; a reminder of how priorities are set, not a measurement, so no actual versus target here; that lives on the Priorities tab).
+- **Rollups**, closed by default, each a one-line summary with chips: **Seats** (liveness counts; open: a stacked bar of context pressure under 60, 60 to 80, over 80 percent, and fleet tokens since mint), **Gauges** (per runtime percent with its mint threshold as a tick mark; unmeasured shown as the word), **Review** (ready, in review, awaiting merge, send-backs; oldest unreviewed; each count links to GitHub's pull request list, there is no Review tab), **Lanes** (the priorities list as set: rank, lane, share percent; a reminder of how priorities are set, not a measurement, so no actual versus target here; that lives on the Priorities tab).
 - **Problems**, last. One line with the counts; at zero it is that one line, "nothing needs attention", and nothing more. Open: one line per problem with the LED, the subject linked to its card, a one-clause consequence, a small line of what to do, and a link to the owning tab. It is a list of things a human must act on now, with a fixed shape per line; it never carries log text and never grows into a log.
 
 ### 4.1 Desktop, 1180 px
@@ -111,4 +110,4 @@ The setting keys in the mockup are illustrative where Mike's spec does not yet n
 
 ## 7. Tabs still to mock up
 
-Board, Review, Priorities, Gauges, Attached sessions. Each lands here with a desktop and a phone image before its stories are built ([the user stories index](stories/README.md)).
+Board, Priorities, Gauges, Attached sessions. Each lands here with a desktop and a phone image before its stories are built ([the user stories index](stories/README.md)).
