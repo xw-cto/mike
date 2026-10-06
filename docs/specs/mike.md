@@ -371,6 +371,16 @@ Factory's harness could be tested only whole: a verb needed the repository check
 - **Tier 4, the tick.** A full tick against the fake runtime, the fake GitHub and the injected clock: routing of every change kind, every gate, record before act, the API frames, the jobs.
 - **Tier 5, live.** One real driver, one sandbox repository, one real tick, one real model turn, on demand.
 
+### 12.4 The dashboard
+
+The client is tested at the same tiers, with a headless browser as the runner where layout matters. It is not a sixth tier.
+
+- **Unit.** The page's pure rules (verb enablement from a row's `verbs`, age and time formatting from ISO 8601, share and gauge arithmetic) as functions with fixtures.
+- **Component.** Each UI component rendered alone from fixture payloads, the seat card first ([section 7.1](#71-the-seats-tab-and-the-seat-card)): at 1180 px and at 375 px, no horizontal overflow, the LED word present beside the color, a disabled verb carrying `verb_why`, an unmeasured field drawn as the word and no bar. A screenshot per component and width is kept as a visual baseline, and a change to it is a reviewed diff, not a surprise.
+- **Contract.** The client fed the dashboard API's fixture frames draws without error, and the command bodies it builds equal the API's command examples byte for byte ([the dashboard API, where this is tested](mike-dashboard-api.md#9-where-this-is-tested)).
+- **Integration.** The page in a headless browser against the in-process API server with the fake runtime and a fixture store: a pushed frame updates one card without a repaint, a half-typed steer and an open expander survive the frame, a command shows its job outcome on the row, the stream reopens after a cut, a major-version mismatch stops the page with "must update". No network beyond loopback.
+- **End-to-end.** The live run in tier 5 is driven through the page once, on a phone-width viewport and a desktop one.
+
 **What a test must still do.** Fail on main and pass on the head ([rule 7](#9-what-mike-keeps)). Name its tier and the seam it uses. Say the measurement it makes.
 
 ## 13. Done when

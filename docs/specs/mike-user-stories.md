@@ -1254,6 +1254,12 @@ Evidence: [mike.md §12.1, the tiers](mike.md#121-the-tiers), end-to-end tier.
 Acceptance: the run is not in default CI; it writes its result, duration and cost to the issue that asked for it; no unit, component, contract or integration test imports from it.
 Verdict: NEW.
 
+#### MS-191 Dashboard tested at every tier
+As a human, I want the dashboard client tested at the same tiers as the rest of Mike, with the seat card and every tab rendered alone from fixtures in a headless browser at 1180 px and 375 px, so that a layout or responsiveness break is caught before I open it on my phone.
+Evidence: [mike.md §12.4, the dashboard](mike.md#124-the-dashboard); [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card).
+Acceptance: each component has a render test at both widths asserting no horizontal overflow and a kept screenshot baseline; the client's command bodies equal the API fixtures byte for byte; an integration test against the in-process API shows a pushed frame updating one card while typed text survives; none of these needs a live control plane, vendor or GitHub.
+Verdict: NEW.
+
 ## 4. Retired stories
 
 Not built ([mike.md §3.3, gates for every caller](mike.md#33-gates-mike-enforces-for-every-caller), [mike.md §10, what Mike does not re-create](mike.md#10-what-mike-does-not-re-create), [mike.md §13, done when](mike.md#13-done-when)). One line each.

@@ -303,4 +303,4 @@ The contract tests ship with Mike and run in CI. Each names a story or a section
 - **CORS.** A listed origin is named, never `*`; a preflight or POST from another origin is 403; the webhook carries no CORS header.
 - **Keep-alive and stale snapshot.** An idle stream sends a keep-alive inside one interval; a stopped loop yields one stale `health` frame even when a log line lands in the same pass.
 - **Second client.** A CLI or text client that imports nothing from the page reads every part and runs every command through this contract ([MS-008, Arthur reads the same API](mike-user-stories.md#ms-008-arthur-reads-the-same-api)).
-- **Phone.** Out of contract scope; the client's own tests hold [MS-139, every tab fits a phone](mike-user-stories.md#ms-139-every-tab-fits-a-phone).
+- **Phone.** Out of contract scope; the client's own component and integration tests hold [MS-139, every tab fits a phone](mike-user-stories.md#ms-139-every-tab-fits-a-phone) and [MS-191, dashboard tested at every tier](mike-user-stories.md#ms-191-dashboard-tested-at-every-tier) ([mike.md §12.4, the dashboard](mike.md#124-the-dashboard)).
