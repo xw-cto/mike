@@ -1200,19 +1200,19 @@ Verdict: NEW.
 
 #### MS-182 Seat card info block
 As a human, I want each card to show name, role, liveness LED with its word, driver, last mint, assignment with its time, last steer with its time, context pressure as a bar gauge, and tokens since mint, so that one glance answers who, what, how long, and how full.
-Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-002, liveness as one of four words](#ms-002-liveness-as-one-of-four-words).
+Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-002, liveness in four words](#ms-002-liveness-in-four-words).
 Acceptance: all nine fields present on every card; the LED color always has its word beside it; an unmeasured field reads unmeasured plus its reason and draws no bar; the gauge fill changes to warning at 60 percent and critical at 80 percent.
 Verdict: NEW.
 
 #### MS-183 Seat card controls
 As a human, I want a start-stop switch and Restart, Steer, Mint and Archive at the bottom of each card, with a verb disabled and explained when the seat's row does not list it, so that I act on one seat without a menu hunt.
-Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-027, the server explains a disabled verb](#ms-027-verb-buttons-say-what-and-why-off).
+Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-027, verb buttons explain themselves](#ms-027-verb-buttons-explain-themselves).
 Acceptance: the five controls are present on every card; a control not in the row's `verbs` is disabled with `verb_why` as its hover text; a click posts one command and the card shows the job outcome.
 Verdict: NEW.
 
 #### MS-184 Phone card: expander and hamburger
 As a human on a phone, I want the card's info behind a Details expander and its verbs behind a hamburger, with the start-stop switch still visible, so that the tab stays short and every verb has a touch path.
-Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-005, readable on a phone](#ms-005-readable-on-a-phone).
+Evidence: [mike.md §7.1, the Seats tab and the seat card](mike.md#71-the-seats-tab-and-the-seat-card); [MS-005, last confirmed steer shown](#ms-005-last-confirmed-steer-shown).
 Acceptance: at 375 px a closed card is at most 3 lines tall; the expander and the hamburger each open with one tap; the switch is reachable without opening either; an open expander or menu survives a sessions frame.
 Verdict: NEW.
 
